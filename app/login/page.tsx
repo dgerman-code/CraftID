@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { login } from "./actions";
+import { login, resendConfirmation } from "./actions";
 import { localeFrom } from "@/components/site-shell";
 
 type LoginPageProps = {
@@ -17,6 +17,9 @@ const copy = {
     new: "New to CraftID?",
     create: "Create an account",
     back: "Back to CraftID",
+    resendTitle: "Confirmation email did not work?",
+    resendText: "Enter the same email address and we will send a new confirmation link.",
+    resend: "Resend confirmation",
   },
   uk: {
     eyebrow: "Безпечний доступ",
@@ -28,6 +31,9 @@ const copy = {
     new: "Ще не маєте CraftID?",
     create: "Створити обліковий запис",
     back: "Повернутися до CraftID",
+    resendTitle: "Письмо підтвердження не спрацювало?",
+    resendText: "Вкажіть ту саму email-адресу, і ми надішлемо нове посилання для підтвердження.",
+    resend: "Надіслати підтвердження повторно",
   },
 } as const;
 
@@ -65,6 +71,17 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <p className="authFoot">
           {t.new} <Link href={`/signup${q}`}>{t.create}</Link>
         </p>
+
+        <div className="resendPanel">
+          <strong>{t.resendTitle}</strong>
+          <p>{t.resendText}</p>
+          <form className="resendForm" action={resendConfirmation}>
+            <input type="hidden" name="lang" value={locale} />
+            <input name="email" type="email" autoComplete="email" placeholder={t.email} required />
+            <button className="button" type="submit">{t.resend}</button>
+          </form>
+        </div>
+
         <p className="authBack"><Link href={`/${q}`}>← {t.back}</Link></p>
       </section>
     </main>
