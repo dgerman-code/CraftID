@@ -1284,3 +1284,175 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+.profileImageSection {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 2px solid var(--accent);
+}
+
+.profileImageRow {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.profileImagePreview {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.78rem;
+  padding: 12px;
+}
+
+.profileImagePreview img,
+.ownerPreviewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileImageForm {
+  display: grid;
+  gap: 12px;
+  max-width: 520px;
+}
+
+.profileImageForm input[type="file"] {
+  padding: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.skillSelector {
+  margin: 30px 0 34px;
+  padding-top: 26px;
+  border-top: 2px solid var(--accent);
+}
+
+.skillSelector form {
+  margin-top: 16px;
+}
+
+.skillOptionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  margin-bottom: 18px;
+}
+
+.skillOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 12px 14px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+}
+
+.skillOption.selected {
+  background: var(--surface);
+  color: var(--muted);
+  cursor: default;
+}
+
+.skillOption input {
+  width: 16px;
+  height: 16px;
+}
+
+.secondaryFormEyebrow {
+  margin-top: 38px;
+}
+
+.previewNotice {
+  max-width: 760px;
+  margin: 12px 0 30px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.ownerPreviewCard {
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.ownerPreviewHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 36px;
+  align-items: start;
+  padding: 34px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ownerPreviewHeader h1 {
+  margin: 10px 0;
+}
+
+.ownerPreviewImage {
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+}
+
+.ownerPreviewGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+}
+
+.ownerPreviewGrid > section,
+.ownerPreviewGrid > aside {
+  padding: 30px 0;
+}
+
+.ownerPreviewGrid > section {
+  padding-right: 36px;
+}
+
+.ownerPreviewGrid > aside {
+  padding-left: 30px;
+  border-left: 1px solid var(--line);
+}
+
+.previewSkillsLabel {
+  margin-top: 28px;
+}
+
+@media (max-width: 800px) {
+  .profileImageRow,
+  .ownerPreviewHeader,
+  .ownerPreviewGrid,
+  .skillOptionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .profileImagePreview,
+  .ownerPreviewImage {
+    width: 160px;
+  }
+
+  .ownerPreviewGrid > section {
+    padding-right: 0;
+  }
+
+  .ownerPreviewGrid > aside {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
