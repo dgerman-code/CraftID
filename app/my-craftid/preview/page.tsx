@@ -81,7 +81,7 @@ export default async function PreviewPage({ searchParams }: Props) {
     profile_photo_path?: string | null;
   };
 
-  const [{ data: claims }, { data: privacy }] = await Promise.all([
+  const [{ data: claims }, { data: privacy }, { data: address }] = await Promise.all([
     supabase
       .from("claims")
       .select("id, claim_type, title, status, visibility")
@@ -93,6 +93,11 @@ export default async function PreviewPage({ searchParams }: Props) {
       .select("show_profile_photo, show_city, show_languages, show_portfolio, show_qualifications, location_precision")
       .eq("entity_id", entity.id)
       .single(),
+    supabase
+      .from("entity_business_addresses")
+      .select("address_line1, address_line2, postal_code, locality, country_code")
+      .eq("entity_id", entity.id)
+      .maybeSingle(),
   ]);
 
   let photoUrl: string | null = null;
@@ -104,9 +109,22 @@ export default async function PreviewPage({ searchParams }: Props) {
   }
 
   const skills = (claims ?? []).filter((claim) => claim.claim_type === "skill");
-  const location = privacy?.show_city
-    ? [record.city, record.region, record.country_code].filter(Boolean).join(", ")
-    : [record.region, record.country_code].filter(Boolean).join(", ");
+
+  let location = [record.region, record.country_code].filter(Boolean).join(", ");
+  if (privacy?.location_precision === "country") {
+    location = record.country_code ?? "";
+  } else if (privacy?.location_precision === "region") {
+    location = [record.region, record.country_code].filter(Boolean).join(", ");
+  } else if (privacy?.location_precision === "city") {
+    location = [record.city, record.region, record.country_code].filter(Boolean).join(", ");
+  } else if (privacy?.location_precision === "exact_business_location" && address) {
+    location = [
+      address.address_line1,
+      address.address_line2,
+      [address.postal_code, address.locality].filter(Boolean).join(" "),
+      address.country_code,
+    ].filter(Boolean).join(", ");
+  }
 
   return (
     <main className="workspacePage previewPage">
