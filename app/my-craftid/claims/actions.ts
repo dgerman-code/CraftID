@@ -25,6 +25,7 @@ export async function addClaim(formData: FormData) {
 
   const { data: entity } = await supabase.from("craftid_entities")
     .select("id").eq("owner_user_id", userId).limit(1).single();
+  if (!entity) redirect(`/onboarding${q}`);
 
   const { error } = await supabase.from("claims").insert({
     entity_id: entity.id,
