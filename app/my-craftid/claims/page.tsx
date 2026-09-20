@@ -57,6 +57,7 @@ export default async function ClaimsPage({ searchParams }: Props) {
 
   const { data: entity } = await supabase.from("craftid_entities")
     .select("id").eq("owner_user_id", userId).limit(1).single();
+  if (!entity) redirect(`/onboarding${q}`);
 
   const { data: claims } = await supabase.from("claims")
     .select("id, claim_type, title, description, visibility, status, created_at")
