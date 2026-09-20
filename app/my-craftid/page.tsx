@@ -170,7 +170,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             [t.skills, t.skillsText, "/my-craftid/claims"],
             [t.evidence, t.evidenceText, "/my-craftid/evidence"],
             [t.privacy, t.privacyText, "/my-craftid/privacy"],
-            [t.public, t.publicText, entity.entity_type === "professional" ? "/professionals/maria-kovalenko" : "/workshops/atelier-forma"],
+            [t.public, t.publicText, "/my-craftid/preview"],
           ].map(([title, text, href], index) => (
             <article className="dashboardModule" key={title}>
               <span className="choiceIndex">0{index + 1}</span>
