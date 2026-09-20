@@ -24,6 +24,7 @@ const copy = {
     back: "Back to My CraftID",
     added: "Claim added.",
     status: "Status",
+    describeSkill: "Describe skill",
     selectSkills: "Select professional skills",
     selectSkillsIntro: "Choose one or more skills from the CraftID taxonomy. Selected skills are added as structured self-declared claims and can later be supported by evidence.",
     saveSkills: "Add selected skills",
@@ -47,6 +48,7 @@ const copy = {
     back: "Назад до Мій CraftID",
     added: "Твердження додано.",
     status: "Статус",
+    describeSkill: "Описати навичку",
     selectSkills: "Оберіть професійні навички",
     selectSkillsIntro: "Оберіть одну або кілька навичок із таксономії CraftID. Вибрані навички додаються як структуровані самодекларовані твердження, до яких згодом можна додати докази.",
     saveSkills: "Додати вибрані навички",
@@ -160,6 +162,11 @@ export default async function ClaimsPage({ searchParams }: Props) {
                   <span>{t.status}: {claim.status.replaceAll("_", " ")}</span>
                   <span>{claim.visibility}</span>
                 </div>
+                {claim.claim_type === "skill" ? (
+                  <Link className="claimAction" href={`/my-craftid/claims/${claim.id}${q}`}>
+                    {t.describeSkill} →
+                  </Link>
+                ) : null}
               </article>
             ))}
           </aside>
