@@ -39,6 +39,8 @@ const copy = {
     privacyText: "Choose what is visible publicly and how precise your location may be.",
     public: "Public profile",
     publicText: "Preview how the record will appear once publication criteria are met.",
+    requests: "Contact requests",
+    requestsText: "Review controlled enquiries without publishing your private email or phone.",
     open: "Open",
     typeProfessional: "Professional",
     typeWorkshop: "Workshop",
@@ -73,6 +75,8 @@ const copy = {
     privacyText: "Оберіть, що буде публічним і наскільки точно може відображатися ваше місцезнаходження.",
     public: "Публічний профіль",
     publicText: "Перегляньте, як запис виглядатиме після виконання критеріїв публікації.",
+    requests: "Запити на контакт",
+    requestsText: "Переглядайте контрольовані звернення без публікації вашого приватного email або телефону.",
     open: "Відкрити",
     typeProfessional: "Професіонал",
     typeWorkshop: "Майстерня",
@@ -179,9 +183,10 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             [t.evidence, t.evidenceText, "/my-craftid/evidence"],
             [t.privacy, t.privacyText, "/my-craftid/privacy"],
             [t.public, t.publicText, "/my-craftid/preview"],
+            [t.requests, t.requestsText, "/my-craftid/requests"],
           ].map(([title, text, href], index) => (
             <article className="dashboardModule" key={title}>
-              <span className="choiceIndex">0{index + 1}</span>
+              <span className="choiceIndex">{String(index + 1).padStart(2, "0")}</span>
               <h3>{title}</h3>
               <p>{text}</p>
               <Link href={`${href}${q}`}>{t.open} →</Link>
