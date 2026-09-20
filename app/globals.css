@@ -1456,3 +1456,69 @@ button {
     border-top: 1px solid var(--line);
   }
 }
+
+
+.claimAction {
+  display: inline-block;
+  margin-top: 14px;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.provenanceBadge {
+  display: inline-flex;
+  align-items: center;
+  margin: 18px 0 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.indicatorForm {
+  display: grid;
+  gap: 0;
+  margin-top: 28px;
+  border-top: 2px solid var(--accent);
+}
+
+.indicatorQuestion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+  gap: 24px;
+  align-items: center;
+  min-height: 78px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.indicatorQuestion > span {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.indicatorQuestion select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.indicatorForm .button {
+  justify-self: start;
+  margin-top: 24px;
+}
+
+@media (max-width: 760px) {
+  .indicatorQuestion {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
