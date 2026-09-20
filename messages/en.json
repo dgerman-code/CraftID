@@ -1,0 +1,27 @@
+{
+  "brand": {
+    "name": "CraftID",
+    "initiative": "An EUFUA initiative"
+  },
+  "nav": {
+    "discover": "Discover",
+    "skills": "Skills",
+    "methodology": "Methodology",
+    "about": "About"
+  },
+  "home": {
+    "eyebrow": "Professional identity infrastructure",
+    "title": "Professional identity, built on evidence.",
+    "description": "A European-oriented professional identity and evidence infrastructure for craftspeople, workshops and craft-based micro-enterprises.",
+    "primaryCta": "Explore registry",
+    "secondaryCta": "Create CraftID"
+  },
+  "trust": {
+    "selfDeclared": "Self-declared",
+    "evidenceSubmitted": "Evidence submitted",
+    "documentReviewed": "Document reviewed",
+    "evidenceReviewed": "Evidence reviewed",
+    "identityReviewed": "Identity reviewed",
+    "externalSourceConfirmed": "External source confirmed"
+  }
+}
