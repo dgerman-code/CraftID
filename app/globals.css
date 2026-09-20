@@ -1872,3 +1872,24 @@ button {
     height: 112px;
   }
 }
+
+
+.markDomainWarning {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--danger);
+  background: #fff;
+}
+
+.markAssetButton {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 18px;
+}
+
+.markButtonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
