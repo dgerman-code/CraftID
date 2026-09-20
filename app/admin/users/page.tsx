@@ -5,14 +5,22 @@ import { removeStaffRole, setStaffRole } from "./actions";
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ error?: string; message?: string }> };
 
+type StaffMember = {
+  user_id: string;
+  email: string | null;
+  role: "admin" | "reviewer";
+  created_at: string;
+};
+
 export default async function UsersAdminPage({ searchParams }: Props) {
   const sp = await searchParams;
   const supabase = await createClient();
   const { data: role } = await supabase.rpc("current_staff_role");
   if (role !== "admin") redirect("/admin");
 
-  const { data: staff, error } = await supabase.rpc("admin_list_staff");
+  const { data: staffData, error } = await supabase.rpc("admin_list_staff");
   if (error) throw new Error(error.message);
+  const staff = (staffData ?? []) as StaffMember[];
 
   return (
     <main className="adminPage">
@@ -26,10 +34,10 @@ export default async function UsersAdminPage({ searchParams }: Props) {
       {sp.message ? <p className="formMessage">Access role updated.</p> : null}
 
       <section className="adminPanel">
-        <div className="adminPanelHeader"><div><div className="eyebrow">Current staff</div><h2>Administrative access</h2></div><span>{staff?.length ?? 0}</span></div>
+        <div className="adminPanelHeader"><div><div className="eyebrow">Current staff</div><h2>Administrative access</h2></div><span>{staff.length}</span></div>
         <div className="adminTable">
           <div className="adminTableHead adminUsersColumns"><span>Email / User</span><span>Role</span><span>Since</span><span>Actions</span></div>
-          {(staff ?? []).map((member) => (
+          {staff.map((member) => (
             <div className="adminTableRow adminUsersColumns" key={member.user_id}>
               <div className="adminRegistryIdentity"><strong>{member.email ?? "No email"}</strong><small>{member.user_id}</small></div>
               <span className="adminStatus">{member.role}</span>
