@@ -23,7 +23,7 @@ const copy = {
     empty: "No evidence has been uploaded yet.",
     back: "Back to My CraftID",
     uploaded: "Evidence uploaded.",
-    note: "Accepted in the MVP: PDF, JPEG, PNG and WebP. Maximum file size: 10 MB.",
+    note: "Accepted formats: PDF, JPEG, PNG and WebP. Maximum file size: 10 MB.",
     privacy: "Raw evidence files are not public. Public profiles show review status or source information rather than exposing sensitive documents.",
   },
   uk: {
@@ -41,7 +41,7 @@ const copy = {
     empty: "Доказів ще не завантажено.",
     back: "Назад до Мій CraftID",
     uploaded: "Доказ завантажено.",
-    note: "У MVP приймаються PDF, JPEG, PNG і WebP. Максимальний розмір файла — 10 МБ.",
+    note: "Дозволені формати: PDF, JPEG, PNG і WebP. Максимальний розмір файла — 10 МБ.",
     privacy: "Первинні файли доказів не є публічними. Публічні профілі показують статус перевірки або інформацію про джерело, а не відкривають чутливі документи.",
   },
 } as const;
@@ -91,13 +91,13 @@ export default async function EvidencePage({ searchParams }: Props) {
               <label>{t.titleLabel}<input name="title" required /></label>
               <label>{t.type}
                 <select name="evidenceType" required defaultValue="qualification_document">
-                  <option value="qualification_document">Qualification document</option>
-                  <option value="experience_document">Experience document</option>
-                  <option value="identity_document">Identity document</option>
-                  <option value="business_registration">Business registration</option>
-                  <option value="portfolio_evidence">Portfolio evidence</option>
-                  <option value="external_reference">External reference</option>
-                  <option value="other">Other</option>
+                  <option value="qualification_document">{locale === "uk" ? "Документ про кваліфікацію" : "Qualification document"}</option>
+                  <option value="experience_document">{locale === "uk" ? "Документ про досвід" : "Experience document"}</option>
+                  <option value="identity_document">{locale === "uk" ? "Документ для підтвердження особи" : "Identity document"}</option>
+                  <option value="business_registration">{locale === "uk" ? "Реєстрація бізнесу" : "Business registration"}</option>
+                  <option value="portfolio_evidence">{locale === "uk" ? "Матеріал портфоліо" : "Portfolio evidence"}</option>
+                  <option value="external_reference">{locale === "uk" ? "Зовнішнє джерело" : "External reference"}</option>
+                  <option value="other">{locale === "uk" ? "Інше" : "Other"}</option>
                 </select>
               </label>
               <label>{t.issuer}<input name="issuer" /></label>
