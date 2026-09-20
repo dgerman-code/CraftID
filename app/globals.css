@@ -1686,3 +1686,189 @@ button {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
+
+
+.publicIdentityPage {
+  min-height: 100vh;
+  padding: 42px 0 88px;
+}
+
+.publicIdentityHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--line);
+}
+
+.publicIdentityHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 48px;
+  align-items: end;
+  padding: 64px 0 46px;
+}
+
+.publicIdentityHero h1 {
+  margin: 10px 0 12px;
+  font-size: clamp(3rem, 6vw, 6.4rem);
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+}
+
+.publicIdentityGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  border-top: 2px solid var(--accent);
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.publicIdentityGrid > article,
+.publicIdentityGrid > aside {
+  padding: 34px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.publicIdentityNotice {
+  max-width: 860px;
+  margin: 28px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.markGrid {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 36px;
+}
+
+.markPanel {
+  padding: 26px;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.markPanel > p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.qrFrame {
+  width: 220px;
+  margin: 20px 0 16px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.qrFrame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.craftIdBadgePreview {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 22px 0;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.markUrlBlock,
+.markPhysicalText {
+  display: grid;
+  gap: 7px;
+  margin: 18px 0;
+}
+
+.markUrlBlock strong {
+  font-size: 0.78rem;
+}
+
+.markUrlBlock code,
+.markPhysicalText code {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.markCodeSection,
+.printLabelSection {
+  margin-top: 38px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.embedCode {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.printLabel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 128px;
+  gap: 24px;
+  align-items: center;
+  max-width: 620px;
+  margin-top: 18px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  background: #fff;
+}
+
+.printLabel > div {
+  display: grid;
+  gap: 8px;
+}
+
+.printLabel strong {
+  font-size: 1.8rem;
+}
+
+.printLabel span,
+.printLabel small {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.printLabel span {
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+.printLabel small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.printLabel img {
+  width: 128px;
+  height: 128px;
+}
+
+@media (max-width: 800px) {
+  .publicIdentityHero,
+  .publicIdentityGrid,
+  .markGrid,
+  .printLabel {
+    grid-template-columns: 1fr;
+  }
+
+  .printLabel img {
+    width: 112px;
+    height: 112px;
+  }
+}
