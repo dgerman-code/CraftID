@@ -36,6 +36,8 @@ const copy = {
     linkedin: "LinkedIn",
     portfolio: "Portfolio URL",
     publicToggle: "Show publicly",
+    partnerToggle: "Share with institutional partners on request",
+    privateContactNote: "Email and phone are never exposed publicly. They may be shared only through controlled institutional workflows if you opt in.",
     saveContacts: "Save contact settings",
     contactsSaved: "Contact settings saved.",
   },
@@ -66,6 +68,8 @@ const copy = {
     linkedin: "LinkedIn",
     portfolio: "Посилання на портфоліо",
     publicToggle: "Показувати публічно",
+    partnerToggle: "Дозволити передавати інституційним партнерам за запитом",
+    privateContactNote: "Email і телефон ніколи не показуються публічно. Вони можуть передаватися лише через контрольований інституційний процес, якщо ви окремо погодитесь.",
     saveContacts: "Зберегти контакти",
     contactsSaved: "Контактні налаштування збережено.",
   },
@@ -92,7 +96,7 @@ export default async function ProfilePage({ searchParams }: Props) {
       : supabase.from("workshop_profiles").select("display_name, craft_sector, country_code, region, city, about, profile_photo_path").eq("entity_id", entity.id).single(),
     supabase
       .from("entity_contact_points")
-      .select("contact_type, value, visibility")
+      .select("contact_type, value, show_in_public_profile, share_with_institutional_partners")
       .eq("entity_id", entity.id),
   ]);
 
@@ -169,17 +173,18 @@ export default async function ProfilePage({ searchParams }: Props) {
           <div className="eyebrow">{t.contactsEyebrow}</div>
           <h2>{t.contactsTitle}</h2>
           <p className="fieldHelp">{t.contactsIntro}</p>
+          <p className="privacyNote">{t.privateContactNote}</p>
 
           <form className="workspaceForm contactForm" action={updateContactPoints}>
             <input type="hidden" name="lang" value={locale} />
 
             {[
-              ["professional_email", "professionalEmail", t.professionalEmail, "email"],
-              ["phone", "phone", t.phone, "tel"],
-              ["website", "website", t.website, "url"],
-              ["linkedin", "linkedin", t.linkedin, "url"],
-              ["portfolio", "portfolio", t.portfolio, "url"],
-            ].map(([type, name, label, inputType]) => {
+              ["professional_email", "professionalEmail", t.professionalEmail, "email", false],
+              ["phone", "phone", t.phone, "tel", false],
+              ["website", "website", t.website, "url", true],
+              ["linkedin", "linkedin", t.linkedin, "url", true],
+              ["portfolio", "portfolio", t.portfolio, "url", true],
+            ].map(([type, name, label, inputType, canBePublic]) => {
               const item = contacts.get(type);
               return (
                 <div className="contactRow" key={type}>
@@ -191,14 +196,26 @@ export default async function ProfilePage({ searchParams }: Props) {
                       defaultValue={item?.value ?? ""}
                     />
                   </label>
-                  <label className="contactVisibility">
-                    <input
-                      type="checkbox"
-                      name={`${name}Public`}
-                      defaultChecked={item?.visibility === "public"}
-                    />
-                    {t.publicToggle}
-                  </label>
+                  <div className="contactVisibilityGroup">
+                    {canBePublic ? (
+                      <label className="contactVisibility">
+                        <input
+                          type="checkbox"
+                          name={`${name}Public`}
+                          defaultChecked={item?.show_in_public_profile === true}
+                        />
+                        {t.publicToggle}
+                      </label>
+                    ) : null}
+                    <label className="contactVisibility">
+                      <input
+                        type="checkbox"
+                        name={`${name}Partner`}
+                        defaultChecked={item?.share_with_institutional_partners === true}
+                      />
+                      {t.partnerToggle}
+                    </label>
+                  </div>
                 </div>
               );
             })}
