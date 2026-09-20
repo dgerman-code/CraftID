@@ -179,12 +179,12 @@ export default async function ProfilePage({ searchParams }: Props) {
             <input type="hidden" name="lang" value={locale} />
 
             {[
-              ["professional_email", "professionalEmail", t.professionalEmail, "email", false],
-              ["phone", "phone", t.phone, "tel", false],
-              ["website", "website", t.website, "url", true],
-              ["linkedin", "linkedin", t.linkedin, "url", true],
-              ["portfolio", "portfolio", t.portfolio, "url", true],
-            ].map(([type, name, label, inputType, canBePublic]) => {
+              { type: "professional_email", name: "professionalEmail", label: t.professionalEmail, inputType: "email", canBePublic: false },
+              { type: "phone", name: "phone", label: t.phone, inputType: "tel", canBePublic: false },
+              { type: "website", name: "website", label: t.website, inputType: "url", canBePublic: true },
+              { type: "linkedin", name: "linkedin", label: t.linkedin, inputType: "url", canBePublic: true },
+              { type: "portfolio", name: "portfolio", label: t.portfolio, inputType: "url", canBePublic: true },
+            ].map(({ type, name, label, inputType, canBePublic }) => {
               const item = contacts.get(type);
               return (
                 <div className="contactRow" key={type}>
