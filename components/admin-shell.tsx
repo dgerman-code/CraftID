@@ -12,8 +12,12 @@ type Props = {
 const nav = [
   { href: "/admin", label: "Dashboard", adminOnly: false },
   { href: "/admin/registry", label: "CraftID Registry", adminOnly: true },
+  { href: "/admin/publication", label: "Publication Queue", adminOnly: true },
   { href: "/admin/review", label: "Reviews", adminOnly: false },
   { href: "/admin/referrals", label: "Institutional Opportunities", adminOnly: true },
+  { href: "/admin/taxonomy", label: "Taxonomy", adminOnly: true },
+  { href: "/admin/users", label: "Users & Roles", adminOnly: true },
+  { href: "/admin/audit", label: "Audit & Compliance", adminOnly: true },
   { href: "/admin/identifiers", label: "Identifier Administration", adminOnly: true },
 ];
 
