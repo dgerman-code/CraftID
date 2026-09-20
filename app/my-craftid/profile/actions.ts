@@ -133,3 +133,60 @@ export async function uploadProfileImage(formData: FormData) {
   revalidatePath("/my-craftid/preview");
   redirect(`/my-craftid/profile${q ? `${q}&` : "?"}message=photo`);
 }
+
+
+export async function updateContactPoints(formData: FormData) {
+  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const q = lang === "uk" ? "?lang=uk" : "";
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getClaims();
+  const userId = auth?.claims?.sub;
+  if (!userId) redirect(`/login${q}`);
+
+  const { data: entity } = await supabase
+    .from("craftid_entities")
+    .select("id")
+    .eq("owner_user_id", userId)
+    .limit(1)
+    .single();
+
+  if (!entity) redirect(`/onboarding${q}`);
+
+  const rows = [
+    ["professional_email", String(formData.get("professionalEmail") ?? "").trim(), formData.get("professionalEmailPublic") === "on"],
+    ["phone", String(formData.get("phone") ?? "").trim(), formData.get("phonePublic") === "on"],
+    ["website", String(formData.get("website") ?? "").trim(), formData.get("websitePublic") === "on"],
+    ["linkedin", String(formData.get("linkedin") ?? "").trim(), formData.get("linkedinPublic") === "on"],
+    ["portfolio", String(formData.get("portfolio") ?? "").trim(), formData.get("portfolioPublic") === "on"],
+  ] as const;
+
+  for (const [contactType, value, isPublic] of rows) {
+    if (!value) {
+      await supabase
+        .from("entity_contact_points")
+        .delete()
+        .eq("entity_id", entity.id)
+        .eq("contact_type", contactType);
+      continue;
+    }
+
+    const { error } = await supabase
+      .from("entity_contact_points")
+      .upsert({
+        entity_id: entity.id,
+        contact_type: contactType,
+        value,
+        visibility: isPublic ? "public" : "private",
+        is_verified: false,
+        verified_at: null,
+      }, { onConflict: "entity_id,contact_type" });
+
+    if (error) {
+      redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
+    }
+  }
+
+  revalidatePath("/my-craftid/profile");
+  revalidatePath("/my-craftid/preview");
+  redirect(`/my-craftid/profile${q ? `${q}&` : "?"}message=contacts`);
+}
