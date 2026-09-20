@@ -5,7 +5,7 @@ type Props = { searchParams: Promise<{ lang?: string }> };
 
 const copy = {
   en: {
-    id: "CraftID #00001284",
+    id: "CraftID #00001284-29",
     name: "Maria Kovalenko",
     role: "Ceramicist",
     location: "Lviv, Ukraine",
@@ -23,7 +23,7 @@ const copy = {
     disclaimer: "Demo record. All profile content is fictional and shown only to demonstrate the CraftID information model.",
   },
   uk: {
-    id: "CraftID #00001284",
+    id: "CraftID #00001284-29",
     name: "Maria Kovalenko",
     role: "Керамістка",
     location: "Львів, Україна",
