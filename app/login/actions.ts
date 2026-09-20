@@ -6,16 +6,18 @@ import { createClient } from "@/lib/supabase/server";
 export async function login(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const q = lang === "uk" ? "?lang=uk" : "";
 
   if (!email || !password) {
-    redirect("/login?error=Email%20and%20password%20are%20required");
+    redirect(`/login${q ? `${q}&` : "?"}error=Email%20and%20password%20are%20required`);
   }
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
   }
 
   const { data: entity } = await supabase
@@ -24,11 +26,13 @@ export async function login(formData: FormData) {
     .limit(1)
     .maybeSingle();
 
-  redirect(entity ? "/my-craftid" : "/onboarding");
+  redirect(entity ? `/my-craftid${q}` : `/onboarding${q}`);
 }
 
-export async function logout() {
+export async function logout(formData?: FormData) {
+  const lang = String(formData?.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const q = lang === "uk" ? "?lang=uk" : "";
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/");
+  redirect(`/${q}`);
 }
