@@ -8,8 +8,8 @@ export const dynamic = "force-dynamic";
 
 type Props = { searchParams: Promise<{ lang?: string }> };
 
-function formatCraftId(value: number | string) {
-  return `#${String(value).padStart(8, "0")}`;
+function formatCraftId(value: number | string, checkDigits: string) {
+  return `#${String(value).padStart(8, "0")}-${checkDigits}`;
 }
 
 const copy = {
@@ -88,7 +88,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
 
   const { data: entity } = await supabase
     .from("craftid_entities")
-    .select("id, craftid_number, entity_type, public_status")
+    .select("id, craftid_number, craftid_check_digits, entity_type, public_status")
     .eq("owner_user_id", userId)
     .limit(1)
     .maybeSingle();
@@ -142,7 +142,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
         <div className="recordTopbar">
           <div>
             <span className="recordType">{typeLabel}</span>
-            <h1>{formatCraftId(entity.craftid_number)}</h1>
+            <h1>{formatCraftId(entity.craftid_number, entity.craftid_check_digits)}</h1>
           </div>
           <div className="dashboardStatus">
             <span>{t.status}</span>
