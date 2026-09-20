@@ -415,3 +415,435 @@ button {
     flex-direction: column;
   }
 }
+
+
+/* Public content system */
+.languageSwitch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.languageSwitch a.active {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.footerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.pageHero,
+.profileHero {
+  padding: 86px 0 76px;
+}
+
+.pageHero h1,
+.profileHero h1 {
+  max-width: 980px;
+  margin: 18px 0 24px;
+  font-size: clamp(3.6rem, 7vw, 6.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+}
+
+.pageHero p {
+  max-width: 780px;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.compactSection {
+  padding-top: 44px;
+  padding-bottom: 44px;
+}
+
+.editorialSection {
+  background: var(--surface);
+}
+
+.sectionLead {
+  max-width: 760px;
+  margin-bottom: 42px;
+}
+
+.sectionLead h2,
+.splitFeature h2,
+.trustBand h2 {
+  margin: 14px 0 16px;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.sectionLead p,
+.splitFeature p,
+.trustBand p,
+.informationCard p,
+.taxonomyCard p,
+.statusCard p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.informationGrid,
+.taxonomyGrid,
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 2px solid var(--accent);
+  border-left: 1px solid var(--line);
+}
+
+.taxonomyGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.statusGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.informationCard,
+.taxonomyCard,
+.statusCard {
+  padding: 28px;
+  min-height: 220px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.informationCard h3,
+.taxonomyCard h3,
+.statusCard h3 {
+  margin: 34px 0 12px;
+  font-size: 1.3rem;
+  letter-spacing: -0.025em;
+}
+
+.splitFeature {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 2px solid var(--accent);
+  border-left: 1px solid var(--line);
+}
+
+.splitFeature > article {
+  min-height: 290px;
+  padding: 34px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.trustBand {
+  background: #e9edf2;
+}
+
+.trustBandInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 48px;
+}
+
+.disclaimerBand {
+  background: #eef0ed;
+}
+
+.disclaimerBand p {
+  max-width: 920px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.registryToolbar {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  border-top: 2px solid var(--accent);
+  border-left: 1px solid var(--line);
+}
+
+.registryToolbar label {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.registryToolbar input,
+.registryToolbar select {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  min-height: 38px;
+  outline: none;
+  color: var(--ink);
+}
+
+.privacyNote {
+  max-width: 820px;
+  margin: 20px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.recordList {
+  margin-top: 30px;
+  border-top: 2px solid var(--accent);
+}
+
+.publicRecord {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 220px;
+  gap: 24px;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.recordNumber,
+.recordId {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.publicRecord h2 {
+  margin: 8px 0 6px;
+  font-size: 2rem;
+  letter-spacing: -0.04em;
+}
+
+.publicRecord p {
+  max-width: 700px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.recordRole {
+  font-weight: 700;
+}
+
+.recordStatus {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 18px;
+  text-align: right;
+  font-size: 0.8rem;
+}
+
+.recordStatus span {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+}
+
+.recordStatus a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  font-size: 0.76rem;
+}
+
+.buttonDisabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.boundaryList {
+  border-top: 2px solid var(--accent);
+}
+
+.boundaryItem {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0;
+}
+
+.boundaryItem span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.boundaryItem p {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 36px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.profileHeaderGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 48px;
+  align-items: end;
+}
+
+.profileRole {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.trustStamp {
+  padding: 18px;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--line);
+}
+
+.trustStamp span {
+  display: block;
+  margin-bottom: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.trustStamp strong {
+  font-size: 1rem;
+}
+
+.profileSection {
+  padding-top: 0;
+}
+
+.profileColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  border-top: 2px solid var(--accent);
+  border-left: 1px solid var(--line);
+}
+
+.profileMain,
+.profileAside {
+  padding: 38px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.profileSummary {
+  margin-top: 0;
+  font-size: 1.25rem;
+  line-height: 1.55;
+}
+
+.profileMain > p:not(.profileSummary),
+.profileMetaBlock p,
+.profileMetaBlock span,
+.timelineItem span {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.profileBlock,
+.profileMetaBlock {
+  margin-top: 44px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.timelineItem {
+  display: grid;
+  gap: 5px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.timelineItem em {
+  color: var(--accent);
+  font-style: normal;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 1000px) {
+  .taxonomyGrid,
+  .statusGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .registryToolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .profileColumns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .headerRight {
+    gap: 12px;
+  }
+
+  .languageSwitch {
+    display: none;
+  }
+
+  .footerInner,
+  .trustBandInner {
+    align-items: flex-start;
+    flex-direction: column;
+    display: flex;
+  }
+
+  .informationGrid,
+  .taxonomyGrid,
+  .statusGrid,
+  .splitFeature,
+  .registryToolbar,
+  .profileHeaderGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .publicRecord {
+    grid-template-columns: 1fr;
+  }
+
+  .recordStatus {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .pageHero h1,
+  .profileHero h1 {
+    font-size: 3.3rem;
+  }
+}
