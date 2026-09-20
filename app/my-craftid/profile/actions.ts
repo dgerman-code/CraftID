@@ -60,3 +60,76 @@ export async function updateProfile(formData: FormData) {
   revalidatePath("/my-craftid/profile");
   redirect(`/my-craftid/profile${q ? `${q}&` : "?"}message=saved`);
 }
+
+
+export async function uploadProfileImage(formData: FormData) {
+  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const q = lang === "uk" ? "?lang=uk" : "";
+  const file = formData.get("file");
+
+  if (!(file instanceof File) || file.size === 0) {
+    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(
+      lang === "uk" ? "Оберіть зображення" : "Choose an image",
+    )}`);
+  }
+
+  const allowed = new Set(["image/jpeg", "image/png", "image/webp"]);
+  if (!allowed.has(file.type) || file.size > 5 * 1024 * 1024) {
+    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(
+      lang === "uk"
+        ? "Дозволені JPEG, PNG або WebP до 5 МБ"
+        : "Use JPEG, PNG or WebP up to 5 MB",
+    )}`);
+  }
+
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getClaims();
+  const userId = auth?.claims?.sub;
+  if (!userId) redirect(`/login${q}`);
+
+  const { data: entity } = await supabase
+    .from("craftid_entities")
+    .select("id, entity_type")
+    .eq("owner_user_id", userId)
+    .limit(1)
+    .single();
+
+  if (!entity) redirect(`/onboarding${q}`);
+
+  const table = entity.entity_type === "professional" ? "professional_profiles" : "workshop_profiles";
+  const { data: current } = await supabase
+    .from(table)
+    .select("profile_photo_path")
+    .eq("entity_id", entity.id)
+    .single();
+
+  const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+  const path = `${userId}/${entity.id}/${crypto.randomUUID()}.${ext}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("profile-images")
+    .upload(path, await file.arrayBuffer(), { contentType: file.type, upsert: false });
+
+  if (uploadError) {
+    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(uploadError.message)}`);
+  }
+
+  const { error: updateError } = await supabase
+    .from(table)
+    .update({ profile_photo_path: path })
+    .eq("entity_id", entity.id);
+
+  if (updateError) {
+    await supabase.storage.from("profile-images").remove([path]);
+    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(updateError.message)}`);
+  }
+
+  if (current?.profile_photo_path) {
+    await supabase.storage.from("profile-images").remove([current.profile_photo_path]);
+  }
+
+  revalidatePath("/my-craftid");
+  revalidatePath("/my-craftid/profile");
+  revalidatePath("/my-craftid/preview");
+  redirect(`/my-craftid/profile${q ? `${q}&` : "?"}message=photo`);
+}
