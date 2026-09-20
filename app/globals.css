@@ -2562,3 +2562,143 @@ button {
     grid-column: auto;
   }
 }
+
+
+.adminPublicationColumns {
+  grid-template-columns: minmax(220px, 1.5fr) 0.7fr 1fr 0.6fr 0.7fr 0.75fr;
+}
+
+.adminUsersColumns {
+  grid-template-columns: minmax(280px, 1.5fr) 0.6fr 0.7fr minmax(220px, 1fr);
+}
+
+.adminTaxonomyColumns {
+  grid-template-columns: minmax(250px, 1.5fr) 0.75fr 1fr 0.65fr 0.45fr;
+}
+
+.adminAuditColumns {
+  grid-template-columns: 0.9fr 1fr 1.3fr 0.8fr minmax(240px, 1.5fr);
+}
+
+.adminInlineActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.adminInlineActions form {
+  margin: 0;
+}
+
+.textButton {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dangerText {
+  color: var(--danger);
+}
+
+.adminGrantForm {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) 180px auto;
+  gap: 14px;
+  align-items: end;
+  margin-top: 18px;
+}
+
+.adminGrantForm label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.adminGrantForm input,
+.adminGrantForm select {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.adminCheckbox {
+  display: flex !important;
+  grid-template-columns: none !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.adminCheckbox input {
+  width: 16px !important;
+  min-height: 16px !important;
+}
+
+.adminAuditFilters {
+  grid-template-columns: minmax(260px, 520px) auto;
+  justify-content: start;
+  margin-bottom: 20px;
+}
+
+.adminMetadata {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.adminControlGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  margin-top: 16px;
+}
+
+.adminControlGrid article {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.adminControlGrid strong {
+  font-size: 0.8rem;
+}
+
+.adminControlGrid span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 980px) {
+  .adminGrantForm,
+  .adminControlGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .adminPublicationColumns,
+  .adminUsersColumns,
+  .adminTaxonomyColumns,
+  .adminAuditColumns {
+    min-width: 860px;
+  }
+}
