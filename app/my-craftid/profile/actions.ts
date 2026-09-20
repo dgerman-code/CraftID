@@ -153,14 +153,14 @@ export async function updateContactPoints(formData: FormData) {
   if (!entity) redirect(`/onboarding${q}`);
 
   const rows = [
-    ["professional_email", String(formData.get("professionalEmail") ?? "").trim(), formData.get("professionalEmailPublic") === "on"],
-    ["phone", String(formData.get("phone") ?? "").trim(), formData.get("phonePublic") === "on"],
-    ["website", String(formData.get("website") ?? "").trim(), formData.get("websitePublic") === "on"],
-    ["linkedin", String(formData.get("linkedin") ?? "").trim(), formData.get("linkedinPublic") === "on"],
-    ["portfolio", String(formData.get("portfolio") ?? "").trim(), formData.get("portfolioPublic") === "on"],
+    ["professional_email", String(formData.get("professionalEmail") ?? "").trim(), false, formData.get("professionalEmailPartner") === "on"],
+    ["phone", String(formData.get("phone") ?? "").trim(), false, formData.get("phonePartner") === "on"],
+    ["website", String(formData.get("website") ?? "").trim(), formData.get("websitePublic") === "on", formData.get("websitePartner") === "on"],
+    ["linkedin", String(formData.get("linkedin") ?? "").trim(), formData.get("linkedinPublic") === "on", formData.get("linkedinPartner") === "on"],
+    ["portfolio", String(formData.get("portfolio") ?? "").trim(), formData.get("portfolioPublic") === "on", formData.get("portfolioPartner") === "on"],
   ] as const;
 
-  for (const [contactType, value, isPublic] of rows) {
+  for (const [contactType, value, isPublic, shareWithPartners] of rows) {
     if (!value) {
       await supabase
         .from("entity_contact_points")
@@ -176,9 +176,11 @@ export async function updateContactPoints(formData: FormData) {
         entity_id: entity.id,
         contact_type: contactType,
         value,
-        visibility: isPublic ? "public" : "private",
-        is_verified: false,
-        verified_at: null,
+        show_in_public_profile: isPublic,
+        public_consent_at: isPublic ? new Date().toISOString() : null,
+        share_with_institutional_partners: shareWithPartners,
+        partner_sharing_consent_at: shareWithPartners ? new Date().toISOString() : null,
+        is_primary: true,
       }, { onConflict: "entity_id,contact_type" });
 
     if (error) {
