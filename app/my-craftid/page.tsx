@@ -41,6 +41,8 @@ const copy = {
     publicText: "Preview how the record will appear once publication criteria are met.",
     requests: "Contact requests",
     requestsText: "Review controlled enquiries without publishing your private email or phone.",
+    referrals: "Institutional opportunities",
+    referralsText: "Review project, partnership, training and commission invitations routed through CraftID.",
     open: "Open",
     typeProfessional: "Professional",
     typeWorkshop: "Workshop",
@@ -77,6 +79,8 @@ const copy = {
     publicText: "Перегляньте, як запис виглядатиме після виконання критеріїв публікації.",
     requests: "Запити на контакт",
     requestsText: "Переглядайте контрольовані звернення без публікації вашого приватного email або телефону.",
+    referrals: "Інституційні можливості",
+    referralsText: "Переглядайте запрошення до проєктів, партнерств, навчання та замовлень, передані через CraftID.",
     open: "Відкрити",
     typeProfessional: "Професіонал",
     typeWorkshop: "Майстерня",
@@ -184,6 +188,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             [t.privacy, t.privacyText, "/my-craftid/privacy"],
             [t.public, t.publicText, "/my-craftid/preview"],
             [t.requests, t.requestsText, "/my-craftid/requests"],
+            [t.referrals, t.referralsText, "/my-craftid/referrals"],
           ].map(([title, text, href], index) => (
             <article className="dashboardModule" key={title}>
               <span className="choiceIndex">{String(index + 1).padStart(2, "0")}</span>
