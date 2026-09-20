@@ -1,0 +1,114 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { localeFrom } from "@/components/site-shell";
+import { uploadEvidence } from "./actions";
+
+export const dynamic = "force-dynamic";
+type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
+
+const copy = {
+  en: {
+    eyebrow: "Evidence",
+    title: "Support individual claims with private evidence.",
+    intro: "Evidence is stored privately by default. Uploading a document does not verify a claim automatically; it creates material that may later be linked to a claim and reviewed.",
+    titleLabel: "Evidence title",
+    type: "Evidence type",
+    issuer: "Issuer / source",
+    file: "File",
+    upload: "Upload evidence",
+    list: "Evidence library",
+    empty: "No evidence has been uploaded yet.",
+    back: "Back to My CraftID",
+    uploaded: "Evidence uploaded.",
+    note: "Accepted in the MVP: PDF, JPEG, PNG and WebP. Maximum file size: 10 MB.",
+    privacy: "Raw evidence files are not public. Public profiles show review status or source information rather than exposing sensitive documents.",
+  },
+  uk: {
+    eyebrow: "Докази",
+    title: "Підтверджуйте окремі твердження приватними доказами.",
+    intro: "Докази за замовчуванням зберігаються приватно. Завантаження документа не підтверджує твердження автоматично; воно створює матеріал, який згодом можна пов’язати з твердженням і передати на перевірку.",
+    titleLabel: "Назва доказу",
+    type: "Тип доказу",
+    issuer: "Видавець / джерело",
+    file: "Файл",
+    upload: "Завантажити доказ",
+    list: "Бібліотека доказів",
+    empty: "Доказів ще не завантажено.",
+    back: "Назад до Мій CraftID",
+    uploaded: "Доказ завантажено.",
+    note: "У MVP приймаються PDF, JPEG, PNG і WebP. Максимальний розмір файла — 10 МБ.",
+    privacy: "Первинні файли доказів не є публічними. Публічні профілі показують статус перевірки або інформацію про джерело, а не відкривають чутливі документи.",
+  },
+} as const;
+
+export default async function EvidencePage({ searchParams }: Props) {
+  const params = await searchParams;
+  const locale = localeFrom(params.lang);
+  const t = copy[locale];
+  const q = locale === "uk" ? "?lang=uk" : "";
+
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getClaims();
+  const userId = auth?.claims?.sub;
+  if (!userId) redirect(`/login${q}`);
+
+  const { data: entity } = await supabase.from("craftid_entities")
+    .select("id").eq("owner_user_id", userId).limit(1).single();
+
+  const { data: evidence } = await supabase.from("evidence_items")
+    .select("id, evidence_type, title, issuer, review_status, uploaded_at")
+    .eq("owner_entity_id", entity.id)
+    .order("uploaded_at", { ascending: false });
+
+  return (
+    <main className="workspacePage">
+      <div className="container">
+        <Link className="backLink" href={`/my-craftid${q}`}>← {t.back}</Link>
+        <div className="workspaceGrid">
+          <section>
+            <div className="eyebrow">{t.eyebrow}</div>
+            <h1>{t.title}</h1>
+            <p className="workspaceIntro">{t.intro}</p>
+            <p className="privacyNote">{t.privacy}</p>
+
+            {params.error ? <p className="formMessage error">{params.error}</p> : null}
+            {params.message ? <p className="formMessage">{t.uploaded}</p> : null}
+
+            <form className="workspaceForm compactForm" action={uploadEvidence}>
+              <input type="hidden" name="lang" value={locale} />
+              <label>{t.titleLabel}<input name="title" required /></label>
+              <label>{t.type}
+                <select name="evidenceType" required defaultValue="qualification_document">
+                  <option value="qualification_document">Qualification document</option>
+                  <option value="experience_document">Experience document</option>
+                  <option value="identity_document">Identity document</option>
+                  <option value="business_registration">Business registration</option>
+                  <option value="portfolio_evidence">Portfolio evidence</option>
+                  <option value="external_reference">External reference</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+              <label>{t.issuer}<input name="issuer" /></label>
+              <label>{t.file}<input name="file" type="file" accept=".pdf,image/jpeg,image/png,image/webp" required /></label>
+              <p className="fieldHelp">{t.note}</p>
+              <button className="button buttonPrimary" type="submit">{t.upload}</button>
+            </form>
+          </section>
+
+          <aside className="workspaceList">
+            <div className="eyebrow">{t.list}</div>
+            {!evidence?.length ? <p className="emptyState">{t.empty}</p> : evidence.map((item) => (
+              <article className="claimItem" key={item.id}>
+                <span className="recordId">{item.evidence_type.replaceAll("_", " ")}</span>
+                <h3>{item.title}</h3>
+                {item.issuer ? <p>{item.issuer}</p> : null}
+                <div className="claimMeta"><span>{item.review_status.replaceAll("_", " ")}</span></div>
+              </article>
+            ))}
+          </aside>
+        </div>
+      </div>
+    </main>
+  );
+}
