@@ -33,37 +33,20 @@ export async function createCraftId(formData: FormData) {
     redirect(`/my-craftid${q}`);
   }
 
-  const { data: entity, error: entityError } = await supabase
-    .from("craftid_entities")
-    .insert({ entity_type: entityType, owner_user_id: userId })
-    .select("id")
-    .single();
-
-  if (entityError || !entity) {
-    redirect(`/onboarding${q ? `${q}&` : "?"}error=${encodeURIComponent(entityError?.message ?? "Unable to create CraftID")}`);
-  }
-
-  const profileResult =
+  const displayName =
     entityType === "professional"
-      ? await supabase.from("professional_profiles").insert({
-          entity_id: entity.id,
-          display_name: lang === "uk" ? "Новий професіонал" : "New professional",
-        })
-      : await supabase.from("workshop_profiles").insert({
-          entity_id: entity.id,
-          display_name: lang === "uk" ? "Нова майстерня" : "New workshop",
-        });
+      ? lang === "uk" ? "Новий професіонал" : "New professional"
+      : lang === "uk" ? "Нова майстерня" : "New workshop";
 
-  if (profileResult.error) {
-    redirect(`/onboarding${q ? `${q}&` : "?"}error=${encodeURIComponent(profileResult.error.message)}`);
-  }
+  const { error } = await supabase.rpc("create_own_craftid", {
+    p_entity_type: entityType,
+    p_display_name: displayName,
+  });
 
-  const { error: privacyError } = await supabase
-    .from("privacy_settings")
-    .insert({ entity_id: entity.id });
-
-  if (privacyError) {
-    redirect(`/onboarding${q ? `${q}&` : "?"}error=${encodeURIComponent(privacyError.message)}`);
+  if (error) {
+    redirect(
+      `/onboarding${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`,
+    );
   }
 
   redirect(`/my-craftid${q}`);
