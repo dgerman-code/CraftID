@@ -21,11 +21,18 @@ const copy = {
     country: "Country only",
     region: "Region",
     cityLevel: "City",
-    exact: "Exact business location",
+    exact: "Exact address (optional)",
+    exactTitle: "Optional exact address",
+    exactText: "Add an exact workshop or business address only if you want CraftID to store it. It stays private unless you explicitly choose Exact address above.",
+    address1: "Address line 1",
+    address2: "Address line 2",
+    postalCode: "Postal code",
+    locality: "City / locality",
+    addressCountry: "Country code",
     save: "Save privacy settings",
     saved: "Privacy settings saved.",
     back: "Back to My CraftID",
-    warning: "For individual professionals, do not use an exact home address. Exact business location is intended for workshops or public business premises where appropriate.",
+    warning: "Exact address is optional. For individual professionals, avoid publishing a private home address. Use this only for a workshop, studio, shop or other location you intentionally want to disclose.",
     evidence: "Evidence files remain private regardless of these public profile settings.",
   },
   uk: {
@@ -41,11 +48,18 @@ const copy = {
     country: "Лише країна",
     region: "Регіон",
     cityLevel: "Місто",
-    exact: "Точне місце бізнесу",
+    exact: "Точна адреса (за бажанням)",
+    exactTitle: "Точна адреса за бажанням",
+    exactText: "Додайте точну адресу майстерні або бізнесу лише за бажанням. Вона залишається приватною, доки ви явно не оберете «Точна адреса» вище.",
+    address1: "Адреса, рядок 1",
+    address2: "Адреса, рядок 2",
+    postalCode: "Поштовий індекс",
+    locality: "Місто / населений пункт",
+    addressCountry: "Код країни",
     save: "Зберегти налаштування приватності",
     saved: "Налаштування приватності збережено.",
     back: "Назад до Мій CraftID",
-    warning: "Для індивідуальних професіоналів не використовуйте точну домашню адресу. Точне місце бізнесу призначене для майстерень або публічних бізнес-приміщень, де це доречно.",
+    warning: "Точна адреса не є обов’язковою. Для індивідуальних професіоналів не публікуйте приватну домашню адресу. Використовуйте цю опцію лише для майстерні, студії, магазину або іншого місця, яке ви свідомо хочете показати.",
     evidence: "Файли доказів залишаються приватними незалежно від цих налаштувань публічного профілю.",
   },
 } as const;
@@ -65,9 +79,15 @@ export default async function PrivacyPage({ searchParams }: Props) {
     .select("id").eq("owner_user_id", userId).limit(1).single();
   if (!entity) redirect(`/onboarding${q}`);
 
-  const { data: settings } = await supabase.from("privacy_settings")
-    .select("show_profile_photo, show_city, show_languages, show_portfolio, show_qualifications, location_precision")
-    .eq("entity_id", entity.id).single();
+  const [{ data: settings }, { data: address }] = await Promise.all([
+    supabase.from("privacy_settings")
+      .select("show_profile_photo, show_city, show_languages, show_portfolio, show_qualifications, location_precision")
+      .eq("entity_id", entity.id).single(),
+    supabase.from("entity_business_addresses")
+      .select("address_line1, address_line2, postal_code, locality, country_code")
+      .eq("entity_id", entity.id)
+      .maybeSingle(),
+  ]);
 
   return (
     <main className="workspacePage">
@@ -99,6 +119,19 @@ export default async function PrivacyPage({ searchParams }: Props) {
               <option value="exact_business_location">{t.exact}</option>
             </select>
           </label>
+
+          <section className="exactAddressSection">
+            <div className="eyebrow">{t.exactTitle}</div>
+            <p className="fieldHelp">{t.exactText}</p>
+            <div className="formGrid">
+              <label>{t.address1}<input name="addressLine1" defaultValue={address?.address_line1 ?? ""} /></label>
+              <label>{t.address2}<input name="addressLine2" defaultValue={address?.address_line2 ?? ""} /></label>
+              <label>{t.postalCode}<input name="postalCode" defaultValue={address?.postal_code ?? ""} /></label>
+              <label>{t.locality}<input name="locality" defaultValue={address?.locality ?? ""} /></label>
+              <label>{t.addressCountry}<input name="addressCountryCode" maxLength={2} defaultValue={address?.country_code ?? ""} placeholder="UA" /></label>
+            </div>
+          </section>
+
           <button className="button buttonPrimary" type="submit">{t.save}</button>
         </form>
       </div>
