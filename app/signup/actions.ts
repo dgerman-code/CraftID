@@ -8,17 +8,22 @@ export async function signup(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const confirmPassword = String(formData.get("confirmPassword") ?? "");
+  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const q = lang === "uk" ? "?lang=uk" : "";
+
+  const errorUrl = (message: string) =>
+    `/signup${q ? `${q}&` : "?"}error=${encodeURIComponent(message)}`;
 
   if (!email || !password) {
-    redirect("/signup?error=Email%20and%20password%20are%20required");
+    redirect(errorUrl("Email and password are required"));
   }
 
   if (password.length < 8) {
-    redirect("/signup?error=Password%20must%20be%20at%20least%208%20characters");
+    redirect(errorUrl("Password must be at least 8 characters"));
   }
 
   if (password !== confirmPassword) {
-    redirect("/signup?error=Passwords%20do%20not%20match");
+    redirect(errorUrl("Passwords do not match"));
   }
 
   const supabase = await createClient();
@@ -26,19 +31,22 @@ export async function signup(formData: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo: `${getSiteUrl()}auth/callback`,
+      emailRedirectTo: `${getSiteUrl()}auth/callback?next=${encodeURIComponent(`/onboarding${q}`)}`,
     },
   });
 
   if (error) {
-    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+    redirect(errorUrl(error.message));
   }
 
   if (data.session) {
-    redirect("/onboarding");
+    redirect(`/onboarding${q}`);
   }
 
-  redirect(
-    "/login?message=Check%20your%20email%20to%20confirm%20your%20CraftID%20account",
-  );
+  const message =
+    lang === "uk"
+      ? "Перевірте email, щоб підтвердити обліковий запис CraftID"
+      : "Check your email to confirm your CraftID account";
+
+  redirect(`/login${q ? `${q}&` : "?"}message=${encodeURIComponent(message)}`);
 }
