@@ -59,22 +59,49 @@ export async function saveSkillProfile(formData: FormData) {
   const today = new Date().toISOString().slice(0, 10);
 
   for (const [indicatorKey, value] of entries) {
-    await supabase
-      .from("observations")
-      .update({ valid_to: today })
-      .eq("claim_id", claim.id)
-      .eq("indicator_key", indicatorKey)
-      .eq("provenance_status", "self_declared")
-      .is("valid_to", null);
+    const [{ data: version }, { data: current }] = await Promise.all([
+      supabase
+        .from("indicator_definition_versions")
+        .select("id")
+        .eq("indicator_key", indicatorKey)
+        .eq("is_current", true)
+        .single(),
+      supabase
+        .from("current_observations")
+        .select("id, value")
+        .eq("claim_id", claim.id)
+        .eq("indicator_key", indicatorKey)
+        .maybeSingle(),
+    ]);
+
+    if (!version) {
+      redirect(`/my-craftid/claims/${claimId}${q ? `${q}&` : "?"}error=${encodeURIComponent("Current indicator definition was not found")}`);
+    }
+
+    if (current && String(current.value) === value) continue;
+
+    if (current) {
+      const { error: closeError } = await supabase
+        .from("observations")
+        .update({ valid_to: today })
+        .eq("id", current.id);
+
+      if (closeError) {
+        redirect(`/my-craftid/claims/${claimId}${q ? `${q}&` : "?"}error=${encodeURIComponent(closeError.message)}`);
+      }
+    }
 
     const { error } = await supabase.from("observations").insert({
       entity_id: claim.entity_id,
       claim_id: claim.id,
       taxonomy_term_id: claim.taxonomy_term_id,
       indicator_key: indicatorKey,
+      indicator_version_id: version.id,
       value,
       provenance_status: "self_declared",
-      visibility: "aggregate_only",
+      supersedes_observation_id: current?.id ?? null,
+      show_in_public_profile: false,
+      include_in_aggregates: false,
       valid_from: today,
     });
 
