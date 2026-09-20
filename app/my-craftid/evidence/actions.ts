@@ -27,6 +27,7 @@ export async function uploadEvidence(formData: FormData) {
 
   const { data: entity } = await supabase.from("craftid_entities")
     .select("id").eq("owner_user_id", userId).limit(1).single();
+  if (!entity) redirect(`/onboarding${q}`);
 
   const path = `${userId}/${entity.id}/${crypto.randomUUID()}-${safeName(file.name)}`;
   const bytes = await file.arrayBuffer();
