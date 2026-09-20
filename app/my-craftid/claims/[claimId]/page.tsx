@@ -162,16 +162,16 @@ export default async function SkillProfilePage({ params, searchParams }: Props) 
 
   const [{ data: definitions }, { data: observations }] = await Promise.all([
     supabase
-      .from("indicator_definitions")
-      .select("key, label_en, label_uk, options, sort_order, is_core")
-      .eq("scope", "skill")
-      .eq("is_active", true)
-      .order("sort_order"),
+      .from("indicator_definition_versions")
+      .select("id, indicator_key, label_en, label_uk, options, version, is_current, indicator_definitions!inner(scope, sort_order, is_active)")
+      .eq("is_current", true)
+      .eq("indicator_definitions.scope", "skill")
+      .eq("indicator_definitions.is_active", true)
+      .order("indicator_definitions(sort_order)"),
     supabase
-      .from("observations")
+      .from("current_observations")
       .select("indicator_key, value, provenance_status, observed_at")
-      .eq("claim_id", claim.id)
-      .is("valid_to", null),
+      .eq("claim_id", claim.id),
   ]);
 
   const current = new Map((observations ?? []).map((o) => [o.indicator_key, String(o.value)]));
@@ -196,9 +196,9 @@ export default async function SkillProfilePage({ params, searchParams }: Props) 
           {definitions?.map((definition) => {
             const options = Array.isArray(definition.options) ? definition.options as string[] : [];
             return (
-              <label className="indicatorQuestion" key={definition.key}>
-                <span>{t.questions[definition.key as keyof typeof t.questions] ?? (locale === "uk" ? definition.label_uk : definition.label_en)}</span>
-                <select name={definition.key} defaultValue={current.get(definition.key) ?? ""}>
+              <label className="indicatorQuestion" key={definition.id}>
+                <span>{t.questions[definition.indicator_key as keyof typeof t.questions] ?? (locale === "uk" ? definition.label_uk : definition.label_en)}</span>
+                <select name={definition.indicator_key} defaultValue={current.get(definition.indicator_key) ?? ""}>
                   <option value="">{locale === "uk" ? "Оберіть відповідь" : "Choose an answer"}</option>
                   {options.map((option) => (
                     <option value={option} key={option}>
