@@ -129,12 +129,12 @@ export default async function ClaimsPage({ searchParams }: Props) {
               <label>{t.type}
                 <select name="claimType" required defaultValue="skill">
                   <option value="skill">{t.customSkill}</option>
-                  <option value="experience">Experience</option>
-                  <option value="qualification">Qualification</option>
-                  <option value="workshop_affiliation">Workshop affiliation</option>
-                  <option value="external_recognition">External recognition</option>
-                  <option value="origin">Origin</option>
-                  <option value="craft_tradition">Craft tradition</option>
+                  <option value="experience">{locale === "uk" ? "Досвід" : "Experience"}</option>
+                  <option value="qualification">{locale === "uk" ? "Кваліфікація" : "Qualification"}</option>
+                  <option value="workshop_affiliation">{locale === "uk" ? "Зв’язок із майстернею" : "Workshop affiliation"}</option>
+                  <option value="external_recognition">{locale === "uk" ? "Зовнішнє визнання" : "External recognition"}</option>
+                  <option value="origin">{locale === "uk" ? "Походження" : "Origin"}</option>
+                  <option value="craft_tradition">{locale === "uk" ? "Реміснича традиція" : "Craft tradition"}</option>
                 </select>
               </label>
               <label>{t.titleLabel}<input name="title" required /></label>
