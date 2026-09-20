@@ -11,12 +11,17 @@ export default function HomePage() {
           <Link href="/" className="brand">
             {t.brand.name}
           </Link>
-          <nav className="nav" aria-label="Primary navigation">
-            <Link href="/discover">{t.nav.discover}</Link>
-            <Link href="/skills">{t.nav.skills}</Link>
-            <Link href="/methodology">{t.nav.methodology}</Link>
-            <Link href="/about">{t.nav.about}</Link>
-          </nav>
+          <div className="headerRight">
+            <nav className="nav" aria-label="Primary navigation">
+              <Link href="/discover">{t.nav.discover}</Link>
+              <Link href="/skills">{t.nav.skills}</Link>
+              <Link href="/methodology">{t.nav.methodology}</Link>
+              <Link href="/about">{t.nav.about}</Link>
+            </nav>
+            <Link className="textLink" href="/login">
+              Sign in
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -27,11 +32,11 @@ export default function HomePage() {
             <h1>{t.home.title}</h1>
             <p>{t.home.description}</p>
             <div className="actions">
-              <Link className="button buttonPrimary" href="/discover">
-                {t.home.primaryCta}
-              </Link>
-              <Link className="button" href="/create">
+              <Link className="button buttonPrimary" href="/signup">
                 {t.home.secondaryCta}
+              </Link>
+              <Link className="button" href="/discover">
+                {t.home.primaryCta}
               </Link>
             </div>
           </div>
