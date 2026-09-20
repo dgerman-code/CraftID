@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
-import { updateProfile, uploadProfileImage } from "./actions";
+import { updateProfile, uploadProfileImage, updateContactPoints } from "./actions";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
@@ -27,6 +27,17 @@ const copy = {
     photoText: "Add a portrait or workshop image. JPEG, PNG or WebP, up to 5 MB.",
     uploadPhoto: "Upload image",
     noPhoto: "No image uploaded yet.",
+    contactsEyebrow: "Professional contact & external presence",
+    contactsTitle: "Add the professional channels you want to associate with CraftID.",
+    contactsIntro: "All fields are optional. Each contact can stay private or be shown publicly.",
+    professionalEmail: "Professional email",
+    phone: "Phone",
+    website: "Website",
+    linkedin: "LinkedIn",
+    portfolio: "Portfolio URL",
+    publicToggle: "Show publicly",
+    saveContacts: "Save contact settings",
+    contactsSaved: "Contact settings saved.",
   },
   uk: {
     eyebrow: "Інформація профілю",
@@ -46,6 +57,17 @@ const copy = {
     photoText: "Додайте портрет або зображення майстерні. JPEG, PNG або WebP до 5 МБ.",
     uploadPhoto: "Завантажити зображення",
     noPhoto: "Зображення ще не завантажено.",
+    contactsEyebrow: "Професійні контакти та зовнішні профілі",
+    contactsTitle: "Додайте професійні канали, які хочете пов’язати з CraftID.",
+    contactsIntro: "Усі поля необов’язкові. Кожен контакт можна залишити приватним або показувати публічно.",
+    professionalEmail: "Професійний email",
+    phone: "Телефон",
+    website: "Вебсайт",
+    linkedin: "LinkedIn",
+    portfolio: "Посилання на портфоліо",
+    publicToggle: "Показувати публічно",
+    saveContacts: "Зберегти контакти",
+    contactsSaved: "Контактні налаштування збережено.",
   },
 } as const;
 
@@ -64,9 +86,15 @@ export default async function ProfilePage({ searchParams }: Props) {
     .select("id, entity_type").eq("owner_user_id", userId).limit(1).single();
   if (!entity) redirect(`/onboarding${q}`);
 
-  const result = entity.entity_type === "professional"
-    ? await supabase.from("professional_profiles").select("display_name, professional_title, country_code, region, city, about, profile_photo_path").eq("entity_id", entity.id).single()
-    : await supabase.from("workshop_profiles").select("display_name, craft_sector, country_code, region, city, about, profile_photo_path").eq("entity_id", entity.id).single();
+  const [result, contactsResult] = await Promise.all([
+    entity.entity_type === "professional"
+      ? supabase.from("professional_profiles").select("display_name, professional_title, country_code, region, city, about, profile_photo_path").eq("entity_id", entity.id).single()
+      : supabase.from("workshop_profiles").select("display_name, craft_sector, country_code, region, city, about, profile_photo_path").eq("entity_id", entity.id).single(),
+    supabase
+      .from("entity_contact_points")
+      .select("contact_type, value, visibility")
+      .eq("entity_id", entity.id),
+  ]);
 
   const record = result.data as {
     display_name: string;
@@ -78,6 +106,10 @@ export default async function ProfilePage({ searchParams }: Props) {
     about?: string | null;
     profile_photo_path?: string | null;
   };
+
+  const contacts = new Map(
+    (contactsResult.data ?? []).map((item) => [item.contact_type, item]),
+  );
 
   let photoUrl: string | null = null;
   if (record.profile_photo_path) {
@@ -97,7 +129,11 @@ export default async function ProfilePage({ searchParams }: Props) {
         <p className="privacyNote">{t.privacy}</p>
 
         {params.error ? <p className="formMessage error">{params.error}</p> : null}
-        {params.message ? <p className="formMessage">{params.message === "photo" ? t.uploadPhoto : t.saved}</p> : null}
+        {params.message ? (
+          <p className="formMessage">
+            {params.message === "photo" ? t.uploadPhoto : params.message === "contacts" ? t.contactsSaved : t.saved}
+          </p>
+        ) : null}
 
         <section className="profileImageSection">
           <div>
@@ -128,6 +164,48 @@ export default async function ProfilePage({ searchParams }: Props) {
           <label>{t.about}<textarea name="about" rows={7} defaultValue={record.about ?? ""} /></label>
           <button className="button buttonPrimary" type="submit">{t.save}</button>
         </form>
+
+        <section className="contactSection">
+          <div className="eyebrow">{t.contactsEyebrow}</div>
+          <h2>{t.contactsTitle}</h2>
+          <p className="fieldHelp">{t.contactsIntro}</p>
+
+          <form className="workspaceForm contactForm" action={updateContactPoints}>
+            <input type="hidden" name="lang" value={locale} />
+
+            {[
+              ["professional_email", "professionalEmail", t.professionalEmail, "email"],
+              ["phone", "phone", t.phone, "tel"],
+              ["website", "website", t.website, "url"],
+              ["linkedin", "linkedin", t.linkedin, "url"],
+              ["portfolio", "portfolio", t.portfolio, "url"],
+            ].map(([type, name, label, inputType]) => {
+              const item = contacts.get(type);
+              return (
+                <div className="contactRow" key={type}>
+                  <label className="contactValue">
+                    {label}
+                    <input
+                      name={name}
+                      type={inputType}
+                      defaultValue={item?.value ?? ""}
+                    />
+                  </label>
+                  <label className="contactVisibility">
+                    <input
+                      type="checkbox"
+                      name={`${name}Public`}
+                      defaultChecked={item?.visibility === "public"}
+                    />
+                    {t.publicToggle}
+                  </label>
+                </div>
+              );
+            })}
+
+            <button className="button buttonPrimary" type="submit">{t.saveContacts}</button>
+          </form>
+        </section>
       </div>
     </main>
   );
