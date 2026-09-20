@@ -56,11 +56,13 @@ export async function GET(request: NextRequest) {
     <text x="230" y="92" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#59615c">${esc(canonical)}</text>
   </svg>`;
 
+  const download = request.nextUrl.searchParams.get("download") === "1";
   return new NextResponse(svg, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
       "Cache-Control": "public, max-age=3600, s-maxage=3600",
-      "Content-Disposition": `inline; filename="craftid-${parsed.formatted}.svg"`,
+      "Content-Disposition": `${download ? "attachment" : "inline"}; filename="craftid-badge-${parsed.formatted}.svg"`,
+      "X-Robots-Tag": "noindex",
     },
   });
 }
