@@ -9,6 +9,7 @@
   --muted: #59615c;
   --line: #cfd5d0;
   --accent: #1e3a5f;
+  --danger: #8a3834;
   --max-width: 1280px;
 }
 
@@ -35,6 +36,10 @@ textarea {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
 .container {
   width: min(var(--max-width), calc(100% - 48px));
   margin: 0 auto;
@@ -53,6 +58,12 @@ textarea {
   gap: 24px;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
 .brand {
   font-size: 1.45rem;
   font-weight: 800;
@@ -66,6 +77,13 @@ textarea {
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.textLink {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .hero {
@@ -104,9 +122,12 @@ textarea {
 .button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 42px;
   padding: 0 16px;
   border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--ink);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-size: 0.76rem;
@@ -151,6 +172,216 @@ textarea {
   font-size: 0.85rem;
 }
 
+.authPage,
+.onboardingPage,
+.recordPage {
+  min-height: 100vh;
+}
+
+.authPage {
+  display: grid;
+  place-items: center;
+  padding: 40px 20px;
+}
+
+.authPanel {
+  width: min(520px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 40px;
+}
+
+.authBrand {
+  display: inline-block;
+  margin-bottom: 54px;
+}
+
+.authPanel h1,
+.onboardingTitle,
+.recordTopbar h1 {
+  margin: 14px 0 18px;
+  letter-spacing: -0.045em;
+}
+
+.authPanel h1 {
+  font-size: clamp(2.6rem, 6vw, 4.3rem);
+  line-height: 0.95;
+}
+
+.authIntro,
+.onboardingIntro {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.authForm {
+  display: grid;
+  gap: 18px;
+  margin-top: 30px;
+}
+
+.authForm label {
+  display: grid;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.authForm input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+}
+
+.authForm input:focus {
+  border-color: var(--accent);
+}
+
+.authFoot {
+  margin: 28px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.authFoot a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.formMessage {
+  margin: 22px 0 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--accent);
+  background: #eef1ef;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.formMessage.error {
+  border-left-color: var(--danger);
+  background: #f6eeee;
+  color: var(--danger);
+}
+
+.onboardingPage,
+.recordPage {
+  padding: 72px 0;
+}
+
+.onboardingTitle {
+  max-width: 840px;
+  font-size: clamp(3rem, 7vw, 6.2rem);
+  line-height: 0.95;
+}
+
+.onboardingIntro {
+  max-width: 680px;
+  font-size: 1.05rem;
+}
+
+.choiceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  margin-top: 48px;
+  border-top: 2px solid var(--accent);
+  border-left: 1px solid var(--line);
+}
+
+.choiceCard {
+  min-height: 330px;
+  padding: 30px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.choiceIndex,
+.recordType {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.choiceCard h2 {
+  margin: 44px 0 16px;
+  font-size: 2rem;
+  letter-spacing: -0.035em;
+}
+
+.choiceCard p {
+  min-height: 88px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.recordTopbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 34px;
+  border-bottom: 2px solid var(--accent);
+}
+
+.recordTopbar h1 {
+  font-size: clamp(3.2rem, 7vw, 6.4rem);
+}
+
+.recordGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 0;
+  border-left: 1px solid var(--line);
+}
+
+.recordPrimary,
+.recordAside {
+  padding: 36px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.recordPrimary h2 {
+  margin: 48px 0 12px;
+  font-size: clamp(2.2rem, 4vw, 4rem);
+  letter-spacing: -0.045em;
+}
+
+.recordPrimary > p {
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.recordMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin-top: 44px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.recordAside ol {
+  margin: 28px 0 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 @media (max-width: 800px) {
   .nav {
     display: none;
@@ -164,12 +395,23 @@ textarea {
     font-size: 3.6rem;
   }
 
-  .logic {
+  .logic,
+  .choiceGrid,
+  .recordGrid {
     grid-template-columns: 1fr;
   }
 
   .logicItem {
     border-right: 0;
     border-bottom: 1px solid var(--line);
+  }
+
+  .authPanel {
+    padding: 28px 22px;
+  }
+
+  .recordTopbar {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
