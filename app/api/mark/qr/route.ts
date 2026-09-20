@@ -33,10 +33,12 @@ export async function GET(request: NextRequest) {
   }
 
   const body = await response.arrayBuffer();
+  const download = request.nextUrl.searchParams.get("download") === "1";
   return new NextResponse(body, {
     headers: {
       "Content-Type": response.headers.get("content-type") ?? "image/png",
       "Cache-Control": "public, max-age=86400, s-maxage=86400",
+      "Content-Disposition": `${download ? "attachment" : "inline"}; filename="craftid-qr-${craftId}.png"`,
       "X-Robots-Tag": "noindex",
     },
   });
