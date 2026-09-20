@@ -20,7 +20,7 @@ const copy = {
     workshop: "Workshop",
     workshopText: "For a studio, workshop or craft-based micro-enterprise with capabilities, team, production context, portfolio and evidence.",
     workshopCta: "Create workshop CraftID",
-    note: "A CraftID number is a persistent identifier. It does not encode country, profession, year, nationality or legal form.",
+    note: "Your CraftID is a permanent identifier and does not change. Country of professional practice, craft field and profile type are stored separately and may be updated. Numbers 00000001–00000100 are reserved for explicit administrative assignment.",
   },
   uk: {
     eyebrow: "Налаштування CraftID",
@@ -32,7 +32,7 @@ const copy = {
     workshop: "Майстерня",
     workshopText: "Для студії, майстерні або ремісничого мікропідприємства з можливостями, командою, виробничим контекстом, портфоліо та доказами.",
     workshopCta: "Створити CraftID майстерні",
-    note: "Номер CraftID є постійним ідентифікатором. Він не кодує країну, професію, рік, національність або юридичну форму.",
+    note: "Ваш CraftID є постійним ідентифікатором і не змінюється. Країна професійної практики, ремісничий напрям і тип профілю зберігаються окремо та можуть оновлюватися. Номери 00000001–00000100 зарезервовані для окремого призначення адміністратором.",
   },
 } as const;
 
