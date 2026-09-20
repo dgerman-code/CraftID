@@ -23,6 +23,12 @@ const copy = {
     noSkills: "No skills added yet.",
     noAbout: "No description added yet.",
     notSet: "Not set",
+    contact: "Contact & links",
+    professional_email: "Email",
+    phone: "Phone",
+    website: "Website",
+    linkedin: "LinkedIn",
+    portfolio: "Portfolio",
   },
   uk: {
     eyebrow: "Попередній перегляд",
@@ -35,6 +41,12 @@ const copy = {
     noSkills: "Навички ще не додані.",
     noAbout: "Опис ще не додано.",
     notSet: "Не вказано",
+    contact: "Контакти та посилання",
+    professional_email: "Email",
+    phone: "Телефон",
+    website: "Вебсайт",
+    linkedin: "LinkedIn",
+    portfolio: "Портфоліо",
   },
 } as const;
 
@@ -81,7 +93,7 @@ export default async function PreviewPage({ searchParams }: Props) {
     profile_photo_path?: string | null;
   };
 
-  const [{ data: claims }, { data: privacy }, { data: address }] = await Promise.all([
+  const [{ data: claims }, { data: privacy }, { data: address }, { data: contacts }] = await Promise.all([
     supabase
       .from("claims")
       .select("id, claim_type, title, status, visibility")
@@ -98,6 +110,11 @@ export default async function PreviewPage({ searchParams }: Props) {
       .select("address_line1, address_line2, postal_code, locality, country_code")
       .eq("entity_id", entity.id)
       .maybeSingle(),
+    supabase
+      .from("entity_contact_points")
+      .select("contact_type, value, visibility")
+      .eq("entity_id", entity.id)
+      .eq("visibility", "public"),
   ]);
 
   let photoUrl: string | null = null;
@@ -158,6 +175,28 @@ export default async function PreviewPage({ searchParams }: Props) {
                   {skills.map((skill) => <span className="tag" key={skill.id}>{skill.title}</span>)}
                 </div>
               ) : <p>{t.noSkills}</p>}
+
+              {contacts?.length ? (
+                <>
+                  <div className="eyebrow previewSkillsLabel">{t.contact}</div>
+                  <div className="contactPreviewList">
+                    {contacts.map((item) => {
+                      const label = t[item.contact_type as keyof typeof t] ?? item.contact_type;
+                      const isUrl = ["website", "linkedin", "portfolio"].includes(item.contact_type);
+                      const href = item.contact_type === "professional_email"
+                        ? `mailto:${item.value}`
+                        : item.contact_type === "phone"
+                          ? `tel:${item.value}`
+                          : item.value;
+                      return isUrl || item.contact_type === "professional_email" || item.contact_type === "phone" ? (
+                        <a key={item.contact_type} href={href} target={isUrl ? "_blank" : undefined} rel={isUrl ? "noreferrer" : undefined}>
+                          {label} →
+                        </a>
+                      ) : null;
+                    })}
+                  </div>
+                </>
+              ) : null}
             </aside>
           </div>
         </section>
