@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getSiteUrl } from "@/lib/site-url";
 
 export async function login(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
@@ -35,4 +36,37 @@ export async function logout(formData?: FormData) {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect(`/${q}`);
+}
+
+
+export async function resendConfirmation(formData: FormData) {
+  const email = String(formData.get("email") ?? "").trim();
+  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const q = lang === "uk" ? "?lang=uk" : "";
+
+  if (!email) {
+    redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(
+      lang === "uk" ? "Вкажіть email для повторного надсилання" : "Enter your email to resend confirmation",
+    )}`);
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+    options: {
+      emailRedirectTo: `${getSiteUrl()}auth/callback?next=${encodeURIComponent(`/onboarding${q}`)}`,
+    },
+  });
+
+  if (error) {
+    redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
+  }
+
+  const message =
+    lang === "uk"
+      ? "Нове письмо підтвердження надіслано"
+      : "A new confirmation email has been sent";
+
+  redirect(`/login${q ? `${q}&` : "?"}message=${encodeURIComponent(message)}`);
 }
