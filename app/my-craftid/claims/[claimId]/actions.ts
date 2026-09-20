@@ -100,8 +100,6 @@ export async function saveSkillProfile(formData: FormData) {
       value,
       provenance_status: "self_declared",
       supersedes_observation_id: current?.id ?? null,
-      show_in_public_profile: false,
-      include_in_aggregates: false,
       valid_from: today,
     });
 
