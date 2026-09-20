@@ -43,6 +43,8 @@ const copy = {
     requestsText: "Review controlled enquiries without publishing your private email or phone.",
     referrals: "Institutional opportunities",
     referralsText: "Review project, partnership, training and commission invitations routed through CraftID.",
+    mark: "CraftID Mark",
+    markText: "Use your CraftID on websites, product cards, workshop signage and printed material.",
     open: "Open",
     typeProfessional: "Professional",
     typeWorkshop: "Workshop",
@@ -81,6 +83,8 @@ const copy = {
     requestsText: "Переглядайте контрольовані звернення без публікації вашого приватного email або телефону.",
     referrals: "Інституційні можливості",
     referralsText: "Переглядайте запрошення до проєктів, партнерств, навчання та замовлень, передані через CraftID.",
+    mark: "CraftID Mark",
+    markText: "Використовуйте CraftID на вебсайті, картках виробів, вивісці майстерні та друкованих матеріалах.",
     open: "Відкрити",
     typeProfessional: "Професіонал",
     typeWorkshop: "Майстерня",
@@ -189,6 +193,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             [t.public, t.publicText, "/my-craftid/preview"],
             [t.requests, t.requestsText, "/my-craftid/requests"],
             [t.referrals, t.referralsText, "/my-craftid/referrals"],
+            [t.mark, t.markText, "/my-craftid/mark"],
           ].map(([title, text, href], index) => (
             <article className="dashboardModule" key={title}>
               <span className="choiceIndex">{String(index + 1).padStart(2, "0")}</span>
