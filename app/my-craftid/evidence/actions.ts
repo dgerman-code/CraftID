@@ -14,6 +14,7 @@ export async function uploadEvidence(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const type = String(formData.get("evidenceType") ?? "").trim();
   const issuer = String(formData.get("issuer") ?? "").trim();
+  const claimId = String(formData.get("claimId") ?? "").trim();
   const file = formData.get("file");
 
   if (!title || !type || !(file instanceof File) || file.size === 0) {
@@ -40,7 +41,7 @@ export async function uploadEvidence(formData: FormData) {
     redirect(`/my-craftid/evidence${q ? `${q}&` : "?"}error=${encodeURIComponent(uploadError.message)}`);
   }
 
-  const { error: insertError } = await supabase.from("evidence_items").insert({
+  const { data: evidenceItem, error: insertError } = await supabase.from("evidence_items").insert({
     owner_entity_id: entity.id,
     evidence_type: type,
     title,
@@ -48,13 +49,36 @@ export async function uploadEvidence(formData: FormData) {
     storage_path: path,
     visibility: "private",
     review_status: "submitted",
-  });
+  }).select("id").single();
 
-  if (insertError) {
+  if (insertError || !evidenceItem) {
     await supabase.storage.from("evidence").remove([path]);
     redirect(`/my-craftid/evidence${q ? `${q}&` : "?"}error=${encodeURIComponent(insertError.message)}`);
   }
 
+  if (claimId) {
+    const { data: claim } = await supabase
+      .from("claims")
+      .select("id, entity_id, status")
+      .eq("id", claimId)
+      .eq("entity_id", entity.id)
+      .maybeSingle();
+
+    if (claim) {
+      const { error: linkError } = await supabase.from("claim_evidence_links").insert({
+        claim_id: claim.id,
+        evidence_id: evidenceItem.id,
+      });
+
+      if (!linkError && claim.status === "self_declared") {
+        await supabase.from("claims")
+          .update({ status: "evidence_submitted" })
+          .eq("id", claim.id);
+      }
+    }
+  }
+
   revalidatePath("/my-craftid/evidence");
+  revalidatePath("/my-craftid/claims");
   redirect(`/my-craftid/evidence${q ? `${q}&` : "?"}message=uploaded`);
 }
