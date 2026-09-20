@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
-import { updateProfile } from "./actions";
+import { updateProfile, uploadProfileImage } from "./actions";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
@@ -22,6 +22,10 @@ const copy = {
     back: "Back to My CraftID",
     saved: "Profile saved.",
     privacy: "Use city or region rather than a private home address. Public visibility is controlled separately in Privacy.",
+    photo: "Profile image",
+    photoText: "Add a portrait or workshop image. JPEG, PNG or WebP, up to 5 MB.",
+    uploadPhoto: "Upload image",
+    noPhoto: "No image uploaded yet.",
   },
   uk: {
     eyebrow: "Інформація профілю",
@@ -37,6 +41,10 @@ const copy = {
     back: "Назад до Мій CraftID",
     saved: "Профіль збережено.",
     privacy: "Вказуйте місто або регіон, а не приватну домашню адресу. Публічна видимість налаштовується окремо у розділі Приватність.",
+    photo: "Зображення профілю",
+    photoText: "Додайте портрет або зображення майстерні. JPEG, PNG або WebP до 5 МБ.",
+    uploadPhoto: "Завантажити зображення",
+    noPhoto: "Зображення ще не завантажено.",
   },
 } as const;
 
@@ -56,8 +64,8 @@ export default async function ProfilePage({ searchParams }: Props) {
   if (!entity) redirect(`/onboarding${q}`);
 
   const result = entity.entity_type === "professional"
-    ? await supabase.from("professional_profiles").select("display_name, professional_title, country_code, region, city, about").eq("entity_id", entity.id).single()
-    : await supabase.from("workshop_profiles").select("display_name, craft_sector, country_code, region, city, about").eq("entity_id", entity.id).single();
+    ? await supabase.from("professional_profiles").select("display_name, professional_title, country_code, region, city, about, profile_photo_path").eq("entity_id", entity.id).single()
+    : await supabase.from("workshop_profiles").select("display_name, craft_sector, country_code, region, city, about, profile_photo_path").eq("entity_id", entity.id).single();
 
   const record = result.data as {
     display_name: string;
@@ -67,7 +75,16 @@ export default async function ProfilePage({ searchParams }: Props) {
     region?: string | null;
     city?: string | null;
     about?: string | null;
+    profile_photo_path?: string | null;
   };
+
+  let photoUrl: string | null = null;
+  if (record.profile_photo_path) {
+    const { data: signed } = await supabase.storage
+      .from("profile-images")
+      .createSignedUrl(record.profile_photo_path, 60 * 60);
+    photoUrl = signed?.signedUrl ?? null;
+  }
 
   return (
     <main className="workspacePage">
@@ -79,7 +96,24 @@ export default async function ProfilePage({ searchParams }: Props) {
         <p className="privacyNote">{t.privacy}</p>
 
         {params.error ? <p className="formMessage error">{params.error}</p> : null}
-        {params.message ? <p className="formMessage">{t.saved}</p> : null}
+        {params.message ? <p className="formMessage">{params.message === "photo" ? t.uploadPhoto : t.saved}</p> : null}
+
+        <section className="profileImageSection">
+          <div>
+            <div className="eyebrow">{t.photo}</div>
+            <p className="fieldHelp">{t.photoText}</p>
+          </div>
+          <div className="profileImageRow">
+            <div className="profileImagePreview">
+              {photoUrl ? <img src={photoUrl} alt="" /> : <span>{t.noPhoto}</span>}
+            </div>
+            <form className="profileImageForm" action={uploadProfileImage}>
+              <input type="hidden" name="lang" value={locale} />
+              <input name="file" type="file" accept="image/jpeg,image/png,image/webp" required />
+              <button className="button" type="submit">{t.uploadPhoto}</button>
+            </form>
+          </div>
+        </section>
 
         <form className="workspaceForm" action={updateProfile}>
           <input type="hidden" name="lang" value={locale} />
