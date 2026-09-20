@@ -15,6 +15,8 @@ const copy = {
     titleLabel: "Evidence title",
     type: "Evidence type",
     issuer: "Issuer / source",
+    claim: "Link to claim",
+    noClaim: "Do not link yet",
     file: "File",
     upload: "Upload evidence",
     list: "Evidence library",
@@ -31,6 +33,8 @@ const copy = {
     titleLabel: "Назва доказу",
     type: "Тип доказу",
     issuer: "Видавець / джерело",
+    claim: "Пов’язати з твердженням",
+    noClaim: "Поки не пов’язувати",
     file: "Файл",
     upload: "Завантажити доказ",
     list: "Бібліотека доказів",
@@ -57,10 +61,16 @@ export default async function EvidencePage({ searchParams }: Props) {
     .select("id").eq("owner_user_id", userId).limit(1).single();
   if (!entity) redirect(`/onboarding${q}`);
 
-  const { data: evidence } = await supabase.from("evidence_items")
-    .select("id, evidence_type, title, issuer, review_status, uploaded_at")
-    .eq("owner_entity_id", entity.id)
-    .order("uploaded_at", { ascending: false });
+  const [{ data: evidence }, { data: claims }] = await Promise.all([
+    supabase.from("evidence_items")
+      .select("id, evidence_type, title, issuer, review_status, uploaded_at")
+      .eq("owner_entity_id", entity.id)
+      .order("uploaded_at", { ascending: false }),
+    supabase.from("claims")
+      .select("id, title, claim_type, status")
+      .eq("entity_id", entity.id)
+      .order("created_at", { ascending: false }),
+  ]);
 
   return (
     <main className="workspacePage">
@@ -91,6 +101,16 @@ export default async function EvidencePage({ searchParams }: Props) {
                 </select>
               </label>
               <label>{t.issuer}<input name="issuer" /></label>
+              <label>{t.claim}
+                <select name="claimId" defaultValue="">
+                  <option value="">{t.noClaim}</option>
+                  {claims?.map((claim) => (
+                    <option value={claim.id} key={claim.id}>
+                      {claim.title} · {claim.claim_type.replaceAll("_", " ")}
+                    </option>
+                  ))}
+                </select>
+              </label>
               <label>{t.file}<input name="file" type="file" accept=".pdf,image/jpeg,image/png,image/webp" required /></label>
               <p className="fieldHelp">{t.note}</p>
               <button className="button buttonPrimary" type="submit">{t.upload}</button>
