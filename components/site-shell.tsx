@@ -79,7 +79,11 @@ export function SiteFooter({ locale }: { locale: PublicLocale }) {
       <div className="container footerInner">
         <span>CraftID</span>
         <span>{t.initiative}</span>
-        <span>Professional identity · skills · evidence</span>
+        <nav className="footerNav" aria-label="Footer navigation">
+          <Link href={withLocale("/privacy", locale)}>Privacy</Link>
+          <Link href={withLocale("/governance", locale)}>Governance</Link>
+          <span>Professional identity · skills · evidence</span>
+        </nav>
       </div>
     </footer>
   );
