@@ -53,6 +53,7 @@ export default async function ProfilePage({ searchParams }: Props) {
 
   const { data: entity } = await supabase.from("craftid_entities")
     .select("id, entity_type").eq("owner_user_id", userId).limit(1).single();
+  if (!entity) redirect(`/onboarding${q}`);
 
   const result = entity.entity_type === "professional"
     ? await supabase.from("professional_profiles").select("display_name, professional_title, country_code, region, city, about").eq("entity_id", entity.id).single()
