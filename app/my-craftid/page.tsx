@@ -42,6 +42,10 @@ const copy = {
     open: "Open",
     typeProfessional: "Professional",
     typeWorkshop: "Workshop",
+    draft: "Draft",
+    published: "Published",
+    suspended: "Suspended",
+    archived: "Archived",
   },
   uk: {
     eyebrow: "Мій CraftID",
@@ -72,6 +76,10 @@ const copy = {
     open: "Відкрити",
     typeProfessional: "Професіонал",
     typeWorkshop: "Майстерня",
+    draft: "Чернетка",
+    published: "Опубліковано",
+    suspended: "Призупинено",
+    archived: "Архів",
   },
 } as const;
 
@@ -146,7 +154,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
           </div>
           <div className="dashboardStatus">
             <span>{t.status}</span>
-            <strong>{entity.public_status}</strong>
+            <strong>{t[entity.public_status as keyof typeof t] ?? entity.public_status}</strong>
           </div>
         </div>
 
