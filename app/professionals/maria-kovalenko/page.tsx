@@ -19,6 +19,14 @@ const copy = {
     interests: "Cooperation interests",
     trust: "Trust & evidence",
     status: "Evidence reviewed",
+    trustStatus: "Trust status",
+    skillItems: ["Wheel throwing", "Porcelain", "Ceramic glazing", "Traditional Ukrainian ceramics"],
+    experienceItems: [["Independent Ceramicist", "2018–present · Lviv, Ukraine"], ["Ceramics Studio Assistant", "2014–2018 · Lviv, Ukraine"]],
+    qualificationItem: ["Diploma in Ceramic Arts", "Lviv National Academy of Arts · 2014"],
+    affiliationValue: ["Atelier Kolo", "Workshop affiliation confirmed"],
+    languageValue: "Ukrainian · English · Polish",
+    interestsValue: "Exhibitions · Cross-border craft projects · Apprenticeship · Training · Design collaboration",
+    trustItems: ["Qualification — reviewed", "Professional experience — evidence submitted", "Workshop affiliation — external source confirmed"],
     back: "Back to registry",
     disclaimer: "Demo record. All profile content is fictional and shown only to demonstrate the CraftID information model.",
   },
@@ -37,6 +45,14 @@ const copy = {
     interests: "Інтереси співпраці",
     trust: "Довіра та докази",
     status: "Докази переглянуто",
+    trustStatus: "Статус довіри",
+    skillItems: ["Гончарний круг", "Порцеляна", "Глазурування кераміки", "Традиційна українська кераміка"],
+    experienceItems: [["Незалежна керамістка", "2018–дотепер · Львів, Україна"], ["Асистентка керамічної студії", "2014–2018 · Львів, Україна"]],
+    qualificationItem: ["Диплом з керамічного мистецтва", "Львівська національна академія мистецтв · 2014"],
+    affiliationValue: ["Atelier Kolo", "Професійний зв’язок із майстернею підтверджено"],
+    languageValue: "Українська · Англійська · Польська",
+    interestsValue: "Виставки · Транскордонні ремісничі проєкти · Учнівство · Навчання · Дизайн-співпраця",
+    trustItems: ["Кваліфікація — документ переглянуто", "Професійний досвід — докази подано", "Зв’язок із майстернею — зовнішнє джерело підтверджено"],
     back: "Назад до реєстру",
     disclaimer: "Демонстраційний запис. Увесь зміст профілю є вигаданим і використовується лише для демонстрації інформаційної моделі CraftID.",
   },
@@ -61,7 +77,7 @@ export default async function ProfessionalProfile({ searchParams }: Props) {
                 <p className="profileRole">{t.role} · {t.location}</p>
               </div>
               <div className="trustStamp">
-                <span>Trust status</span>
+                <span>{t.trustStatus}</span>
                 <strong>{t.status}</strong>
               </div>
             </div>
@@ -77,41 +93,38 @@ export default async function ProfessionalProfile({ searchParams }: Props) {
               <div className="profileBlock">
                 <div className="eyebrow">{t.skills}</div>
                 <div className="tagRow">
-                  {["Wheel throwing", "Porcelain", "Ceramic glazing", "Traditional Ukrainian ceramics"].map((x) => <span className="tag" key={x}>{x}</span>)}
+                  {t.skillItems.map((x) => <span className="tag" key={x}>{x}</span>)}
                 </div>
               </div>
 
               <div className="profileBlock">
                 <div className="eyebrow">{t.experience}</div>
-                <div className="timelineItem"><strong>Independent Ceramicist</strong><span>2018–present · Lviv, Ukraine</span></div>
-                <div className="timelineItem"><strong>Ceramics Studio Assistant</strong><span>2014–2018 · Lviv, Ukraine</span></div>
+                {t.experienceItems.map(([title, meta]) => <div className="timelineItem" key={title}><strong>{title}</strong><span>{meta}</span></div>)}
               </div>
 
               <div className="profileBlock">
                 <div className="eyebrow">{t.qualifications}</div>
-                <div className="timelineItem"><strong>Diploma in Ceramic Arts</strong><span>Lviv National Academy of Arts · 2014</span><em>{t.status}</em></div>
+                <div className="timelineItem"><strong>{t.qualificationItem[0]}</strong><span>{t.qualificationItem[1]}</span><em>{t.status}</em></div>
               </div>
             </div>
 
             <aside className="profileAside">
               <div className="profileMetaBlock">
                 <div className="eyebrow">{t.affiliation}</div>
-                <strong>Atelier Kolo</strong>
-                <span>Workshop affiliation confirmed</span>
+                <strong>{t.affiliationValue[0]}</strong>
+                <span>{t.affiliationValue[1]}</span>
               </div>
               <div className="profileMetaBlock">
                 <div className="eyebrow">{t.languages}</div>
-                <p>Ukrainian · English · Polish</p>
+                <p>{t.languageValue}</p>
               </div>
               <div className="profileMetaBlock">
                 <div className="eyebrow">{t.interests}</div>
-                <p>Exhibitions · Cross-border craft projects · Apprenticeship · Training · Design collaboration</p>
+                <p>{t.interestsValue}</p>
               </div>
               <div className="profileMetaBlock">
                 <div className="eyebrow">{t.trust}</div>
-                <p>Qualification — reviewed</p>
-                <p>Professional experience — evidence submitted</p>
-                <p>Workshop affiliation — external source confirmed</p>
+                {t.trustItems.map((item) => <p key={item}>{item}</p>)}
               </div>
             </aside>
           </div>
