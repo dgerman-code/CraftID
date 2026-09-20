@@ -31,6 +31,10 @@ const copy = {
     openProfile: "Open public profile",
     copyHint: "Copy this HTML into your website.",
     physical: "Suggested physical wording",
+    downloadQr: "Download QR (PNG)",
+    downloadBadge: "Download badge (SVG)",
+    downloadLabel: "Download maker label (SVG)",
+    domainWarning: "Important: this is still running on a temporary technical domain. Do not print permanent QR labels at scale until the final CraftID production domain is connected.",
   },
   uk: {
     eyebrow: "CraftID Mark",
@@ -50,6 +54,10 @@ const copy = {
     openProfile: "Відкрити публічний профіль",
     copyHint: "Скопіюйте цей HTML у свій вебсайт.",
     physical: "Рекомендований текст на виробі",
+    downloadQr: "Завантажити QR (PNG)",
+    downloadBadge: "Завантажити badge (SVG)",
+    downloadLabel: "Завантажити макет (SVG)",
+    domainWarning: "Важливо: зараз CraftID ще працює на тимчасовому технічному домені. Не друкуйте постійні QR-етикетки масово, доки не буде підключено фінальний production-домен CraftID.",
   },
 } as const;
 
@@ -81,6 +89,10 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
   const profileUrl = new URL(`id/${craftId}`, siteUrl).toString();
   const badgeUrl = new URL(`api/mark/badge?craftId=${encodeURIComponent(craftId)}`, siteUrl).toString();
   const qrUrl = `/api/mark/qr?craftId=${encodeURIComponent(craftId)}`;
+  const qrDownloadUrl = `${qrUrl}&download=1`;
+  const badgeDownloadUrl = `/api/mark/badge?craftId=${encodeURIComponent(craftId)}&download=1`;
+  const labelDownloadUrl = `/api/mark/label?craftId=${encodeURIComponent(craftId)}`;
+  const isTemporaryDomain = siteUrl.includes("vercel.app") || siteUrl.includes("localhost");
   const embed = `<a href="${profileUrl}" rel="me noopener" target="_blank"><img src="${badgeUrl}" alt="CraftID #${craftId}" width="560" height="120"></a>`;
   const displayName = profile.data?.display_name ?? "CraftID";
 
@@ -95,6 +107,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
         <p className={entity.public_status === "published" ? "formMessage" : "privacyNote"}>
           {entity.public_status === "published" ? t.publicReady : t.publicWarning}
         </p>
+        {isTemporaryDomain ? <p className="privacyNote markDomainWarning">{t.domainWarning}</p> : null}
 
         <section className="markGrid">
           <article className="markPanel">
@@ -104,6 +117,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
               <img src={qrUrl} alt={`QR for CraftID #${craftId}`} width="220" height="220" />
             </div>
             <div className="recordId">CraftID #{craftId}</div>
+            <a className="button markAssetButton" href={qrDownloadUrl}>{t.downloadQr}</a>
           </article>
 
           <article className="markPanel">
@@ -114,7 +128,10 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
               <strong>{t.canonical}</strong>
               <code>{profileUrl}</code>
             </div>
-            {entity.public_status === "published" ? <Link className="button" href={`/id/${craftId}${q}`}>{t.openProfile}</Link> : null}
+            <div className="markButtonRow">
+              <a className="button" href={badgeDownloadUrl}>{t.downloadBadge}</a>
+              {entity.public_status === "published" ? <Link className="button" href={`/id/${craftId}${q}`}>{t.openProfile}</Link> : null}
+            </div>
           </article>
         </section>
 
@@ -139,6 +156,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
             <div className="eyebrow">{t.physical}</div>
             <code>Professional identity: CraftID #{craftId}</code>
           </div>
+          <a className="button markAssetButton" href={labelDownloadUrl}>{t.downloadLabel}</a>
         </section>
       </div>
     </main>
