@@ -20,6 +20,8 @@ export async function updateProfile(formData: FormData) {
     .limit(1)
     .single();
 
+  if (!entity) redirect(`/onboarding${q}`);
+
   const displayName = String(formData.get("displayName") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim();
   const countryCode = String(formData.get("countryCode") ?? "").trim().toUpperCase();
