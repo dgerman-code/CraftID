@@ -1,0 +1,84 @@
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { getSiteUrl } from "@/lib/site-url";
+
+export const dynamic = "force-dynamic";
+
+function parseCraftId(value: string | null) {
+  if (!value) return null;
+  const match = value.match(/^(?:#)?0*(\d+)-(\d{2})$/);
+  if (!match) return null;
+  const number = Number(match[1]);
+  if (!Number.isSafeInteger(number) || number < 1) return null;
+  return { number, check: match[2], formatted: `${String(number).padStart(8, "0")}-${match[2]}` };
+}
+
+function esc(value: string) {
+  return value.replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  }[char] ?? char));
+}
+
+export async function GET(request: NextRequest) {
+  const parsed = parseCraftId(request.nextUrl.searchParams.get("craftId"));
+  if (!parsed) return new NextResponse("Invalid CraftID", { status: 400 });
+
+  const supabase = await createClient();
+  const { data: entity } = await supabase
+    .from("craftid_entities")
+    .select("id, entity_type")
+    .eq("craftid_number", parsed.number)
+    .eq("craftid_check_digits", parsed.check)
+    .maybeSingle();
+
+  if (!entity) return new NextResponse("CraftID not found", { status: 404 });
+
+  const profile = entity.entity_type === "professional"
+    ? await supabase.from("professional_profiles").select("display_name").eq("entity_id", entity.id).single()
+    : await supabase.from("workshop_profiles").select("display_name").eq("entity_id", entity.id).single();
+
+  const displayName = esc(profile.data?.display_name ?? "CraftID");
+  const canonical = new URL(`id/${parsed.formatted}`, getSiteUrl()).toString();
+
+  const qrEndpoint = new URL("https://quickchart.io/qr");
+  qrEndpoint.searchParams.set("text", canonical);
+  qrEndpoint.searchParams.set("size", "360");
+  qrEndpoint.searchParams.set("margin", "1");
+  qrEndpoint.searchParams.set("ecLevel", "M");
+
+  const qrResponse = await fetch(qrEndpoint, {
+    headers: { "User-Agent": "CraftID label generator" },
+    next: { revalidate: 86400 },
+  });
+
+  if (!qrResponse.ok) return new NextResponse("Label generation unavailable", { status: 502 });
+
+  const qrBytes = Buffer.from(await qrResponse.arrayBuffer());
+  const qrData = `data:image/png;base64,${qrBytes.toString("base64")}`;
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360" role="img" aria-label="CraftID maker label ${parsed.formatted}">
+    <rect width="900" height="360" fill="#ffffff"/>
+    <rect x="2" y="2" width="896" height="356" fill="none" stroke="#cfd5d0" stroke-width="2"/>
+    <rect x="2" y="2" width="896" height="8" fill="#1e3a5f"/>
+    <text x="42" y="82" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#111412">CraftID</text>
+    <text x="42" y="132" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="24" fill="#1e3a5f">#${parsed.formatted}</text>
+    <text x="42" y="196" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#111412">${displayName}</text>
+    <text x="42" y="242" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#59615c">Professional identity record</text>
+    <text x="42" y="292" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#59615c">${esc(canonical)}</text>
+    <image href="${qrData}" x="610" y="52" width="238" height="238"/>
+    <text x="610" y="318" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#59615c">Scan to view the CraftID record</text>
+  </svg>`;
+
+  return new NextResponse(svg, {
+    headers: {
+      "Content-Type": "image/svg+xml; charset=utf-8",
+      "Content-Disposition": `attachment; filename="craftid-maker-label-${parsed.formatted}.svg"`,
+      "Cache-Control": "private, max-age=0, must-revalidate",
+      "X-Robots-Tag": "noindex",
+    },
+  });
+}
