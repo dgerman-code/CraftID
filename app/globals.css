@@ -1678,3 +1678,11 @@ button {
     display: grid;
   }
 }
+
+
+.shareableContactsPanel {
+  margin-top: 28px;
+  padding: 18px 0 22px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
