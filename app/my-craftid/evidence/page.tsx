@@ -55,6 +55,7 @@ export default async function EvidencePage({ searchParams }: Props) {
 
   const { data: entity } = await supabase.from("craftid_entities")
     .select("id").eq("owner_user_id", userId).limit(1).single();
+  if (!entity) redirect(`/onboarding${q}`);
 
   const { data: evidence } = await supabase.from("evidence_items")
     .select("id, evidence_type, title, issuer, review_status, uploaded_at")
