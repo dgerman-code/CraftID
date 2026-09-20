@@ -1606,3 +1606,18 @@ button {
     align-items: start;
   }
 }
+
+
+.contactVisibilityGroup {
+  display: grid;
+  gap: 8px;
+  align-self: stretch;
+}
+
+.contactVisibilityGroup .contactVisibility {
+  margin: 0;
+}
+
+.contactRow:has(.contactVisibilityGroup) {
+  align-items: center;
+}
