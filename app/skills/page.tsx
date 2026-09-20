@@ -7,8 +7,8 @@ const copy = {
     eyebrow: "Skills & taxonomy",
     title: "A structured language for craft skills.",
     intro: "CraftID uses a growing taxonomy to describe craft disciplines, professions and practical skills in a consistent way while preserving room for local craft traditions and specialist practice.",
-    taxonomyTitle: "MVP taxonomy",
-    taxonomyText: "The initial taxonomy is intentionally compact. It gives the platform a stable structure without pretending to solve every craft classification problem at launch.",
+    taxonomyTitle: "Core craft domains",
+    taxonomyText: "The taxonomy starts with broad craft domains and expands through professions, practical skills and specialist terms. These domains are navigation anchors, not the final classification system.",
     categories: [
       ["Ceramics", "Ceramic production, forming, glazing, firing and related studio practice."],
       ["Wood", "Woodcraft, joinery, furniture making, carving and workshop production."],
@@ -30,8 +30,8 @@ const copy = {
     eyebrow: "Навички та таксономія",
     title: "Структурована мова ремісничих навичок.",
     intro: "CraftID використовує таксономію, що розвивається, для послідовного опису ремісничих напрямів, професій і практичних навичок, зберігаючи місце для локальних традицій та спеціалізованої практики.",
-    taxonomyTitle: "Таксономія MVP",
-    taxonomyText: "Початкова таксономія навмисно компактна. Вона дає платформі стабільну структуру без спроби вже на старті вирішити всі питання класифікації ремесел.",
+    taxonomyTitle: "Основні ремісничі напрями",
+    taxonomyText: "Таксономія починається з широких ремісничих напрямів і розширюється через професії, практичні навички та спеціалізовані терміни. Ці напрями є навігаційною основою, а не завершеною системою класифікації.",
     categories: [
       ["Кераміка", "Виробництво кераміки, формування, глазурування, випал та пов’язана студійна практика."],
       ["Дерево", "Деревообробка, столярство, меблеве виробництво, різьблення та майстернева практика."],
@@ -70,7 +70,7 @@ export default async function SkillsPage({ searchParams }: Props) {
         <section className="section editorialSection">
           <div className="container">
             <div className="sectionLead">
-              <div className="eyebrow">Structure</div>
+              <div className="eyebrow">{locale === "uk" ? "Структура" : "Structure"}</div>
               <h2>{t.taxonomyTitle}</h2>
               <p>{t.taxonomyText}</p>
             </div>
@@ -89,12 +89,12 @@ export default async function SkillsPage({ searchParams }: Props) {
         <section className="section editorialSection">
           <div className="container splitFeature">
             <article>
-              <div className="eyebrow">Interoperability</div>
+              <div className="eyebrow">{locale === "uk" ? "Сумісність" : "Interoperability"}</div>
               <h2>{t.alignmentTitle}</h2>
               <p>{t.alignmentText}</p>
             </article>
             <article>
-              <div className="eyebrow">Context</div>
+              <div className="eyebrow">{locale === "uk" ? "Контекст" : "Context"}</div>
               <h2>{t.traditionTitle}</h2>
               <p>{t.traditionText}</p>
             </article>
