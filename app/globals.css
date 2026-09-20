@@ -1522,3 +1522,18 @@ button {
     gap: 10px;
   }
 }
+
+
+.exactAddressSection {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.exactAddressSection .formGrid {
+  margin-top: 14px;
+}
+
+.exactAddressSection .fieldHelp {
+  max-width: 760px;
+}
