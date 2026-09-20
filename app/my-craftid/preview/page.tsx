@@ -111,10 +111,9 @@ export default async function PreviewPage({ searchParams }: Props) {
       .eq("entity_id", entity.id)
       .maybeSingle(),
     supabase
-      .from("entity_contact_points")
-      .select("contact_type, value, visibility")
-      .eq("entity_id", entity.id)
-      .eq("visibility", "public"),
+      .from("public_contact_links")
+      .select("contact_type, value, verification_level, verified_at, last_checked_at")
+      .eq("entity_id", entity.id),
   ]);
 
   let photoUrl: string | null = null;
@@ -189,7 +188,7 @@ export default async function PreviewPage({ searchParams }: Props) {
                           ? `tel:${item.value}`
                           : item.value;
                       return isUrl || item.contact_type === "professional_email" || item.contact_type === "phone" ? (
-                        <a key={item.contact_type} href={href} target={isUrl ? "_blank" : undefined} rel={isUrl ? "noreferrer" : undefined}>
+                        <a key={item.contact_type} href={href} target={isUrl ? "_blank" : undefined} rel={isUrl ? "nofollow noopener noreferrer" : undefined}>
                           {label} →
                         </a>
                       ) : null;
