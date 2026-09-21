@@ -25,7 +25,7 @@ export default async function PublicationQueuePage() {
   const [{ data: professionals }, { data: workshops }, { data: claims }, { data: evidence }, { data: privacy }] = await Promise.all([
     ids.length ? supabase.from("professional_profiles").select("entity_id, display_name, professional_title, country_code, region, city").in("entity_id", ids) : Promise.resolve({ data: [] }),
     ids.length ? supabase.from("workshop_profiles").select("entity_id, display_name, craft_sector, country_code, region, city").in("entity_id", ids) : Promise.resolve({ data: [] }),
-    ids.length ? supabase.from("claims").select("entity_id").in("entity_id", ids) : Promise.resolve({ data: [] }),
+    ids.length ? supabase.from("claims").select("entity_id, claim_type").in("entity_id", ids) : Promise.resolve({ data: [] }),
     ids.length ? supabase.from("evidence_items").select("owner_entity_id").in("owner_entity_id", ids) : Promise.resolve({ data: [] }),
     ids.length ? supabase.from("privacy_settings").select("entity_id").in("entity_id", ids) : Promise.resolve({ data: [] }),
   ]);
@@ -46,8 +46,9 @@ export default async function PublicationQueuePage() {
     });
   }
 
-  const claimCount = new Map<string, number>();
-  for (const row of claims ?? []) claimCount.set(row.entity_id, (claimCount.get(row.entity_id) ?? 0) + 1);
+  const skillSet = new Set(
+    (claims ?? []).filter((row) => row.claim_type === "skill").map((row) => row.entity_id),
+  );
   const evidenceCount = new Map<string, number>();
   for (const row of evidence ?? []) evidenceCount.set(row.owner_entity_id, (evidenceCount.get(row.owner_entity_id) ?? 0) + 1);
   const privacySet = new Set((privacy ?? []).map((row) => row.entity_id));
@@ -56,10 +57,10 @@ export default async function PublicationQueuePage() {
     const profile = profiles.get(entity.id);
     const checks = [
       Boolean(profile?.name),
+      Boolean(profile?.subtitle),
       Boolean(profile?.location),
-      (claimCount.get(entity.id) ?? 0) > 0,
+      skillSet.has(entity.id),
       privacySet.has(entity.id),
-      (evidenceCount.get(entity.id) ?? 0) > 0,
     ];
     const ready = checks.filter(Boolean).length;
     return { entity, profile, ready, total: checks.length };
@@ -70,7 +71,7 @@ export default async function PublicationQueuePage() {
       <div className="adminPageHeader">
         <div className="eyebrow">Publication governance</div>
         <h1>Publication Queue</h1>
-        <p>Operational readiness view for draft and suspended CraftID records. Publication remains an administrative status decision and does not imply certification.</p>
+        <p>Minimum integrity gate for draft and suspended CraftID records. A record needs a name, professional title or craft sector, public location, at least one skill claim and privacy settings. Evidence review is not required for publication, and publication does not imply certification.</p>
       </div>
 
       <section className="adminTable">
