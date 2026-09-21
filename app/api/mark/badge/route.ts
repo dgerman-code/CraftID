@@ -28,21 +28,36 @@ export async function GET(request: NextRequest) {
   if (!parsed) return new NextResponse("Invalid CraftID", { status: 400 });
 
   const supabase = await createClient();
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id, entity_type, public_status")
-    .eq("craftid_number", parsed.number)
-    .eq("craftid_check_digits", parsed.check)
-    .maybeSingle();
 
-  if (!entity) return new NextResponse("CraftID not found", { status: 404 });
+  // Published profiles resolve through the public projection, so the badge
+  // carries the real name for anonymous visitors too.
+  const { data: publicProfile } = await supabase.rpc("public_craftid_profile", {
+    p_craftid_number: parsed.number,
+    p_check_digits: parsed.check,
+  });
+  const published = publicProfile as { display_name: string } | null;
 
-  const profile = entity.entity_type === "professional"
-    ? await supabase.from("professional_profiles").select("display_name").eq("entity_id", entity.id).single()
-    : await supabase.from("workshop_profiles").select("display_name").eq("entity_id", entity.id).single();
+  // Owners and staff still get a badge for a CraftID that is not published yet.
+  let ownName: string | null = null;
+  if (!published) {
+    const { data: entity } = await supabase
+      .from("craftid_entities")
+      .select("id, entity_type")
+      .eq("craftid_number", parsed.number)
+      .eq("craftid_check_digits", parsed.check)
+      .maybeSingle();
 
-  const displayName = esc(profile.data?.display_name ?? "CraftID");
-  const statusLabel = entity.public_status === "published" ? "PROFILE AVAILABLE" : "PROFILE NOT PUBLIC";
+    if (!entity) return new NextResponse("CraftID not found", { status: 404 });
+
+    const profile = entity.entity_type === "professional"
+      ? await supabase.from("professional_profiles").select("display_name").eq("entity_id", entity.id).single()
+      : await supabase.from("workshop_profiles").select("display_name").eq("entity_id", entity.id).single();
+
+    ownName = profile.data?.display_name ?? null;
+  }
+
+  const displayName = esc(published?.display_name ?? ownName ?? "CraftID");
+  const statusLabel = published ? "PROFILE AVAILABLE" : "PROFILE NOT PUBLIC";
   const canonical = new URL(`id/${parsed.formatted}`, getSiteUrl()).toString();
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="560" height="120" viewBox="0 0 560 120" role="img" aria-label="CraftID ${parsed.formatted}">

@@ -61,67 +61,33 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
   if (!parsed) notFound();
 
   const supabase = await createClient();
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id, craftid_number, craftid_check_digits, entity_type, public_status")
-    .eq("craftid_number", parsed.number)
-    .eq("craftid_check_digits", parsed.check)
-    .eq("public_status", "published")
-    .maybeSingle();
+  const { data: profile } = await supabase.rpc("public_craftid_profile", {
+    p_craftid_number: parsed.number,
+    p_check_digits: parsed.check,
+  });
 
-  if (!entity) notFound();
-
-  const profileResult = entity.entity_type === "professional"
-    ? await supabase
-        .from("professional_profiles")
-        .select("display_name, professional_title, country_code, region, city, about")
-        .eq("entity_id", entity.id)
-        .single()
-    : await supabase
-        .from("workshop_profiles")
-        .select("display_name, craft_sector, country_code, region, city, about")
-        .eq("entity_id", entity.id)
-        .single();
-
-  const record = profileResult.data as {
+  const record = profile as {
+    craftid_number: number;
+    craftid_check_digits: string;
+    entity_type: "professional" | "workshop";
     display_name: string;
-    professional_title?: string | null;
-    craft_sector?: string | null;
-    country_code?: string | null;
-    region?: string | null;
-    city?: string | null;
-    about?: string | null;
+    professional_title: string | null;
+    craft_sector: string | null;
+    location: string | null;
+    about: string | null;
+    has_public_photo: boolean;
+    languages: string[];
+    claims: { id: string; claim_type: string; title: string; status: string }[];
+    links: { contact_type: string; value: string; verification_level: string }[];
   } | null;
 
   if (!record) notFound();
 
-  const [{ data: claims }, { data: privacy }, { data: links }] = await Promise.all([
-    supabase
-      .from("claims")
-      .select("id, claim_type, title, status")
-      .eq("entity_id", entity.id)
-      .eq("visibility", "public")
-      .eq("claim_type", "skill")
-      .order("created_at", { ascending: true }),
-    supabase
-      .from("privacy_settings")
-      .select("location_precision")
-      .eq("entity_id", entity.id)
-      .maybeSingle(),
-    supabase
-      .from("public_contact_links")
-      .select("contact_type, value, verification_level")
-      .eq("entity_id", entity.id),
-  ]);
+  const claims = record.claims.filter((claim) => claim.claim_type === "skill");
+  const links = record.links;
+  const location = record.location ?? "";
 
-  let location = record.country_code ?? "";
-  if (privacy?.location_precision === "region") {
-    location = [record.region, record.country_code].filter(Boolean).join(", ");
-  } else if (privacy?.location_precision === "city" || privacy?.location_precision === "exact_business_location") {
-    location = [record.city, record.region, record.country_code].filter(Boolean).join(", ");
-  }
-
-  const formatted = formatCraftId(entity.craftid_number, entity.craftid_check_digits);
+  const formatted = formatCraftId(record.craftid_number, record.craftid_check_digits);
   const routeId = formatted.replace("#", "");
 
   return (

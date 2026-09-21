@@ -28,20 +28,32 @@ export async function GET(request: NextRequest) {
   if (!parsed) return new NextResponse("Invalid CraftID", { status: 400 });
 
   const supabase = await createClient();
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id, entity_type")
-    .eq("craftid_number", parsed.number)
-    .eq("craftid_check_digits", parsed.check)
-    .maybeSingle();
 
-  if (!entity) return new NextResponse("CraftID not found", { status: 404 });
+  const { data: publicProfile } = await supabase.rpc("public_craftid_profile", {
+    p_craftid_number: parsed.number,
+    p_check_digits: parsed.check,
+  });
+  const published = publicProfile as { display_name: string } | null;
 
-  const profile = entity.entity_type === "professional"
-    ? await supabase.from("professional_profiles").select("display_name").eq("entity_id", entity.id).single()
-    : await supabase.from("workshop_profiles").select("display_name").eq("entity_id", entity.id).single();
+  let ownName: string | null = null;
+  if (!published) {
+    const { data: entity } = await supabase
+      .from("craftid_entities")
+      .select("id, entity_type")
+      .eq("craftid_number", parsed.number)
+      .eq("craftid_check_digits", parsed.check)
+      .maybeSingle();
 
-  const displayName = esc(profile.data?.display_name ?? "CraftID");
+    if (!entity) return new NextResponse("CraftID not found", { status: 404 });
+
+    const profile = entity.entity_type === "professional"
+      ? await supabase.from("professional_profiles").select("display_name").eq("entity_id", entity.id).single()
+      : await supabase.from("workshop_profiles").select("display_name").eq("entity_id", entity.id).single();
+
+    ownName = profile.data?.display_name ?? null;
+  }
+
+  const displayName = esc(published?.display_name ?? ownName ?? "CraftID");
   const canonical = new URL(`id/${parsed.formatted}`, getSiteUrl()).toString();
 
   const qrEndpoint = new URL("https://quickchart.io/qr");
