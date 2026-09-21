@@ -19,6 +19,9 @@ const labels = {
     signIn: "Sign in",
     initiative: "An EUFUA digital instrument",
     language: "Language",
+    privacy: "Privacy",
+    governance: "Governance",
+    footerLine: "Professional identity · skills · evidence · trust",
   },
   uk: {
     discover: "Пошук",
@@ -28,6 +31,9 @@ const labels = {
     signIn: "Увійти",
     initiative: "Цифровий інструмент EUFUA",
     language: "Мова",
+    privacy: "Приватність",
+    governance: "Управління",
+    footerLine: "Професійна ідентичність · навички · докази · довіра",
   },
 } as const;
 
@@ -62,7 +68,7 @@ export function SiteHeader({
               UA
             </Link>
           </div>
-          <Link className="textLink" href="/login">
+          <Link className="textLink" href={withLocale("/login", locale)}>
             {t.signIn}
           </Link>
         </div>
@@ -80,9 +86,9 @@ export function SiteFooter({ locale }: { locale: PublicLocale }) {
         <span>CraftID</span>
         <span>{t.initiative}</span>
         <nav className="footerNav" aria-label="Footer navigation">
-          <Link href={withLocale("/privacy", locale)}>Privacy</Link>
-          <Link href={withLocale("/governance", locale)}>Governance</Link>
-          <span>Professional identity · skills · evidence</span>
+          <Link href={withLocale("/privacy", locale)}>{t.privacy}</Link>
+          <Link href={withLocale("/governance", locale)}>{t.governance}</Link>
+          <span>{t.footerLine}</span>
         </nav>
       </div>
     </footer>
