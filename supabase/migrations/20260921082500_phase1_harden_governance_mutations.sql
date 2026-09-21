@@ -62,6 +62,13 @@ for each row execute function private.protect_entity_identity_fields();
 -- changes cannot both observe the same pre-change admin count and each leave
 -- the platform with zero admins. The key is used only by the two functions
 -- below.
+--
+-- Both functions check the caller's admin role twice: once before queueing for
+-- the lock, and again after acquiring it. Waiting on the lock can take
+-- arbitrarily long, and the transaction ahead in the queue may have been the
+-- one that demoted the caller, so the authorization decision is only sound
+-- once it is re-taken under the lock, immediately before reading or writing
+-- private.staff_roles.
 
 create or replace function private.admin_set_staff_role_impl(
   p_user_id uuid,
@@ -89,6 +96,11 @@ begin
   end if;
 
   perform pg_advisory_xact_lock(90612026);
+
+  -- Re-check under the lock: the caller may have been demoted while queueing.
+  if not private.has_staff_role(array['admin']) then
+    raise exception 'admin role required';
+  end if;
 
   select role into v_old_role from private.staff_roles where user_id = p_user_id;
 
@@ -133,6 +145,11 @@ begin
   end if;
 
   perform pg_advisory_xact_lock(90612026);
+
+  -- Re-check under the lock: the caller may have been demoted while queueing.
+  if not private.has_staff_role(array['admin']) then
+    raise exception 'admin role required';
+  end if;
 
   select role into v_old_role from private.staff_roles where user_id = p_user_id;
   if v_old_role is null then
