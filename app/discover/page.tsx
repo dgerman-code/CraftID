@@ -1,13 +1,41 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
+import { createClient } from "@/lib/supabase/server";
 
-type Props = { searchParams: Promise<{ lang?: string }> };
+type Props = { searchParams: Promise<{ lang?: string; craftid?: string }> };
+
+function parseCraftId(value: string) {
+  const compact = value.trim().replace(/^CraftID\s*/i, "").replace(/^#/, "");
+  const match = compact.match(/^0*(\d+)-(\d{2})$/);
+  if (!match) return null;
+
+  const number = Number(match[1]);
+  if (!Number.isSafeInteger(number) || number < 1) return null;
+
+  return {
+    number,
+    check: match[2],
+    route: `${String(number).padStart(8, "0")}-${match[2]}`,
+  };
+}
 
 const copy = {
   en: {
     eyebrow: "Public registry",
     title: "Discover professional craft practice.",
-    intro: "Search professional records and workshops by craft, skill and location. CraftID is a professional identity and evidence infrastructure — not a marketplace.",
+    intro: "Find a specific CraftID record directly, or explore published professionals and workshops by craft, skill and location.",
+    idEyebrow: "Direct CraftID lookup",
+    idTitle: "Find a CraftID record",
+    idText: "Use the permanent CraftID number to open a published professional or workshop record directly.",
+    idLabel: "CraftID number",
+    idPlaceholder: "#00000101-86",
+    idButton: "Open record",
+    idHint: "Enter the full CraftID number, including the two check digits.",
+    idInvalid: "Enter a valid CraftID in the format #00000101-86.",
+    idMissing: "No published CraftID record was found for that number.",
+    browseEyebrow: "Browse registry",
+    browseTitle: "Explore by professional context",
     note: "Public location is shown only at the level selected by the profile owner. Individual professionals default to city- or region-level visibility.",
     search: "Search registry",
     placeholder: "Name, craft or skill",
@@ -43,7 +71,18 @@ const copy = {
   uk: {
     eyebrow: "Публічний реєстр",
     title: "Відкривайте професійну ремісничу практику.",
-    intro: "Шукайте професійні профілі та майстерні за ремеслом, навичкою та місцем. CraftID — це інфраструктура професійної ідентичності й доказів, а не маркетплейс.",
+    intro: "Знайдіть конкретний запис CraftID за номером або переглядайте опубліковані профілі професіоналів і майстерень за ремеслом, навичками та місцем.",
+    idEyebrow: "Прямий пошук CraftID",
+    idTitle: "Знайти запис CraftID",
+    idText: "Використовуйте постійний номер CraftID, щоб одразу відкрити опублікований запис професіонала або майстерні.",
+    idLabel: "Номер CraftID",
+    idPlaceholder: "#00000101-86",
+    idButton: "Відкрити запис",
+    idHint: "Введіть повний номер CraftID разом із двома контрольними цифрами.",
+    idInvalid: "Введіть коректний CraftID у форматі #00000101-86.",
+    idMissing: "Опублікований запис CraftID з таким номером не знайдено.",
+    browseEyebrow: "Пошук у реєстрі",
+    browseTitle: "Пошук за професійним контекстом",
     note: "Публічне місце відображається лише з точністю, обраною власником профілю. Для індивідуальних професіоналів типовим є рівень міста або регіону.",
     search: "Пошук у реєстрі",
     placeholder: "Ім’я, ремесло або навичка",
@@ -79,15 +118,37 @@ const copy = {
 } as const;
 
 export default async function DiscoverPage({ searchParams }: Props) {
-  const locale = localeFrom((await searchParams).lang);
+  const params = await searchParams;
+  const locale = localeFrom(params.lang);
   const t = copy[locale];
   const q = locale === "uk" ? "?lang=uk" : "";
+  let lookupError: string | null = null;
+
+  if (params.craftid) {
+    const parsed = parseCraftId(params.craftid);
+
+    if (!parsed) {
+      lookupError = t.idInvalid;
+    } else {
+      const supabase = await createClient();
+      const { data: profile } = await supabase.rpc("public_craftid_profile", {
+        p_craftid_number: parsed.number,
+        p_check_digits: parsed.check,
+      });
+
+      if (profile) {
+        redirect(`/id/${parsed.route}${q}`);
+      }
+
+      lookupError = t.idMissing;
+    }
+  }
 
   return (
     <>
       <SiteHeader locale={locale} pathname="/discover" />
       <main>
-        <section className="pageHero">
+        <section className="pageHero registryHero">
           <div className="container">
             <div className="eyebrow">{t.eyebrow}</div>
             <h1>{t.title}</h1>
@@ -95,8 +156,41 @@ export default async function DiscoverPage({ searchParams }: Props) {
           </div>
         </section>
 
-        <section className="section compactSection">
+        <section className="craftIdLookupSection">
+          <div className="container craftIdLookupGrid">
+            <div className="craftIdLookupIntro">
+              <div className="eyebrow">{t.idEyebrow}</div>
+              <h2>{t.idTitle}</h2>
+              <p>{t.idText}</p>
+            </div>
+            <form className="craftIdLookupForm" method="get" action="/discover">
+              {locale === "uk" ? <input type="hidden" name="lang" value="uk" /> : null}
+              <label htmlFor="craftid-lookup">{t.idLabel}</label>
+              <div className="craftIdLookupControl">
+                <input
+                  id="craftid-lookup"
+                  name="craftid"
+                  inputMode="text"
+                  autoComplete="off"
+                  spellCheck={false}
+                  placeholder={t.idPlaceholder}
+                  defaultValue={params.craftid ?? ""}
+                  aria-describedby="craftid-hint"
+                />
+                <button className="button buttonPrimary" type="submit">{t.idButton}</button>
+              </div>
+              <p id="craftid-hint" className="craftIdLookupHint">{t.idHint}</p>
+              {lookupError ? <p className="formMessage error">{lookupError}</p> : null}
+            </form>
+          </div>
+        </section>
+
+        <section className="section compactSection registryBrowseSection">
           <div className="container">
+            <div className="registryBrowseHeading">
+              <div className="eyebrow">{t.browseEyebrow}</div>
+              <h2>{t.browseTitle}</h2>
+            </div>
             <div className="registryToolbar">
               <label className="searchField">
                 <span>{t.search}</span>
@@ -148,7 +242,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
         <section className="section trustBand">
           <div className="container trustBandInner">
             <div>
-              <div className="eyebrow">Map</div>
+              <div className="eyebrow">{locale === "uk" ? "Карта" : "Map"}</div>
               <h2>{t.mapTitle}</h2>
               <p>{t.mapText}</p>
             </div>
