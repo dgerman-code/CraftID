@@ -16,6 +16,7 @@ const labels = {
     skills: "Skills",
     methodology: "Methodology",
     about: "About",
+    network: "Network",
     signIn: "Sign in",
     initiative: "An EUFUA digital instrument",
     language: "Language",
@@ -28,6 +29,7 @@ const labels = {
     skills: "Навички",
     methodology: "Методологія",
     about: "Про CraftID",
+    network: "Мережа",
     signIn: "Увійти",
     initiative: "Цифровий інструмент EUFUA",
     language: "Мова",
@@ -57,6 +59,7 @@ export function SiteHeader({
             <Link href={withLocale("/discover", locale)}>{t.discover}</Link>
             <Link href={withLocale("/skills", locale)}>{t.skills}</Link>
             <Link href={withLocale("/methodology", locale)}>{t.methodology}</Link>
+            <Link href={withLocale("/network", locale)}>{t.network}</Link>
             <Link href={withLocale("/about", locale)}>{t.about}</Link>
           </nav>
           <div className="languageSwitch" aria-label={t.language}>
