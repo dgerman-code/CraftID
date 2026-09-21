@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { updateProfile, uploadProfileImage, updateContactPoints } from "./actions";
 
 export const dynamic = "force-dynamic";
-type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
+type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
 
 const copy = {
   en: {
@@ -79,16 +79,11 @@ export default async function ProfilePage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
   const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
-
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase.from("craftid_entities")
-    .select("id, entity_type").eq("owner_user_id", userId).limit(1).single();
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(params.entity);
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
+  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
+  if (params.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
 
   const [result, contactsResult] = await Promise.all([
     entity.entity_type === "professional"
@@ -150,6 +145,7 @@ export default async function ProfilePage({ searchParams }: Props) {
             </div>
             <form className="profileImageForm" action={uploadProfileImage}>
               <input type="hidden" name="lang" value={locale} />
+              <input type="hidden" name="entityId" value={entity.id} />
               <input name="file" type="file" accept="image/jpeg,image/png,image/webp" required />
               <button className="button" type="submit">{t.uploadPhoto}</button>
             </form>
@@ -158,6 +154,7 @@ export default async function ProfilePage({ searchParams }: Props) {
 
         <form className="workspaceForm" action={updateProfile}>
           <input type="hidden" name="lang" value={locale} />
+              <input type="hidden" name="entityId" value={entity.id} />
           <label>{t.name}<input name="displayName" defaultValue={record.display_name} required /></label>
           <label>{t.role}<input name="title" defaultValue={record.professional_title ?? record.craft_sector ?? ""} /></label>
           <div className="formGrid">
@@ -177,6 +174,7 @@ export default async function ProfilePage({ searchParams }: Props) {
 
           <form className="workspaceForm contactForm" action={updateContactPoints}>
             <input type="hidden" name="lang" value={locale} />
+              <input type="hidden" name="entityId" value={entity.id} />
 
             {[
               { type: "professional_email", name: "professionalEmail", label: t.professionalEmail, inputType: "email", canBePublic: false },
