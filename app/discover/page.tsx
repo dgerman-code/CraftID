@@ -2,6 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
 import { createClient } from "@/lib/supabase/server";
+import { CraftSkillsMap } from "@/components/craft-skills-map";
+import { resolvePublicMapCoordinate } from "@/lib/public-map";
 
 type Props = {
   searchParams: Promise<{
@@ -11,6 +13,7 @@ type Props = {
     craft?: string;
     country?: string;
     type?: string;
+    view?: string;
   }>;
 };
 
@@ -134,9 +137,12 @@ const copy = {
     open: "Open record",
     claimStatus: "Highest visible claim status",
     noClaimStatus: "No reviewed public claim",
-    mapTitle: "Territorial skills visibility",
-    mapText: "CraftID can support privacy-safe mapping of professional and workshop locations to make regional skill clusters and craft ecosystems more visible over time.",
-    mapCta: "Map view — coming next",
+    mapTitle: "Craft Skills Map",
+    mapText: "Explore published professionals and workshops by privacy-safe city or country centroids. CraftID does not expose private home addresses on the map.",
+    listView: "List",
+    mapView: "Map",
+    mapped: "mapped records",
+    mapPrivacy: "Map positions are approximate and follow the public location disclosed by each profile.",
   },
   uk: {
     eyebrow: "Публічний реєстр",
@@ -170,9 +176,12 @@ const copy = {
     open: "Відкрити запис",
     claimStatus: "Найвищий статус видимого твердження",
     noClaimStatus: "Немає переглянутих публічних тверджень",
-    mapTitle: "Територіальна видимість навичок",
-    mapText: "CraftID може підтримувати приватно-безпечне картографування розташування фахівців і майстерень, щоб з часом зробити видимішими регіональні кластери навичок і ремісничі екосистеми.",
-    mapCta: "Карта — наступний етап",
+    mapTitle: "Карта ремісничих навичок",
+    mapText: "Переглядайте опублікованих професіоналів і майстерні за приватно-безпечними центроїдами міста або країни. CraftID не показує приватні домашні адреси на карті.",
+    listView: "Список",
+    mapView: "Карта",
+    mapped: "записів на карті",
+    mapPrivacy: "Позиції на карті є приблизними та відповідають публічній локації, яку розкрив власник профілю.",
   },
 } as const;
 
@@ -265,8 +274,41 @@ export default async function DiscoverPage({ searchParams }: Props) {
     return matchesSearch && matchesCraft && matchesCountry && matchesType;
   });
 
+  const view = params.view === "map" ? "map" : "list";
+
+  const mapPoints = filteredRecords.flatMap((record) => {
+    const coordinate = resolvePublicMapCoordinate(record.location);
+    if (!coordinate || !record.location) return [];
+
+    const formatted = formatCraftId(record.craftid_number, record.craftid_check_digits);
+    const route = formatted.replace("#", "");
+
+    return [{
+      craftId: `CraftID ${formatted}`,
+      name: record.display_name,
+      role: record.professional_title ?? record.craft_sector ?? "",
+      location: record.location,
+      lat: coordinate.lat,
+      lng: coordinate.lng,
+      precision: coordinate.precision,
+      href: `/id/${route}${q}`,
+    }];
+  });
+
   const filterQuery = new URLSearchParams();
   if (locale === "uk") filterQuery.set("lang", "uk");
+  if (params.q) filterQuery.set("q", params.q);
+  if (params.craft) filterQuery.set("craft", params.craft);
+  if (params.country) filterQuery.set("country", params.country);
+  if (params.type) filterQuery.set("type", params.type);
+
+  const listQuery = new URLSearchParams(filterQuery);
+  listQuery.delete("view");
+  const mapQuery = new URLSearchParams(filterQuery);
+  mapQuery.set("view", "map");
+
+  const clearQuery = new URLSearchParams();
+  if (locale === "uk") clearQuery.set("lang", "uk");
 
   return (
     <>
@@ -352,7 +394,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
                 {filteredRecords.length} {filteredRecords.length === 1 ? t.oneResult : t.manyResults}
               </span>
               {(params.q || params.craft || params.country || params.type) ? (
-                <Link href={`/discover${filterQuery.size ? `?${filterQuery.toString()}` : ""}`}>
+                <Link href={`/discover${clearQuery.size ? `?${clearQuery.toString()}` : ""}`}>
                   {t.clear}
                 </Link>
               ) : null}
@@ -364,8 +406,26 @@ export default async function DiscoverPage({ searchParams }: Props) {
 
         <section className="section registryResultsSection">
           <div className="container">
-            <div className="eyebrow">{t.results}</div>
-            {filteredRecords.length ? (
+            <div className="registryViewHeader">
+              <div>
+                <div className="eyebrow">{view === "map" ? t.mapTitle : t.results}</div>
+                {view === "map" ? <p>{t.mapText}</p> : null}
+              </div>
+              <nav className="registryViewSwitch" aria-label={locale === "uk" ? "Режим реєстру" : "Registry view"}>
+                <Link className={view === "list" ? "active" : ""} href={`/discover${listQuery.size ? `?${listQuery.toString()}` : ""}`}>{t.listView}</Link>
+                <Link className={view === "map" ? "active" : ""} href={`/discover?${mapQuery.toString()}`}>{t.mapView}</Link>
+              </nav>
+            </div>
+
+            {view === "map" ? (
+              <>
+                <CraftSkillsMap locale={locale} points={mapPoints} />
+                <div className="mapMetaLine">
+                  <span>{mapPoints.length} {t.mapped}</span>
+                  <span>{t.mapPrivacy}</span>
+                </div>
+              </>
+            ) : filteredRecords.length ? (
               <div className="recordList">
                 {filteredRecords.map((record, index) => {
                   const skills = (record.claims ?? [])
@@ -407,20 +467,9 @@ export default async function DiscoverPage({ searchParams }: Props) {
             ) : (
               <div className="registryEmpty">
                 <p>{t.empty}</p>
-                <Link href={`/discover${filterQuery.size ? `?${filterQuery.toString()}` : ""}`}>{t.clear} →</Link>
+                <Link href={`/discover${clearQuery.size ? `?${clearQuery.toString()}` : ""}`}>{t.clear} →</Link>
               </div>
             )}
-          </div>
-        </section>
-
-        <section className="section trustBand">
-          <div className="container trustBandInner">
-            <div>
-              <div className="eyebrow">{locale === "uk" ? "Карта" : "Map"}</div>
-              <h2>{t.mapTitle}</h2>
-              <p>{t.mapText}</p>
-            </div>
-            <span className="button buttonDisabled">{t.mapCta}</span>
           </div>
         </section>
       </main>
