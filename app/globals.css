@@ -3156,3 +3156,35 @@ button {
     flex: 1;
   }
 }
+
+
+/* Partner administration */
+.adminPartnerColumns {
+  grid-template-columns: minmax(220px, 1.6fr) minmax(180px, 1.15fr) 120px 150px 80px 54px;
+}
+
+.adminFormSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.adminStatus-in_discussion {
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .adminPartnerColumns {
+    grid-template-columns: minmax(220px, 1.4fr) minmax(180px, 1fr) 120px 130px 60px 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  .adminPartnerColumns {
+    grid-template-columns: 1fr;
+  }
+
+  .adminFormSplit {
+    grid-template-columns: 1fr;
+  }
+}
