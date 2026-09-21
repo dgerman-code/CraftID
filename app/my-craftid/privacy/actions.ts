@@ -2,22 +2,18 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 
 export async function updatePrivacy(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const entityId = String(formData.get("entityId") ?? "").trim();
   const allowedPrecision = new Set(["country", "region", "city", "exact_business_location"]);
   const precision = String(formData.get("locationPrecision") ?? "city");
 
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase.from("craftid_entities")
-    .select("id").eq("owner_user_id", userId).limit(1).single();
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const addressLine1 = String(formData.get("addressLine1") ?? "").trim();
   const addressLine2 = String(formData.get("addressLine2") ?? "").trim();
@@ -35,7 +31,7 @@ export async function updatePrivacy(formData: FormData) {
   }).eq("entity_id", entity.id);
 
   if (error) {
-    redirect(`/my-craftid/privacy${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
+    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(error.message)}`);
   }
 
   const hasAnyAddress = Boolean(addressLine1 || addressLine2 || postalCode || locality || countryCode);
@@ -52,11 +48,11 @@ export async function updatePrivacy(formData: FormData) {
       }, { onConflict: "entity_id" });
 
     if (addressError) {
-      redirect(`/my-craftid/privacy${q ? `${q}&` : "?"}error=${encodeURIComponent(addressError.message)}`);
+      redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(addressError.message)}`);
     }
   }
 
   revalidatePath("/my-craftid/privacy");
   revalidatePath("/my-craftid/preview");
-  redirect(`/my-craftid/privacy${q ? `${q}&` : "?"}message=saved`);
+  redirect(`/my-craftid/privacy${q}&message=saved`);
 }
