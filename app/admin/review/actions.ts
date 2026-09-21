@@ -42,14 +42,12 @@ export async function submitReview(formData: FormData) {
     redirect(`/my-craftid${q}`);
   }
 
-  const { error } = await supabase.from("reviews").insert({
-    claim_id: claimId,
-    evidence_id: evidenceId,
-    reviewer_user_id: userId,
-    reviewer_role: role,
-    decision,
-    resulting_status: resultingStatus,
-    private_notes: notes || null,
+  const { error } = await supabase.rpc("submit_claim_review", {
+    p_claim_id: claimId,
+    p_evidence_id: evidenceId,
+    p_decision: decision,
+    p_resulting_status: resultingStatus,
+    p_private_notes: notes || null,
   });
 
   if (error) {
