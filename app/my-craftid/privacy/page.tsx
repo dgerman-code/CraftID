@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { updatePrivacy } from "./actions";
 
 export const dynamic = "force-dynamic";
-type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
+type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
 
 const copy = {
   en: {
@@ -68,16 +68,11 @@ export default async function PrivacyPage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
   const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
-
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase.from("craftid_entities")
-    .select("id").eq("owner_user_id", userId).limit(1).single();
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(params.entity);
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
+  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
+  if (params.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
 
   const [{ data: settings }, { data: address }] = await Promise.all([
     supabase.from("privacy_settings")
@@ -104,6 +99,7 @@ export default async function PrivacyPage({ searchParams }: Props) {
 
         <form className="workspaceForm" action={updatePrivacy}>
           <input type="hidden" name="lang" value={locale} />
+          <input type="hidden" name="entityId" value={entity.id} />
           <div className="toggleList">
             <label><input type="checkbox" name="showProfilePhoto" defaultChecked={settings?.show_profile_photo} />{t.photo}</label>
             <label><input type="checkbox" name="showCity" defaultChecked={settings?.show_city} />{t.city}</label>
