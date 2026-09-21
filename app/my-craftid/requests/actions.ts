@@ -31,11 +31,7 @@ export async function updateContactRequestStatus(formData: FormData) {
 
   const { error } = await supabase
     .from("contact_requests")
-    .update({
-      status,
-      handled_at: new Date().toISOString(),
-      handled_by: userId,
-    })
+    .update({ status })
     .eq("id", requestId)
     .eq("target_entity_id", entity.id);
 

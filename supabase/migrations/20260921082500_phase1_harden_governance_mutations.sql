@@ -166,14 +166,17 @@ grant execute on function private.admin_remove_staff_role_impl(uuid) to authenti
 ------------------------------------------------------------------------------
 
 revoke update on public.contact_requests from authenticated;
-grant update (status, handled_at, handled_by, owner_notes)
+-- Owners decide the outcome and may annotate it. handled_by / handled_at are
+-- withheld from every end-user role and assigned by the trigger below, so a
+-- client can neither name another actor nor invent a handling time.
+grant update (status, owner_notes)
   on public.contact_requests to authenticated;
 
 create or replace function private.protect_contact_request_fields()
 returns trigger
 language plpgsql
 security invoker
-set search_path = pg_catalog
+set search_path = pg_catalog, auth
 as $$
 begin
   if new.id is distinct from old.id
@@ -188,6 +191,17 @@ begin
     or new.created_at is distinct from old.created_at
   then
     raise exception 'contact request content is immutable; only handling fields may change';
+  end if;
+
+  -- Handling attribution is database-owned. Client-supplied values are always
+  -- overwritten: on a status transition with the acting user and the server
+  -- clock, otherwise with the values already stored.
+  if new.status is distinct from old.status then
+    new.handled_by := (select auth.uid());
+    new.handled_at := now();
+  else
+    new.handled_by := old.handled_by;
+    new.handled_at := old.handled_at;
   end if;
 
   return new;
@@ -206,14 +220,17 @@ for each row execute function private.protect_contact_request_fields();
 ------------------------------------------------------------------------------
 
 revoke update on public.institutional_referrals from authenticated;
-grant update (status, owner_response_note, responded_at, responded_by)
+-- Recipients decide the response and may annotate it. responded_by /
+-- responded_at are withheld from every end-user role and assigned by the
+-- trigger below.
+grant update (status, owner_response_note)
   on public.institutional_referrals to authenticated;
 
 create or replace function private.protect_referral_fields()
 returns trigger
 language plpgsql
 security invoker
-set search_path = pg_catalog
+set search_path = pg_catalog, auth
 as $$
 begin
   if new.id is distinct from old.id
@@ -229,6 +246,16 @@ begin
     or new.created_at is distinct from old.created_at
   then
     raise exception 'referral invitation content is immutable; only response fields may change';
+  end if;
+
+  -- Response attribution is database-owned, on the same terms as
+  -- contact_requests above.
+  if new.status is distinct from old.status then
+    new.responded_by := (select auth.uid());
+    new.responded_at := now();
+  else
+    new.responded_by := old.responded_by;
+    new.responded_at := old.responded_at;
   end if;
 
   return new;
@@ -254,5 +281,6 @@ for each row execute function private.protect_referral_fields();
 -- grant update (entity_type, public_status, updated_at) on public.craftid_entities to authenticated;
 -- grant update on public.contact_requests to authenticated;
 -- grant update on public.institutional_referrals to authenticated;
+-- (the pre-phase-1 shape was table-wide UPDATE on both tables)
 -- The two staff-role functions revert by re-running their previous definitions
 -- from 20260920233940.

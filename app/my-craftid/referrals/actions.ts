@@ -34,8 +34,6 @@ export async function respondToInstitutionalReferral(formData: FormData) {
     .update({
       status,
       owner_response_note: note || null,
-      responded_at: new Date().toISOString(),
-      responded_by: userId,
     })
     .eq("id", referralId)
     .eq("target_entity_id", entity.id)
