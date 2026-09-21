@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 
 function safeName(name: string) {
   return name.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 120);
@@ -10,7 +10,7 @@ function safeName(name: string) {
 
 export async function uploadEvidence(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const entityId = String(formData.get("entityId") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim();
   const type = String(formData.get("evidenceType") ?? "").trim();
   const issuer = String(formData.get("issuer") ?? "").trim();
@@ -18,17 +18,13 @@ export async function uploadEvidence(formData: FormData) {
   const file = formData.get("file");
 
   if (!title || !type || !(file instanceof File) || file.size === 0) {
-    redirect(`/my-craftid/evidence${q ? `${q}&` : "?"}error=${encodeURIComponent("Title, evidence type and file are required")}`);
+    redirect(`/my-craftid/evidence${q}&error=${encodeURIComponent("Title, evidence type and file are required")}`);
   }
 
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase.from("craftid_entities")
-    .select("id").eq("owner_user_id", userId).limit(1).single();
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const path = `${userId}/${entity.id}/${crypto.randomUUID()}-${safeName(file.name)}`;
   const bytes = await file.arrayBuffer();
@@ -38,7 +34,7 @@ export async function uploadEvidence(formData: FormData) {
     .upload(path, bytes, { contentType: file.type, upsert: false });
 
   if (uploadError) {
-    redirect(`/my-craftid/evidence${q ? `${q}&` : "?"}error=${encodeURIComponent(uploadError.message)}`);
+    redirect(`/my-craftid/evidence${q}&error=${encodeURIComponent(uploadError.message)}`);
   }
 
   const { data: evidenceItem, error: insertError } = await supabase.from("evidence_items").insert({
@@ -53,7 +49,7 @@ export async function uploadEvidence(formData: FormData) {
 
   if (insertError || !evidenceItem) {
     await supabase.storage.from("evidence").remove([path]);
-    redirect(`/my-craftid/evidence${q ? `${q}&` : "?"}error=${encodeURIComponent(insertError.message)}`);
+    redirect(`/my-craftid/evidence${q}&error=${encodeURIComponent(insertError.message)}`);
   }
 
   if (claimId) {
@@ -80,5 +76,5 @@ export async function uploadEvidence(formData: FormData) {
 
   revalidatePath("/my-craftid/evidence");
   revalidatePath("/my-craftid/claims");
-  redirect(`/my-craftid/evidence${q ? `${q}&` : "?"}message=uploaded`);
+  redirect(`/my-craftid/evidence${q}&message=uploaded`);
 }
