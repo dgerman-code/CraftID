@@ -3,7 +3,38 @@ import { redirect } from "next/navigation";
 import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
 import { createClient } from "@/lib/supabase/server";
 
-type Props = { searchParams: Promise<{ lang?: string; craftid?: string }> };
+type Props = {
+  searchParams: Promise<{
+    lang?: string;
+    craftid?: string;
+    q?: string;
+    craft?: string;
+    country?: string;
+    type?: string;
+  }>;
+};
+
+type PublicClaim = {
+  id: string;
+  claim_type: string;
+  title: string;
+  status: string;
+};
+
+type PublicRecord = {
+  craftid_number: number;
+  craftid_check_digits: string;
+  entity_type: "professional" | "workshop";
+  display_name: string;
+  professional_title: string | null;
+  craft_sector: string | null;
+  location: string | null;
+  about: string | null;
+  has_public_photo: boolean;
+  languages: string[];
+  claims: PublicClaim[];
+  links: { contact_type: string; value: string; verification_level: string }[];
+};
 
 function parseCraftId(value: string) {
   const compact = value.trim().replace(/^CraftID\s*/i, "").replace(/^#/, "");
@@ -19,6 +50,56 @@ function parseCraftId(value: string) {
     route: `${String(number).padStart(8, "0")}-${match[2]}`,
   };
 }
+
+function formatCraftId(number: number, check: string) {
+  return `#${String(number).padStart(8, "0")}-${check}`;
+}
+
+function normalized(value?: string) {
+  return (value ?? "").trim().toLocaleLowerCase();
+}
+
+function locationCountry(location: string | null) {
+  if (!location) return "";
+  const parts = location.split(",").map((part) => part.trim()).filter(Boolean);
+  return parts.at(-1) ?? "";
+}
+
+const statusRank: Record<string, number> = {
+  self_declared: 0,
+  evidence_submitted: 1,
+  document_reviewed: 2,
+  evidence_reviewed: 3,
+  external_source_confirmed: 4,
+  identity_reviewed: 1,
+};
+
+function strongestClaimStatus(claims: PublicClaim[]) {
+  const relevant = claims.filter((claim) => claim.claim_type !== "identity");
+  if (!relevant.length) return null;
+  return [...relevant].sort(
+    (a, b) => (statusRank[b.status] ?? -1) - (statusRank[a.status] ?? -1),
+  )[0]?.status ?? null;
+}
+
+const statusCopy = {
+  en: {
+    self_declared: "Self-declared",
+    evidence_submitted: "Evidence submitted",
+    document_reviewed: "Document reviewed",
+    evidence_reviewed: "Evidence reviewed",
+    external_source_confirmed: "External source confirmed",
+    identity_reviewed: "Identity reviewed",
+  },
+  uk: {
+    self_declared: "Самодекларовано",
+    evidence_submitted: "Докази подано",
+    document_reviewed: "Документ переглянуто",
+    evidence_reviewed: "Докази переглянуто",
+    external_source_confirmed: "Зовнішнє джерело підтверджено",
+    identity_reviewed: "Особу перевірено",
+  },
+} as const;
 
 const copy = {
   en: {
@@ -39,34 +120,23 @@ const copy = {
     note: "Public location is shown only at the level selected by the profile owner. Individual professionals default to city- or region-level visibility.",
     search: "Search registry",
     placeholder: "Name, craft or skill",
-    craft: "Craft",
+    craft: "Craft / skill",
     country: "Country",
     type: "Profile type",
     all: "All",
     professional: "Professional",
     workshop: "Workshop",
-    featured: "Selected records",
+    results: "Published records",
+    oneResult: "published record",
+    manyResults: "published records",
+    empty: "No published records match these filters.",
+    clear: "Clear filters",
+    open: "Open record",
+    claimStatus: "Highest visible claim status",
+    noClaimStatus: "No reviewed public claim",
     mapTitle: "Territorial skills visibility",
     mapText: "CraftID can support privacy-safe mapping of professional and workshop locations to make regional skill clusters and craft ecosystems more visible over time.",
     mapCta: "Map view — coming next",
-    maria: {
-      name: "Maria Kovalenko",
-      role: "Ceramicist",
-      location: "Lviv, Ukraine",
-      id: "CraftID #00001284-29",
-      text: "Independent ceramicist specialising in wheel-thrown stoneware and porcelain, functional tableware and small-batch sculptural work.",
-      skills: ["Wheel throwing", "Porcelain", "Ceramic glazing"],
-      status: "Evidence reviewed",
-    },
-    atelier: {
-      name: "Atelier Forma",
-      role: "Woodcraft workshop",
-      location: "Antwerp, Belgium",
-      id: "CraftID #00001822-64",
-      text: "Small furniture and woodcraft workshop focused on custom interiors, furniture restoration, traditional joinery and small-series production.",
-      skills: ["Custom furniture", "Restoration", "Wood joinery"],
-      status: "Document reviewed",
-    },
   },
   uk: {
     eyebrow: "Публічний реєстр",
@@ -86,34 +156,23 @@ const copy = {
     note: "Публічне місце відображається лише з точністю, обраною власником профілю. Для індивідуальних професіоналів типовим є рівень міста або регіону.",
     search: "Пошук у реєстрі",
     placeholder: "Ім’я, ремесло або навичка",
-    craft: "Ремесло",
+    craft: "Ремесло / навичка",
     country: "Країна",
     type: "Тип профілю",
     all: "Усі",
     professional: "Професіонал",
     workshop: "Майстерня",
-    featured: "Вибрані записи",
+    results: "Опубліковані записи",
+    oneResult: "опублікований запис",
+    manyResults: "опублікованих записів",
+    empty: "За цими фільтрами опублікованих записів не знайдено.",
+    clear: "Очистити фільтри",
+    open: "Відкрити запис",
+    claimStatus: "Найвищий статус видимого твердження",
+    noClaimStatus: "Немає переглянутих публічних тверджень",
     mapTitle: "Територіальна видимість навичок",
     mapText: "CraftID може підтримувати приватно-безпечне картографування розташування фахівців і майстерень, щоб з часом зробити видимішими регіональні кластери навичок і ремісничі екосистеми.",
     mapCta: "Карта — наступний етап",
-    maria: {
-      name: "Maria Kovalenko",
-      role: "Керамістка",
-      location: "Львів, Україна",
-      id: "CraftID #00001284-29",
-      text: "Незалежна керамістка, яка спеціалізується на гончарному кам’яному посуді та порцеляні, функціональному посуді й малосерійному скульптурному виробництві.",
-      skills: ["Гончарний круг", "Порцеляна", "Глазурування"],
-      status: "Докази переглянуто",
-    },
-    atelier: {
-      name: "Atelier Forma",
-      role: "Майстерня деревообробки",
-      location: "Антверпен, Бельгія",
-      id: "CraftID #00001822-64",
-      text: "Невелика меблева та деревообробна майстерня, що працює з індивідуальними інтер’єрами, реставрацією меблів, традиційним столярством і малосерійним виробництвом.",
-      skills: ["Меблі на замовлення", "Реставрація", "Столярні з’єднання"],
-      status: "Документ переглянуто",
-    },
   },
 } as const;
 
@@ -122,6 +181,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
   const locale = localeFrom(params.lang);
   const t = copy[locale];
   const q = locale === "uk" ? "?lang=uk" : "";
+  const supabase = await createClient();
   let lookupError: string | null = null;
 
   if (params.craftid) {
@@ -130,7 +190,6 @@ export default async function DiscoverPage({ searchParams }: Props) {
     if (!parsed) {
       lookupError = t.idInvalid;
     } else {
-      const supabase = await createClient();
       const { data: profile } = await supabase.rpc("public_craftid_profile", {
         p_craftid_number: parsed.number,
         p_check_digits: parsed.check,
@@ -143,6 +202,71 @@ export default async function DiscoverPage({ searchParams }: Props) {
       lookupError = t.idMissing;
     }
   }
+
+  const { data: publishedEntities } = await supabase
+    .from("craftid_entities")
+    .select("craftid_number, craftid_check_digits")
+    .eq("public_status", "published")
+    .order("craftid_number", { ascending: true })
+    .limit(100);
+
+  const resolved = await Promise.all(
+    (publishedEntities ?? []).map(async (entity) => {
+      const { data } = await supabase.rpc("public_craftid_profile", {
+        p_craftid_number: entity.craftid_number,
+        p_check_digits: entity.craftid_check_digits,
+      });
+      return (data ?? null) as PublicRecord | null;
+    }),
+  );
+
+  const publicRecords = resolved.filter((record): record is PublicRecord => Boolean(record));
+
+  const craftOptions = Array.from(
+    new Set(
+      publicRecords.flatMap((record) => [
+        ...(record.claims ?? [])
+          .filter((claim) => claim.claim_type === "skill")
+          .map((claim) => claim.title),
+        record.professional_title ?? record.craft_sector ?? "",
+      ]).filter(Boolean),
+    ),
+  ).sort((a, b) => a.localeCompare(b));
+
+  const countryOptions = Array.from(
+    new Set(publicRecords.map((record) => locationCountry(record.location)).filter(Boolean)),
+  ).sort((a, b) => a.localeCompare(b));
+
+  const searchTerm = normalized(params.q);
+  const craftFilter = normalized(params.craft);
+  const countryFilter = normalized(params.country);
+  const typeFilter = normalized(params.type);
+
+  const filteredRecords = publicRecords.filter((record) => {
+    const skills = (record.claims ?? [])
+      .filter((claim) => claim.claim_type === "skill")
+      .map((claim) => claim.title);
+    const role = record.professional_title ?? record.craft_sector ?? "";
+    const searchable = [
+      record.display_name,
+      role,
+      record.location ?? "",
+      ...skills,
+    ].join(" ").toLocaleLowerCase();
+
+    const matchesSearch = !searchTerm || searchable.includes(searchTerm);
+    const matchesCraft =
+      !craftFilter ||
+      [role, ...skills].some((value) => normalized(value) === craftFilter);
+    const matchesCountry =
+      !countryFilter || normalized(locationCountry(record.location)) === countryFilter;
+    const matchesType = !typeFilter || normalized(record.entity_type) === typeFilter;
+
+    return matchesSearch && matchesCraft && matchesCountry && matchesType;
+  });
+
+  const filterQuery = new URLSearchParams();
+  if (locale === "uk") filterQuery.set("lang", "uk");
 
   return (
     <>
@@ -191,51 +315,101 @@ export default async function DiscoverPage({ searchParams }: Props) {
               <div className="eyebrow">{t.browseEyebrow}</div>
               <h2>{t.browseTitle}</h2>
             </div>
-            <div className="registryToolbar">
+
+            <form className="registryToolbar" method="get" action="/discover">
+              {locale === "uk" ? <input type="hidden" name="lang" value="uk" /> : null}
               <label className="searchField">
                 <span>{t.search}</span>
-                <input placeholder={t.placeholder} />
+                <input name="q" placeholder={t.placeholder} defaultValue={params.q ?? ""} />
               </label>
               <label>
                 <span>{t.craft}</span>
-                <select><option>{t.all}</option><option>Ceramics</option><option>Wood</option><option>Textiles</option></select>
+                <select name="craft" defaultValue={params.craft ?? ""}>
+                  <option value="">{t.all}</option>
+                  {craftOptions.map((craft) => <option value={craft} key={craft}>{craft}</option>)}
+                </select>
               </label>
               <label>
                 <span>{t.country}</span>
-                <select><option>{t.all}</option><option>Ukraine</option><option>Belgium</option><option>Poland</option></select>
+                <select name="country" defaultValue={params.country ?? ""}>
+                  <option value="">{t.all}</option>
+                  {countryOptions.map((country) => <option value={country} key={country}>{country}</option>)}
+                </select>
               </label>
               <label>
                 <span>{t.type}</span>
-                <select><option>{t.all}</option><option>{t.professional}</option><option>{t.workshop}</option></select>
+                <select name="type" defaultValue={params.type ?? ""}>
+                  <option value="">{t.all}</option>
+                  <option value="professional">{t.professional}</option>
+                  <option value="workshop">{t.workshop}</option>
+                </select>
               </label>
+              <button className="button" type="submit">{locale === "uk" ? "Застосувати" : "Apply"}</button>
+            </form>
+
+            <div className="registrySummary">
+              <span>
+                {filteredRecords.length} {filteredRecords.length === 1 ? t.oneResult : t.manyResults}
+              </span>
+              {(params.q || params.craft || params.country || params.type) ? (
+                <Link href={`/discover${filterQuery.size ? `?${filterQuery.toString()}` : ""}`}>
+                  {t.clear}
+                </Link>
+              ) : null}
             </div>
+
             <p className="privacyNote">{t.note}</p>
           </div>
         </section>
 
-        <section className="section">
+        <section className="section registryResultsSection">
           <div className="container">
-            <div className="eyebrow">{t.featured}</div>
-            <div className="recordList">
-              {[t.maria, t.atelier].map((record, index) => (
-                <article className="publicRecord" key={record.id}>
-                  <div className="recordNumber">0{index + 1}</div>
-                  <div>
-                    <div className="recordId">{record.id}</div>
-                    <h2>{record.name}</h2>
-                    <p className="recordRole">{record.role} · {record.location}</p>
-                    <p>{record.text}</p>
-                    <div className="tagRow">{record.skills.map((s) => <span className="tag" key={s}>{s}</span>)}</div>
-                  </div>
-                  <div className="recordStatus">
-                    <span>{record.status}</span>
-                    <Link href={index === 0 ? `/professionals/maria-kovalenko${q}` : `/workshops/atelier-forma${q}`}>
-                      {locale === "uk" ? "Відкрити запис" : "Open record"} →
-                    </Link>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <div className="eyebrow">{t.results}</div>
+            {filteredRecords.length ? (
+              <div className="recordList">
+                {filteredRecords.map((record, index) => {
+                  const skills = (record.claims ?? [])
+                    .filter((claim) => claim.claim_type === "skill")
+                    .slice(0, 4);
+                  const status = strongestClaimStatus(record.claims ?? []);
+                  const formatted = formatCraftId(record.craftid_number, record.craftid_check_digits);
+                  const route = formatted.replace("#", "");
+                  const role = record.professional_title ?? record.craft_sector ?? "";
+                  const statusLabel = status
+                    ? statusCopy[locale][status as keyof (typeof statusCopy)[typeof locale]] ?? status
+                    : t.noClaimStatus;
+
+                  return (
+                    <article className="publicRecord registryRecord" key={formatted}>
+                      <div className="recordNumber">{String(index + 1).padStart(2, "0")}</div>
+                      <div>
+                        <div className="recordId">CraftID {formatted}</div>
+                        <h2>{record.display_name}</h2>
+                        <p className="recordRole">
+                          {[role, record.location].filter(Boolean).join(" · ")}
+                        </p>
+                        {record.about ? <p>{record.about}</p> : null}
+                        {skills.length ? (
+                          <div className="tagRow">
+                            {skills.map((skill) => <span className="tag" key={skill.id}>{skill.title}</span>)}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="recordStatus">
+                        <span className="recordStatusLabel">{t.claimStatus}</span>
+                        <strong>{statusLabel}</strong>
+                        <Link href={`/id/${route}${q}`}>{t.open} →</Link>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="registryEmpty">
+                <p>{t.empty}</p>
+                <Link href={`/discover${filterQuery.size ? `?${filterQuery.toString()}` : ""}`}>{t.clear} →</Link>
+              </div>
+            )}
           </div>
         </section>
 
