@@ -3070,3 +3070,89 @@ button {
     grid-template-columns: 48px minmax(0, 1fr);
   }
 }
+
+
+/* Craft Skills Map */
+.registryViewHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.registryViewHeader > div:first-child {
+  max-width: 760px;
+}
+
+.registryViewHeader p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.registryViewSwitch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.registryViewSwitch a {
+  min-width: 82px;
+  padding: 10px 14px;
+  border-right: 1px solid var(--line);
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.registryViewSwitch a:last-child {
+  border-right: 0;
+}
+
+.registryViewSwitch a.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.craftSkillsMapFrame {
+  display: block;
+  width: 100%;
+  height: 620px;
+  margin-top: 26px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  background: #eef0ed;
+}
+
+.mapMetaLine {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 12px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 800px) {
+  .registryViewHeader,
+  .mapMetaLine {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .craftSkillsMapFrame {
+    height: 520px;
+  }
+
+  .registryViewSwitch {
+    width: 100%;
+  }
+
+  .registryViewSwitch a {
+    flex: 1;
+  }
+}
