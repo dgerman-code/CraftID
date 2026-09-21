@@ -17,18 +17,19 @@ const copy = {
     eyebrow: "My CraftID",
     signOut: "Sign out",
     recordFallback: "CraftID record",
-    complete: "Complete your profile to describe your professional practice.",
+    complete: "Add a professional title or craft sector to describe your practice.",
+    current: "Your published record is live. Keep its professional information and evidence current.",
+    addTitle: "Add a professional title or craft sector",
+    addLocation: "Add a public city or region",
+    addSkills: "Add professional skills",
+    addExperience: "Add experience or qualifications",
+    addEvidence: "Link supporting evidence",
+    reviewPublish: "Review privacy and publish",
+    maintain: "Review your published record and keep it current",
     status: "Status",
     location: "Location",
     notSet: "Not set",
     next: "Next steps",
-    steps: [
-      "Complete profile information",
-      "Add professional skills",
-      "Add experience and qualifications",
-      "Link supporting evidence",
-      "Review privacy and publish",
-    ],
     profile: "Profile",
     profileText: "Manage the information that describes you or your workshop.",
     skills: "Skills & claims",
@@ -38,13 +39,13 @@ const copy = {
     privacy: "Privacy",
     privacyText: "Choose what is visible publicly and how precise your location may be.",
     public: "Public profile",
-    publicText: "Preview how the record will appear once publication criteria are met.",
+    publicText: "Preview the record before publication or review the live public version.",
     requests: "Contact requests",
     requestsText: "Review controlled enquiries without publishing your private email or phone.",
     referrals: "Institutional opportunities",
     referralsText: "Review project, partnership, training and commission invitations routed through CraftID.",
     mark: "CraftID Mark",
-    markText: "Use your CraftID on websites, product cards, workshop signage and printed material.",
+    markText: "Use your CraftID on websites, product cards, workshop signage and print. The mark identifies a CraftID record; it is not a certification or quality seal.",
     open: "Open",
     typeProfessional: "Professional",
     typeWorkshop: "Workshop",
@@ -57,18 +58,19 @@ const copy = {
     eyebrow: "Мій CraftID",
     signOut: "Вийти",
     recordFallback: "Запис CraftID",
-    complete: "Доповніть профіль, щоб описати свою професійну практику.",
+    complete: "Додайте професійну назву або ремісничий напрям, щоб описати свою практику.",
+    current: "Ваш опублікований запис доступний публічно. Підтримуйте професійну інформацію та докази актуальними.",
+    addTitle: "Додайте професійну назву або ремісничий напрям",
+    addLocation: "Додайте публічне місто або регіон",
+    addSkills: "Додайте професійні навички",
+    addExperience: "Додайте досвід або кваліфікації",
+    addEvidence: "Пов’яжіть підтвердні матеріали",
+    reviewPublish: "Перевірте приватність і опублікуйте",
+    maintain: "Перегляньте опублікований запис і підтримуйте його актуальним",
     status: "Статус",
     location: "Місце",
     notSet: "Не вказано",
     next: "Наступні кроки",
-    steps: [
-      "Заповніть інформацію профілю",
-      "Додайте професійні навички",
-      "Додайте досвід і кваліфікації",
-      "Пов’яжіть підтвердні матеріали",
-      "Перевірте приватність і опублікуйте",
-    ],
     profile: "Профіль",
     profileText: "Керуйте інформацією, що описує вас або вашу майстерню.",
     skills: "Навички та твердження",
@@ -78,13 +80,13 @@ const copy = {
     privacy: "Приватність",
     privacyText: "Оберіть, що буде публічним і наскільки точно може відображатися ваше місцезнаходження.",
     public: "Публічний профіль",
-    publicText: "Перегляньте, як запис виглядатиме після виконання критеріїв публікації.",
+    publicText: "Перегляньте запис до публікації або перевірте його актуальну публічну версію.",
     requests: "Запити на контакт",
     requestsText: "Переглядайте контрольовані звернення без публікації вашого приватного email або телефону.",
     referrals: "Інституційні можливості",
     referralsText: "Переглядайте запрошення до проєктів, партнерств, навчання та замовлень, передані через CraftID.",
     mark: "CraftID Mark",
-    markText: "Використовуйте CraftID на вебсайті, картках виробів, вивісці майстерні та друкованих матеріалах.",
+    markText: "Використовуйте CraftID на вебсайті, картках виробів, вивісці майстерні та у друці. CraftID Mark ідентифікує запис CraftID, але не є сертифікацією або знаком якості.",
     open: "Відкрити",
     typeProfessional: "Професіонал",
     typeWorkshop: "Майстерня",
@@ -138,6 +140,36 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
   const typeLabel =
     entity.entity_type === "professional" ? t.typeProfessional : t.typeWorkshop;
 
+  const [{ count: skillCount }, { count: experienceCount }, { count: evidenceCount }] =
+    await Promise.all([
+      supabase
+        .from("claims")
+        .select("id", { count: "exact", head: true })
+        .eq("entity_id", entity.id)
+        .eq("claim_type", "skill"),
+      supabase
+        .from("claims")
+        .select("id", { count: "exact", head: true })
+        .eq("entity_id", entity.id)
+        .in("claim_type", ["experience", "qualification"]),
+      supabase
+        .from("evidence_items")
+        .select("id", { count: "exact", head: true })
+        .eq("owner_entity_id", entity.id),
+    ]);
+
+  const hasTitle = Boolean(record?.professional_title ?? record?.craft_sector);
+  const hasLocation = Boolean(record?.city ?? record?.region ?? record?.country_code);
+  const nextSteps: string[] = [];
+
+  if (!hasTitle) nextSteps.push(t.addTitle);
+  if (!hasLocation) nextSteps.push(t.addLocation);
+  if (!skillCount) nextSteps.push(t.addSkills);
+  if (!experienceCount) nextSteps.push(t.addExperience);
+  if (!evidenceCount) nextSteps.push(t.addEvidence);
+  if (entity.public_status !== "published") nextSteps.push(t.reviewPublish);
+  if (!nextSteps.length && entity.public_status === "published") nextSteps.push(t.maintain);
+
   return (
     <main className="recordPage dashboardPage">
       <div className="container">
@@ -173,14 +205,18 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
         <div className="recordGrid">
           <section className="recordPrimary">
             <h2>{record?.display_name ?? t.recordFallback}</h2>
-            <p>{record?.professional_title ?? record?.craft_sector ?? t.complete}</p>
+            <p>
+              {record?.professional_title ??
+                record?.craft_sector ??
+                (entity.public_status === "published" ? t.current : t.complete)}
+            </p>
             <div className="recordMeta">
               <span>{t.location}: {[record?.city, record?.region, record?.country_code].filter(Boolean).join(", ") || t.notSet}</span>
             </div>
           </section>
           <aside className="recordAside">
             <div className="eyebrow">{t.next}</div>
-            <ol>{t.steps.map((step) => <li key={step}>{step}</li>)}</ol>
+            <ol>{nextSteps.map((step) => <li key={step}>{step}</li>)}</ol>
           </aside>
         </div>
 
