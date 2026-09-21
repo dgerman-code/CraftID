@@ -2,30 +2,26 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 
 const allowedTypes = new Set(["skill", "experience", "qualification", "workshop_affiliation", "external_recognition", "origin", "craft_tradition"]);
 
 export async function addClaim(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const entityId = String(formData.get("entityId") ?? "").trim();
   const type = String(formData.get("claimType") ?? "");
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const visibility = String(formData.get("visibility") ?? "public") === "private" ? "private" : "public";
 
   if (!allowedTypes.has(type) || !title) {
-    redirect(`/my-craftid/claims${q ? `${q}&` : "?"}error=${encodeURIComponent("Claim type and title are required")}`);
+    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent("Claim type and title are required")}`);
   }
 
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase.from("craftid_entities")
-    .select("id").eq("owner_user_id", userId).limit(1).single();
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const { error } = await supabase.from("claims").insert({
     entity_id: entity.id,
@@ -37,38 +33,29 @@ export async function addClaim(formData: FormData) {
   });
 
   if (error) {
-    redirect(`/my-craftid/claims${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
+    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(error.message)}`);
   }
 
   revalidatePath("/my-craftid/claims");
-  redirect(`/my-craftid/claims${q ? `${q}&` : "?"}message=added`);
+  redirect(`/my-craftid/claims${q}&message=added`);
 }
 
 
 export async function addSkillClaims(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const entityId = String(formData.get("entityId") ?? "").trim();
   const selected = [...new Set(formData.getAll("skillId").map((value) => String(value)).filter(Boolean))];
 
   if (!selected.length) {
-    redirect(`/my-craftid/claims${q ? `${q}&` : "?"}error=${encodeURIComponent(
+    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(
       lang === "uk" ? "Оберіть щонайменше одну навичку" : "Choose at least one skill",
     )}`);
   }
 
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id")
-    .eq("owner_user_id", userId)
-    .limit(1)
-    .single();
-
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const { data: terms, error: termsError } = await supabase
     .from("taxonomy_terms")
@@ -78,7 +65,7 @@ export async function addSkillClaims(formData: FormData) {
     .in("id", selected);
 
   if (termsError || !terms?.length) {
-    redirect(`/my-craftid/claims${q ? `${q}&` : "?"}error=${encodeURIComponent(
+    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(
       termsError?.message ?? "Selected skills were not found",
     )}`);
   }
@@ -105,11 +92,11 @@ export async function addSkillClaims(formData: FormData) {
   if (rows.length) {
     const { error } = await supabase.from("claims").insert(rows);
     if (error) {
-      redirect(`/my-craftid/claims${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
+      redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(error.message)}`);
     }
   }
 
   revalidatePath("/my-craftid/claims");
   revalidatePath("/my-craftid/preview");
-  redirect(`/my-craftid/claims${q ? `${q}&` : "?"}message=skills`);
+  redirect(`/my-craftid/claims${q}&message=skills`);
 }
