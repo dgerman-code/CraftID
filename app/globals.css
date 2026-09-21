@@ -3188,3 +3188,102 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Public partner network */
+.networkIntro {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.networkIntro h2 {
+  margin: 8px 0 0;
+}
+
+.networkIntro p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 780px;
+}
+
+.partnerPublicList {
+  display: grid;
+  gap: 18px;
+}
+
+.partnerPublicCard {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1.4fr) minmax(260px, 0.8fr);
+  gap: 28px;
+  padding: 26px 0;
+  border-top: 1px solid var(--line);
+}
+
+.partnerPublicCard:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.partnerPublicMeta {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.partnerPublicCard h2 {
+  margin: 8px 0 10px;
+  font-size: clamp(1.4rem, 2.8vw, 2.3rem);
+  letter-spacing: -0.03em;
+}
+
+.partnerPublicCard p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.partnerPublicFacts {
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.partnerPublicFacts div {
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.partnerPublicFacts dt {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.partnerPublicFacts dd {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.partnerPublicFacts a {
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .networkIntro,
+  .partnerPublicCard {
+    grid-template-columns: 1fr;
+  }
+
+  .partnerPublicCard {
+    gap: 18px;
+  }
+}
