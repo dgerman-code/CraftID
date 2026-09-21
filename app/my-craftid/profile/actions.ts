@@ -2,25 +2,15 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 
 export async function updateProfile(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id, entity_type")
-    .eq("owner_user_id", userId)
-    .limit(1)
-    .single();
-
-  if (!entity) redirect(`/onboarding${q}`);
+  const entityId = String(formData.get("entityId") ?? "").trim();
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const displayName = String(formData.get("displayName") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim();
@@ -30,7 +20,7 @@ export async function updateProfile(formData: FormData) {
   const about = String(formData.get("about") ?? "").trim();
 
   if (!displayName) {
-    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent("Display name is required")}`);
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent("Display name is required")}`);
   }
 
   const result =
@@ -53,48 +43,39 @@ export async function updateProfile(formData: FormData) {
         }).eq("entity_id", entity.id);
 
   if (result.error) {
-    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(result.error.message)}`);
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(result.error.message)}`);
   }
 
   revalidatePath("/my-craftid");
   revalidatePath("/my-craftid/profile");
-  redirect(`/my-craftid/profile${q ? `${q}&` : "?"}message=saved`);
+  redirect(`/my-craftid/profile${q}&message=saved`);
 }
 
 
 export async function uploadProfileImage(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const entityId = String(formData.get("entityId") ?? "").trim();
   const file = formData.get("file");
 
   if (!(file instanceof File) || file.size === 0) {
-    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(
       lang === "uk" ? "Оберіть зображення" : "Choose an image",
     )}`);
   }
 
   const allowed = new Set(["image/jpeg", "image/png", "image/webp"]);
   if (!allowed.has(file.type) || file.size > 5 * 1024 * 1024) {
-    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(
       lang === "uk"
         ? "Дозволені JPEG, PNG або WebP до 5 МБ"
         : "Use JPEG, PNG or WebP up to 5 MB",
     )}`);
   }
 
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id, entity_type")
-    .eq("owner_user_id", userId)
-    .limit(1)
-    .single();
-
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const table = entity.entity_type === "professional" ? "professional_profiles" : "workshop_profiles";
   const { data: current } = await supabase
@@ -111,7 +92,7 @@ export async function uploadProfileImage(formData: FormData) {
     .upload(path, await file.arrayBuffer(), { contentType: file.type, upsert: false });
 
   if (uploadError) {
-    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(uploadError.message)}`);
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(uploadError.message)}`);
   }
 
   const { error: updateError } = await supabase
@@ -121,7 +102,7 @@ export async function uploadProfileImage(formData: FormData) {
 
   if (updateError) {
     await supabase.storage.from("profile-images").remove([path]);
-    redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(updateError.message)}`);
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(updateError.message)}`);
   }
 
   if (current?.profile_photo_path) {
@@ -131,26 +112,17 @@ export async function uploadProfileImage(formData: FormData) {
   revalidatePath("/my-craftid");
   revalidatePath("/my-craftid/profile");
   revalidatePath("/my-craftid/preview");
-  redirect(`/my-craftid/profile${q ? `${q}&` : "?"}message=photo`);
+  redirect(`/my-craftid/profile${q}&message=photo`);
 }
 
 
 export async function updateContactPoints(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id")
-    .eq("owner_user_id", userId)
-    .limit(1)
-    .single();
-
-  if (!entity) redirect(`/onboarding${q}`);
+  const entityId = String(formData.get("entityId") ?? "").trim();
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const rows = [
     ["professional_email", String(formData.get("professionalEmail") ?? "").trim(), false, formData.get("professionalEmailPartner") === "on"],
@@ -184,11 +156,11 @@ export async function updateContactPoints(formData: FormData) {
       }, { onConflict: "entity_id,contact_type" });
 
     if (error) {
-      redirect(`/my-craftid/profile${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
+      redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(error.message)}`);
     }
   }
 
   revalidatePath("/my-craftid/profile");
   revalidatePath("/my-craftid/preview");
-  redirect(`/my-craftid/profile${q ? `${q}&` : "?"}message=contacts`);
+  redirect(`/my-craftid/profile${q}&message=contacts`);
 }
