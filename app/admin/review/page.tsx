@@ -51,10 +51,22 @@ export default async function ReviewPage({ searchParams }: Props) {
   const { data: role } = await supabase.rpc("current_staff_role");
   if (role !== "reviewer" && role !== "admin") redirect(`/my-craftid${q}`);
 
-  const { data: links } = await supabase
-    .from("claim_evidence_links")
-    .select("claim_id, evidence_id, claims(id, title, claim_type, status), evidence_items(id, title, evidence_type, issuer, review_status)")
-    .limit(50);
+  const [{ data: links }, { data: ownedEntities }] = await Promise.all([
+    supabase
+      .from("claim_evidence_links")
+      .select("claim_id, evidence_id, claims(id, entity_id, title, claim_type, status), evidence_items(id, title, evidence_type, issuer, review_status)")
+      .limit(50),
+    supabase
+      .from("craftid_entities")
+      .select("id")
+      .eq("owner_user_id", auth.claims.sub),
+  ]);
+
+  const ownedEntityIds = new Set((ownedEntities ?? []).map((entity) => entity.id));
+  const reviewableLinks = (links ?? []).filter((link) => {
+    const claim = Array.isArray(link.claims) ? link.claims[0] : link.claims;
+    return claim ? !ownedEntityIds.has(claim.entity_id) : false;
+  });
 
   return (
     <main className="workspacePage">
@@ -69,10 +81,10 @@ export default async function ReviewPage({ searchParams }: Props) {
 
         <section className="reviewQueue">
           <div className="eyebrow">{t.queue}</div>
-          {!links?.length ? (
+          {!reviewableLinks.length ? (
             <p className="emptyState">{t.empty}</p>
           ) : (
-            links.map((link) => {
+            reviewableLinks.map((link) => {
               const claim = Array.isArray(link.claims) ? link.claims[0] : link.claims;
               const evidence = Array.isArray(link.evidence_items) ? link.evidence_items[0] : link.evidence_items;
               if (!claim || !evidence) return null;
