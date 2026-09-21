@@ -313,7 +313,7 @@ using (
 
 create policy "public can read active public relationships"
 on public.professional_workshop_relationships for select
-to anon
+to anon, authenticated
 using (
   status = 'active'
   and visibility = 'public'
