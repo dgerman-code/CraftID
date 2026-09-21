@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { addClaim, addSkillClaims } from "./actions";
 
 export const dynamic = "force-dynamic";
-type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
+type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
 
 const copy = {
   en: {
@@ -62,16 +62,11 @@ export default async function ClaimsPage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
   const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
-
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase.from("craftid_entities")
-    .select("id").eq("owner_user_id", userId).limit(1).single();
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(params.entity);
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
+  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
+  if (params.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
 
   const [{ data: claims }, { data: skillTerms }] = await Promise.all([
     supabase.from("claims")
@@ -108,6 +103,7 @@ export default async function ClaimsPage({ searchParams }: Props) {
               <p className="fieldHelp">{t.selectSkillsIntro}</p>
               <form action={addSkillClaims}>
                 <input type="hidden" name="lang" value={locale} />
+                <input type="hidden" name="entityId" value={entity.id} />
                 <div className="skillOptionGrid">
                   {skillTerms?.map((term) => {
                     const label = locale === "uk" ? term.label_uk : term.label_en;
@@ -128,6 +124,7 @@ export default async function ClaimsPage({ searchParams }: Props) {
 
             <form className="workspaceForm compactForm" action={addClaim}>
               <input type="hidden" name="lang" value={locale} />
+                <input type="hidden" name="entityId" value={entity.id} />
               <label>{t.type}
                 <select name="claimType" required defaultValue="skill">
                   <option value="skill">{t.customSkill}</option>
