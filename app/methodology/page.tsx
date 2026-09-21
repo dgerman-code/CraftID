@@ -8,14 +8,15 @@ const copy = {
     title: "Clear claims. Clear evidence. Clear review status.",
     intro: "CraftID separates what a profile owner says about professional practice from the evidence that may support a specific claim, and from the review status of that claim.",
     modelTitle: "Claim-based trust model",
-    modelText: "Review is applied to individual claims and supporting evidence. CraftID does not use a blanket “verified professional” status.",
+    modelText: "Review is applied to individual claims and supporting evidence. CraftID does not use a blanket “verified professional” status. Identity review is a separate control and is not a higher professional trust level.",
+    identityTrack: "Identity review",
+    identityTrackText: "Identity review links identity evidence to the profile owner. It runs in parallel to professional claim review and does not verify skills, experience or qualifications.",
     statuses: [
       ["Self-declared", "Information entered by the profile owner and not independently reviewed."],
       ["Evidence submitted", "Supporting evidence has been uploaded or referenced for a specific claim and is awaiting or undergoing review."],
       ["Document reviewed", "A reviewer has inspected documentary evidence in relation to the displayed claim. This does not independently recognise the underlying qualification or status."],
       ["Evidence reviewed", "Available evidence has been assessed and reasonably supports the specific claim under the applicable review procedure."],
       ["External source confirmed", "A claim corresponds to an identifiable external source, register, institution or issuer."],
-      ["Identity reviewed", "Identity evidence has been reviewed to link the profile to a person. This does not verify skills, experience or qualifications."],
     ],
     reviewsTitle: "What CraftID may review",
     reviewsText: "Identity information and evidence linked to individual professional claims, such as selected qualifications, experience, affiliations, business registration or other documented assertions.",
@@ -32,14 +33,15 @@ const copy = {
     title: "Чіткі твердження. Чіткі докази. Чіткий статус перевірки.",
     intro: "CraftID розділяє інформацію, яку власник профілю заявляє про професійну практику, докази, що можуть підтверджувати конкретне твердження, та статус перевірки цього твердження.",
     modelTitle: "Модель довіри на рівні тверджень",
-    modelText: "Перевірка застосовується до окремих тверджень і підтвердних матеріалів. CraftID не використовує узагальнений статус «верифікований професіонал».",
+    modelText: "Перевірка застосовується до окремих тверджень і підтвердних матеріалів. CraftID не використовує узагальнений статус «верифікований професіонал». Перевірка ідентичності є окремим контролем і не є вищим рівнем професійної довіри.",
+    identityTrack: "Перевірка ідентичності",
+    identityTrackText: "Перевірка ідентичності пов’язує документи, що посвідчують особу, з власником профілю. Вона відбувається паралельно до перевірки професійних тверджень і не підтверджує навички, досвід чи кваліфікації.",
     statuses: [
       ["Заявлено самостійно", "Інформація внесена власником профілю та не перевірялася незалежно."],
       ["Докази подано", "Підтвердний матеріал завантажено або зазначено для конкретного твердження; перевірка очікується або триває."],
       ["Документ переглянуто", "Рецензент переглянув документальні докази у зв’язку з відображеним твердженням. Це не означає незалежного визнання кваліфікації чи статусу."],
       ["Докази переглянуто", "Наявні докази оцінено та вони обґрунтовано підтримують конкретне твердження відповідно до застосованої процедури."],
       ["Підтверджено зовнішнім джерелом", "Твердження відповідає ідентифікованому зовнішньому джерелу, реєстру, установі або видавцю."],
-      ["Ідентичність переглянуто", "Документи, що посвідчують особу, переглянуто для пов’язання профілю з людиною. Це не підтверджує навички, досвід чи кваліфікації."],
     ],
     reviewsTitle: "Що CraftID може перевіряти",
     reviewsText: "Дані про ідентичність та докази, пов’язані з окремими професійними твердженнями, наприклад вибраними кваліфікаціями, досвідом, професійними зв’язками, реєстрацією бізнесу або іншими документованими відомостями.",
@@ -76,14 +78,23 @@ export default async function MethodologyPage({ searchParams }: Props) {
               <h2>{t.modelTitle}</h2>
               <p>{t.modelText}</p>
             </div>
-            <div className="statusGrid">
-              {t.statuses.map(([title, text], index) => (
-                <article className="statusCard" key={title}>
-                  <span className="choiceIndex">{String(index + 1).padStart(2, "0")}</span>
-                  <h3>{title}</h3>
-                  <p>{text}</p>
-                </article>
-              ))}
+            <div className="trustModelLayout">
+              <div className="claimTrustTrack">
+                {t.statuses.map(([title, text], index) => (
+                  <article className="claimTrustStep" key={title}>
+                    <span className="choiceIndex">{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3>{title}</h3>
+                      <p>{text}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <aside className="identityTrustTrack">
+                <div className="eyebrow">{locale === "uk" ? "Паралельний контроль" : "Parallel control"}</div>
+                <h3>{t.identityTrack}</h3>
+                <p>{t.identityTrackText}</p>
+              </aside>
             </div>
           </div>
         </section>
