@@ -2968,3 +2968,105 @@ button {
     flex-direction: column;
   }
 }
+
+
+/* Methodology trust model */
+.trustModelLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.claimTrustTrack {
+  border-top: 2px solid var(--accent);
+}
+
+.claimTrustStep {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 18px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.claimTrustStep h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+.claimTrustStep p,
+.identityTrustTrack p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.identityTrustTrack {
+  padding: 24px;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.identityTrustTrack h3 {
+  margin: 10px 0 12px;
+  font-size: 1.35rem;
+  letter-spacing: -0.025em;
+}
+
+/* Admin publication gate */
+.adminGateBanner {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  margin: 24px 0 0;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.adminGateBanner > div {
+  display: grid;
+  gap: 8px;
+}
+
+.adminGateBanner strong {
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+}
+
+.adminGateBanner p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.adminGateBanner.pass {
+  border-top: 3px solid #547a60;
+}
+
+.adminGateBanner.blocked {
+  border-top: 3px solid var(--danger);
+}
+
+.adminGateBanner.pass strong {
+  color: #345d43;
+}
+
+.adminGateBanner.blocked strong {
+  color: var(--danger);
+}
+
+@media (max-width: 800px) {
+  .trustModelLayout,
+  .adminGateBanner {
+    grid-template-columns: 1fr;
+  }
+
+  .claimTrustStep {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+}
