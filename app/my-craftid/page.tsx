@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/login/actions";
 import { localeFrom } from "@/components/site-shell";
+import { createWorkshopCraftId } from "./actions";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 
 export const dynamic = "force-dynamic";
 
-type Props = { searchParams: Promise<{ lang?: string }> };
+type Props = {
+  searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }>;
+};
 
 function formatCraftId(value: number | string, checkDigits: string) {
   return `#${String(value).padStart(8, "0")}-${checkDigits}`;
@@ -53,6 +56,12 @@ const copy = {
     published: "Published",
     suspended: "Suspended",
     archived: "Archived",
+    records: "Your CraftID records",
+    switch: "Switch record",
+    createWorkshop: "Create Workshop CraftID",
+    workshopCreated: "Workshop CraftID created and linked to your professional record.",
+    workshopExists: "You already have an active Workshop CraftID.",
+    relationshipNote: "Personal and workshop records remain separate CraftIDs. Their relationship can be managed without merging professional evidence.",
   },
   uk: {
     eyebrow: "Мій CraftID",
@@ -94,68 +103,55 @@ const copy = {
     published: "Опубліковано",
     suspended: "Призупинено",
     archived: "Архів",
+    records: "Ваші записи CraftID",
+    switch: "Перемкнути запис",
+    createWorkshop: "Створити CraftID майстерні",
+    workshopCreated: "CraftID майстерні створено та пов’язано з вашим професійним записом.",
+    workshopExists: "У вас уже є активний CraftID майстерні.",
+    relationshipNote: "Персональний запис і майстерня залишаються окремими CraftID. Їхній зв’язок можна керувати без об’єднання професійних доказів.",
   },
 } as const;
 
 export default async function MyCraftIdPage({ searchParams }: Props) {
-  const locale = localeFrom((await searchParams).lang);
+  const sp = await searchParams;
+  const locale = localeFrom(sp.lang);
   const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
 
-  const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims();
-  const userId = claimsData?.claims?.sub;
+  const { supabase, userId, entity, entities } = await getOwnedCraftId(sp.entity);
+  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
+  if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
 
-  if (!userId) redirect(`/login${q}`);
+  const entityIds = entities.map((item) => item.id);
+  const [{ data: professionalProfiles }, { data: workshopProfiles }] = await Promise.all([
+    entityIds.length
+      ? supabase.from("professional_profiles").select("entity_id, display_name, professional_title, country_code, region, city").in("entity_id", entityIds)
+      : Promise.resolve({ data: [] }),
+    entityIds.length
+      ? supabase.from("workshop_profiles").select("entity_id, display_name, craft_sector, country_code, region, city").in("entity_id", entityIds)
+      : Promise.resolve({ data: [] }),
+  ]);
 
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id, craftid_number, craftid_check_digits, entity_type, public_status")
-    .eq("owner_user_id", userId)
-    .limit(1)
-    .maybeSingle();
+  const profiles = new Map<string, {
+    display_name: string;
+    professional_title?: string | null;
+    craft_sector?: string | null;
+    country_code?: string | null;
+    region?: string | null;
+    city?: string | null;
+  }>();
 
-  if (!entity) redirect(`/onboarding${q}`);
+  for (const profile of professionalProfiles ?? []) profiles.set(profile.entity_id, profile);
+  for (const profile of workshopProfiles ?? []) profiles.set(profile.entity_id, profile);
 
-  const profile =
-    entity.entity_type === "professional"
-      ? await supabase.from("professional_profiles")
-          .select("display_name, professional_title, country_code, region, city")
-          .eq("entity_id", entity.id).single()
-      : await supabase.from("workshop_profiles")
-          .select("display_name, craft_sector, country_code, region, city")
-          .eq("entity_id", entity.id).single();
-
-  const record = profile.data as
-    | {
-        display_name: string;
-        professional_title?: string | null;
-        craft_sector?: string | null;
-        country_code?: string | null;
-        region?: string | null;
-        city?: string | null;
-      }
-    | null;
-
-  const typeLabel =
-    entity.entity_type === "professional" ? t.typeProfessional : t.typeWorkshop;
+  const record = profiles.get(entity.id) ?? null;
+  const typeLabel = entity.entity_type === "professional" ? t.typeProfessional : t.typeWorkshop;
 
   const [{ count: skillCount }, { count: experienceCount }, { count: evidenceCount }] =
     await Promise.all([
-      supabase
-        .from("claims")
-        .select("id", { count: "exact", head: true })
-        .eq("entity_id", entity.id)
-        .eq("claim_type", "skill"),
-      supabase
-        .from("claims")
-        .select("id", { count: "exact", head: true })
-        .eq("entity_id", entity.id)
-        .in("claim_type", ["experience", "qualification"]),
-      supabase
-        .from("evidence_items")
-        .select("id", { count: "exact", head: true })
-        .eq("owner_entity_id", entity.id),
+      supabase.from("claims").select("id", { count: "exact", head: true }).eq("entity_id", entity.id).eq("claim_type", "skill"),
+      supabase.from("claims").select("id", { count: "exact", head: true }).eq("entity_id", entity.id).in("claim_type", ["experience", "qualification"]),
+      supabase.from("evidence_items").select("id", { count: "exact", head: true }).eq("owner_entity_id", entity.id),
     ]);
 
   const hasTitle = Boolean(record?.professional_title ?? record?.craft_sector);
@@ -170,19 +166,22 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
   if (entity.public_status !== "published") nextSteps.push(t.reviewPublish);
   if (!nextSteps.length && entity.public_status === "published") nextSteps.push(t.maintain);
 
+  const selectedQuery = ownerWorkspaceQuery(locale, entity.id);
+  const hasWorkshop = entities.some((item) => item.entity_type === "workshop");
+
   return (
     <main className="recordPage dashboardPage">
       <div className="container">
         <div className="dashboardHeader">
           <div>
-            <Link href={`/${q}`} className="brand">CraftID</Link>
+            <Link href={locale === "uk" ? "/?lang=uk" : "/"} className="brand">CraftID</Link>
             <div className="eyebrow dashboardEyebrow">{t.eyebrow}</div>
           </div>
           <div className="dashboardActions">
             <div className="languageSwitch">
-              <Link className={locale === "en" ? "active" : ""} href="/my-craftid">EN</Link>
+              <Link className={locale === "en" ? "active" : ""} href={`/my-craftid?entity=${entity.id}`}>EN</Link>
               <span>/</span>
-              <Link className={locale === "uk" ? "active" : ""} href="/my-craftid?lang=uk">UA</Link>
+              <Link className={locale === "uk" ? "active" : ""} href={`/my-craftid?lang=uk&entity=${entity.id}`}>UA</Link>
             </div>
             <form action={logout}>
               <input type="hidden" name="lang" value={locale} />
@@ -190,6 +189,43 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             </form>
           </div>
         </div>
+
+        <section className="entitySwitcher">
+          <div>
+            <div className="eyebrow">{t.records}</div>
+            <p>{t.relationshipNote}</p>
+          </div>
+          <div className="entitySwitcherRecords" aria-label={t.switch}>
+            {entities.map((item) => {
+              const itemProfile = profiles.get(item.id);
+              const active = item.id === entity.id;
+              return (
+                <Link
+                  className={active ? "entitySwitchCard active" : "entitySwitchCard"}
+                  href={`/my-craftid${ownerWorkspaceQuery(locale, item.id)}`}
+                  key={item.id}
+                >
+                  <span>{item.entity_type === "professional" ? t.typeProfessional : t.typeWorkshop}</span>
+                  <strong>{itemProfile?.display_name ?? t.recordFallback}</strong>
+                  <small>{formatCraftId(item.craftid_number, item.craftid_check_digits)}</small>
+                </Link>
+              );
+            })}
+            {!hasWorkshop && entities.some((item) => item.entity_type === "professional") ? (
+              <form action={createWorkshopCraftId}>
+                <input type="hidden" name="lang" value={locale} />
+                <button className="entitySwitchCard entitySwitchCreate" type="submit">
+                  <span>+</span>
+                  <strong>{t.createWorkshop}</strong>
+                </button>
+              </form>
+            ) : null}
+          </div>
+        </section>
+
+        {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
+        {sp.message === "workshop_created" ? <p className="formMessage">{t.workshopCreated}</p> : null}
+        {sp.message === "workshop_exists" ? <p className="formMessage">{t.workshopExists}</p> : null}
 
         <div className="recordTopbar">
           <div>
@@ -235,7 +271,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
               <span className="choiceIndex">{String(index + 1).padStart(2, "0")}</span>
               <h3>{title}</h3>
               <p>{text}</p>
-              <Link href={`${href}${q}`}>{t.open} →</Link>
+              <Link href={`${href}${selectedQuery}`}>{t.open} →</Link>
             </article>
           ))}
         </section>
