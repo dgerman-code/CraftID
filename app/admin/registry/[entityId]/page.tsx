@@ -113,13 +113,14 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
   const publicId = formatId(entity.craftid_number, entity.craftid_check_digits);
   const publicRouteId = publicId.replace("#", "");
 
-  const readiness = [
-    { label: "Profile identity", ok: displayName !== "Profile not completed" },
-    { label: "Location recorded", ok: Boolean(profile?.country_code || profile?.region || profile?.city) },
-    { label: "At least one skill/claim", ok: claims.length > 0 },
+  const publicationGate = [
+    { label: "Display name", ok: displayName !== "Profile not completed" },
+    { label: "Professional title / craft sector", ok: Boolean(subtitle) },
+    { label: "Public location", ok: Boolean(profile?.country_code || profile?.region || profile?.city) },
+    { label: "At least one skill claim", ok: claims.some((claim) => claim.claim_type === "skill") },
     { label: "Privacy settings", ok: Boolean(privacyResult.data) },
-    { label: "Supporting evidence", ok: evidence.length > 0 },
   ];
+  const publicationGatePass = publicationGate.every((item) => item.ok);
 
   return (
     <main className="adminPage">
@@ -153,8 +154,20 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
       {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
       {sp.message ? <p className="formMessage">Status updated and recorded in the audit trail.</p> : null}
 
+      <div className={`adminGateBanner ${publicationGatePass ? "pass" : "blocked"}`}>
+        <div>
+          <div className="eyebrow">Publication gate</div>
+          <strong>{publicationGatePass ? "PASS" : "BLOCKED"}</strong>
+        </div>
+        <p>
+          {publicationGatePass
+            ? "This record meets the minimum integrity requirements for public registry publication. This is not a certification decision."
+            : "Publication is blocked until the missing minimum registry fields below are completed. Evidence review is not required for publication."}
+        </p>
+      </div>
+
       <section className="adminReadinessGrid">
-        {readiness.map((item) => (
+        {publicationGate.map((item) => (
           <article key={item.label} className={item.ok ? "ready" : "missing"}>
             <span>{item.label}</span>
             <strong>{item.ok ? "Ready" : "Missing"}</strong>
@@ -288,7 +301,9 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
                 New status
                 <select name="status" defaultValue={entity.public_status}>
                   <option value="draft">Draft</option>
-                  <option value="published">Published</option>
+                  <option value="published" disabled={!publicationGatePass && entity.public_status !== "published"}>
+                    Published{!publicationGatePass && entity.public_status !== "published" ? " — blocked by gate" : ""}
+                  </option>
                   <option value="suspended">Suspended</option>
                   <option value="archived">Archived</option>
                 </select>
