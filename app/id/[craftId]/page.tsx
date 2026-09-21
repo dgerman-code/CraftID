@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -99,10 +100,24 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
         </header>
 
         <section className="publicIdentityHero">
-          <div>
-            <div className="recordId">CraftID {formatted}</div>
-            <h1>{record.display_name}</h1>
-            <p className="profileRole">{record.professional_title ?? record.craft_sector ?? ""}</p>
+          <div className="publicIdentityIntro">
+            {record.has_public_photo ? (
+              <Image
+                className="publicProfilePhoto"
+                src={`/api/public/profile-photo/${routeId}`}
+                alt={record.display_name}
+                width={112}
+                height={112}
+                unoptimized
+              />
+            ) : (
+              <div className="publicProfilePhoto publicProfilePhotoFallback" aria-hidden="true" />
+            )}
+            <div>
+              <div className="recordId">CraftID {formatted}</div>
+              <h1>{record.display_name}</h1>
+              <p className="profileRole">{record.professional_title ?? record.craft_sector ?? ""}</p>
+            </div>
           </div>
           <div className="trustStamp">
             <span>CraftID</span>
