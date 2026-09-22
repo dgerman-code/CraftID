@@ -26,6 +26,7 @@ export async function createCraftId(formData: FormData) {
     .from("craftid_entities")
     .select("id")
     .eq("owner_user_id", userId)
+    .neq("public_status", "archived")
     .limit(1)
     .maybeSingle();
 
