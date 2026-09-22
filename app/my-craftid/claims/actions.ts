@@ -44,7 +44,6 @@ export async function addClaim(formData: FormData) {
 export async function addSkillClaims(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const entityId = String(formData.get("entityId") ?? "").trim();
-  const fallbackQ = lang === "uk" ? "?lang=uk" : "";
   const selected = [...new Set(formData.getAll("skillId").map((value) => String(value)).filter(Boolean))];
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
