@@ -22,7 +22,7 @@ const copy = {
     region: "Region",
     cityLevel: "City",
     exactTitle: "Optional exact address",
-    exactText: "You may store an exact workshop or business address for future operational use. CraftID does not currently publish exact addresses in public profiles or on the map.",
+    exactText: "You may store an exact workshop or business address privately. Workshop CraftID owners can separately choose to publish it in the public workshop profile.",
     address1: "Address line 1",
     address2: "Address line 2",
     postalCode: "Postal code",
@@ -31,7 +31,10 @@ const copy = {
     save: "Save privacy settings",
     saved: "Privacy settings saved.",
     back: "Back to My CraftID",
-    warning: "Public location is limited to country, region or city. Exact addresses remain private. For individual professionals, do not enter a private home address unless there is a clear operational need.",
+    exactPublic: "Show exact workshop/business address publicly",
+    exactPublicHelp: "Workshop only. This publishes the full address in the public Workshop profile. The Craft Skills Map remains aggregated and does not use the exact address.",
+    exactPublicConsent: "I understand that this full workshop/business address will be publicly visible.",
+    warning: "General public location is controlled separately as country, region or city. Exact address publication is optional and available only for Workshop CraftID.",
     evidence: "Evidence files remain private regardless of these public profile settings.",
   },
   uk: {
@@ -48,7 +51,7 @@ const copy = {
     region: "Регіон",
     cityLevel: "Місто",
     exactTitle: "Точна адреса за бажанням",
-    exactText: "За бажанням можна зберегти точну адресу майстерні або бізнесу для майбутніх операційних сценаріїв. CraftID наразі не публікує точні адреси у профілях чи на карті.",
+    exactText: "Точну адресу майстерні або бізнесу можна зберігати приватно. Власник Workshop CraftID може окремо дозволити її публікацію у публічному профілі майстерні.",
     address1: "Адреса, рядок 1",
     address2: "Адреса, рядок 2",
     postalCode: "Поштовий індекс",
@@ -57,7 +60,10 @@ const copy = {
     save: "Зберегти налаштування приватності",
     saved: "Налаштування приватності збережено.",
     back: "Назад до Мій CraftID",
-    warning: "Публічна локація обмежена рівнем країни, регіону або міста. Точні адреси залишаються приватними. Для індивідуальних професіоналів не вказуйте домашню адресу без чіткої операційної потреби.",
+    exactPublic: "Показувати точну адресу майстерні/бізнесу публічно",
+    exactPublicHelp: "Лише для Workshop CraftID. Повна адреса буде показана у публічному профілі майстерні. Craft Skills Map залишається агрегованою і не використовує точну адресу.",
+    exactPublicConsent: "Я розумію, що ця повна адреса майстерні/бізнесу буде доступна публічно.",
+    warning: "Загальна публічна географія окремо налаштовується як країна, регіон або місто. Публікація точної адреси є добровільною і доступна лише для Workshop CraftID.",
     evidence: "Файли доказів залишаються приватними незалежно від цих налаштувань публічного профілю.",
   },
 } as const;
@@ -77,7 +83,7 @@ export default async function PrivacyPage({ searchParams }: Props) {
       .select("show_profile_photo, show_city, show_languages, show_portfolio, show_qualifications, location_precision")
       .eq("entity_id", entity.id).single(),
     supabase.from("entity_business_addresses")
-      .select("address_line1, address_line2, postal_code, locality, country_code")
+      .select("address_line1, address_line2, postal_code, locality, country_code, show_in_public_profile")
       .eq("entity_id", entity.id)
       .maybeSingle(),
   ]);
@@ -122,6 +128,27 @@ export default async function PrivacyPage({ searchParams }: Props) {
               <label>{t.locality}<input name="locality" defaultValue={address?.locality ?? ""} /></label>
               <label>{t.addressCountry}<input name="addressCountryCode" maxLength={2} defaultValue={address?.country_code ?? ""} placeholder="UA" /></label>
             </div>
+            {entity.entity_type === "workshop" ? (
+              <div className="toggleList exactAddressPublicConsent">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="showExactAddressPublic"
+                    defaultChecked={address?.show_in_public_profile ?? false}
+                  />
+                  {t.exactPublic}
+                </label>
+                <p className="fieldHelp">{t.exactPublicHelp}</p>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="confirmExactAddressPublic"
+                    defaultChecked={address?.show_in_public_profile ?? false}
+                  />
+                  {t.exactPublicConsent}
+                </label>
+              </div>
+            ) : null}
           </section>
 
           <button className="button buttonPrimary" type="submit">{t.save}</button>
