@@ -3,13 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 
 function safeInternalPath(value: string | null) {
   if (!value) return "/onboarding";
-  if (!value.startsWith("/") || value.startsWith("//") || value.includes("\")) {
+  if (!value.startsWith("/") || value.startsWith("//") || value.includes("\\")) {
     return "/onboarding";
   }
 
   try {
     const decoded = decodeURIComponent(value);
-    if (!decoded.startsWith("/") || decoded.startsWith("//") || decoded.includes("\")) {
+    if (!decoded.startsWith("/") || decoded.startsWith("//") || decoded.includes("\\")) {
       return "/onboarding";
     }
   } catch {
