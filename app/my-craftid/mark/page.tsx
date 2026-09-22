@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
-type Props = { searchParams: Promise<{ lang?: string }> };
+type Props = { searchParams: Promise<{ lang?: string; entity?: string }> };
 
 function formatCraftId(value: number | string, checkDigits: string) {
   return `${String(value).padStart(8, "0")}-${checkDigits}`;
@@ -62,23 +62,14 @@ const copy = {
 } as const;
 
 export default async function CraftIdMarkPage({ searchParams }: Props) {
-  const locale = localeFrom((await searchParams).lang);
+  const sp = await searchParams;
+  const locale = localeFrom(sp.lang);
   const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
-
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id, craftid_number, craftid_check_digits, entity_type, public_status")
-    .eq("owner_user_id", userId)
-    .limit(1)
-    .single();
-
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
+  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
+  if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
 
   const profile = entity.entity_type === "professional"
     ? await supabase.from("professional_profiles").select("display_name").eq("entity_id", entity.id).single()
@@ -130,7 +121,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
             </div>
             <div className="markButtonRow">
               <a className="button" href={badgeDownloadUrl}>{t.downloadBadge}</a>
-              {entity.public_status === "published" ? <Link className="button" href={`/id/${craftId}${q}`}>{t.openProfile}</Link> : null}
+              {entity.public_status === "published" ? <Link className="button" href={`/id/${craftId}${locale === "uk" ? "?lang=uk" : ""}`}>{t.openProfile}</Link> : null}
             </div>
           </article>
         </section>
