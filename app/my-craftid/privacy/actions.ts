@@ -21,23 +21,25 @@ export async function updatePrivacy(formData: FormData) {
   const locality = String(formData.get("locality") ?? "").trim();
   const countryCode = String(formData.get("addressCountryCode") ?? "").trim().toUpperCase();
 
-  const { error } = await supabase.from("privacy_settings").update({
-    show_profile_photo: formData.get("showProfilePhoto") === "on",
-    show_city: formData.get("showCity") === "on",
-    show_languages: formData.get("showLanguages") === "on",
-    show_portfolio: formData.get("showPortfolio") === "on",
-    show_qualifications: formData.get("showQualifications") === "on",
-    location_precision: allowedPrecision.has(precision) ? precision : "city",
-  }).eq("entity_id", entity.id);
-
-  if (error) {
-    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(error.message)}`);
-  }
-
   if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) {
     redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(
       lang === "uk" ? "Код країни адреси має містити 2 літери." : "Address country code must contain 2 letters.",
     )}`);
+  }
+
+  const canonicalPrecision = allowedPrecision.has(precision) ? precision : "city";
+
+  const { error } = await supabase.from("privacy_settings").update({
+    show_profile_photo: formData.get("showProfilePhoto") === "on",
+    show_city: canonicalPrecision === "city",
+    show_languages: formData.get("showLanguages") === "on",
+    show_portfolio: formData.get("showPortfolio") === "on",
+    show_qualifications: formData.get("showQualifications") === "on",
+    location_precision: canonicalPrecision,
+  }).eq("entity_id", entity.id);
+
+  if (error) {
+    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(error.message)}`);
   }
 
   const hasAnyAddress = Boolean(addressLine1 || addressLine2 || postalCode || locality || countryCode);
