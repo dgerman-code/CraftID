@@ -61,6 +61,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
     .from("craftid_entities")
     .select("id")
     .eq("owner_user_id", data.claims.sub)
+    .neq("public_status", "archived")
     .limit(1)
     .maybeSingle();
 
