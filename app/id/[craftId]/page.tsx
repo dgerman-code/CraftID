@@ -29,6 +29,7 @@ const copy = {
     about: "About",
     skills: "Skills",
     location: "Location",
+    exactAddress: "Workshop address",
     links: "External presence",
     contact: "Contact through CraftID",
     notice: "CraftID is an independent professional identity and evidence infrastructure. This profile is not a quality certification or EU recognition.",
@@ -49,6 +50,7 @@ const copy = {
     about: "Про практику",
     skills: "Навички",
     location: "Місце",
+    exactAddress: "Адреса майстерні",
     links: "Зовнішні профілі",
     contact: "Зв’язатися через CraftID",
     notice: "CraftID — незалежна інфраструктура професійної ідентичності та доказів. Цей профіль не є сертифікацією якості або визнанням ЄС.",
@@ -89,6 +91,13 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
     professional_title: string | null;
     craft_sector: string | null;
     location: string | null;
+    exact_business_address: {
+      address_line1: string | null;
+      address_line2: string | null;
+      postal_code: string | null;
+      locality: string | null;
+      country_code: string | null;
+    } | null;
     about: string | null;
     has_public_photo: boolean;
     languages: string[];
@@ -171,6 +180,17 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
   const claims = record.claims.filter((claim) => claim.claim_type === "skill");
   const links = record.links;
   const location = record.location ?? "";
+  const exactAddress = record.exact_business_address
+    ? [
+        record.exact_business_address.address_line1,
+        record.exact_business_address.address_line2,
+        [
+          record.exact_business_address.postal_code,
+          record.exact_business_address.locality,
+        ].filter(Boolean).join(" "),
+        record.exact_business_address.country_code,
+      ].filter(Boolean).join(", ")
+    : "";
 
   const formatted = formatCraftId(record.craftid_number, record.craftid_check_digits);
   const routeId = formatted.replace("#", "");
@@ -227,6 +247,13 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
           <aside>
             <div className="eyebrow">{t.location}</div>
             <p>{location || t.unavailable}</p>
+
+            {exactAddress ? (
+              <div className="profileMetaBlock">
+                <div className="eyebrow">{t.exactAddress}</div>
+                <p>{exactAddress}</p>
+              </div>
+            ) : null}
 
             {links?.length ? (
               <div className="profileMetaBlock">
