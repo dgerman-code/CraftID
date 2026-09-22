@@ -61,28 +61,27 @@ export async function updateProfile(formData: FormData) {
 export async function uploadProfileImage(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const entityId = String(formData.get("entityId") ?? "").trim();
-  const fallbackQ = lang === "uk" ? "?lang=uk" : "";
   const file = formData.get("file");
 
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
+
   if (!(file instanceof File) || file.size === 0) {
-    redirect(`/my-craftid/profile${fallbackQ}${fallbackQ ? "&" : "?"}error=${encodeURIComponent(
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(
       lang === "uk" ? "Оберіть зображення" : "Choose an image",
     )}`);
   }
 
   const allowed = new Set(["image/jpeg", "image/png", "image/webp"]);
   if (!allowed.has(file.type) || file.size > 5 * 1024 * 1024) {
-    redirect(`/my-craftid/profile${fallbackQ}${fallbackQ ? "&" : "?"}error=${encodeURIComponent(
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(
       lang === "uk"
         ? "Дозволені JPEG, PNG або WebP до 5 МБ"
         : "Use JPEG, PNG or WebP up to 5 MB",
     )}`);
   }
-
-  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const table = entity.entity_type === "professional" ? "professional_profiles" : "workshop_profiles";
   const { data: current } = await supabase
