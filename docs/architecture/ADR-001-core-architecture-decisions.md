@@ -190,7 +190,7 @@ Public map rules:
 - no private home address;
 - no production capacity attached to public map points;
 - no sensitive social attributes attached to public points;
-- no exact workshop location unless separately and explicitly opted in;
+- exact workshop/business addresses are stored separately as private operational data and are not published by the current public profile or map; any future exact-location publication requires a separately designed explicit-consent and revocation flow;
 - no disclosure of protected/private evidence.
 
 The map should support:
@@ -212,8 +212,9 @@ Territorial/public aggregate reporting must apply a minimum disclosure threshold
 
 Initial design principle:
 - sensitive or potentially identifying public aggregates are suppressed when group size is below a configured threshold;
-- initial working threshold: **k ≥ 5** unless a later DPIA/data-governance decision changes it;
-- if a subgroup is too small, the UI should move to a broader territorial/category level or show "insufficient public data".
+- thresholds are configuration-driven; current general public aggregates use **k ≥ 5**;
+- sensitive or potentially identifying aggregate views use the stricter configured threshold (**currently k ≥ 10**) where such data is lawfully introduced;
+- if a subgroup is too small, the data/query layer suppresses it before client delivery; the UI may move to a broader territorial/category level or show "insufficient public data".
 
 Suppression must be enforced in the data/query layer, not only via UI wording.
 
