@@ -24,7 +24,7 @@ const copy = {
     workshopText: "For a studio, workshop or craft-based micro-enterprise. This record describes the organisation or place of practice: craft sector, capabilities, team relationships, business context and workshop-level evidence.",
     workshopHint: "Use this for the workshop itself — not as a replacement for the craftsperson's personal record.",
     workshopCta: "Create workshop CraftID",
-    note: "Each CraftID is a permanent identifier for one record. A person and a workshop may therefore have different CraftIDs and be linked through a declared relationship. Country of practice and professional information can be updated without changing the CraftID. Numbers 00000001–00000100 are reserved for explicit administrative assignment.",
+    note: "Each CraftID is a permanent identifier for one entity. It is never replaced, reassigned or transferred to another entity. If you previously closed your account and return with the same confirmed email, CraftID restores the same archived record as a draft instead of issuing a new number. A person and a workshop may have separate CraftIDs and be linked through a declared relationship. Numbers 00000001–00000100 are reserved for explicit administrative assignment.",
   },
   uk: {
     eyebrow: "Налаштування CraftID",
@@ -40,7 +40,7 @@ const copy = {
     workshopText: "Для студії, майстерні або ремісничого мікропідприємства. Цей запис описує організацію або місце професійної діяльності: ремісничий напрям, можливості, командні зв’язки, бізнес-контекст і докази на рівні майстерні.",
     workshopHint: "Використовуйте для самої майстерні — не замість персонального запису майстра.",
     workshopCta: "Створити CraftID майстерні",
-    note: "Кожен CraftID є постійним ідентифікатором одного запису. Тому людина і майстерня можуть мати різні CraftID та бути пов’язаними через задекларований зв’язок. Країну діяльності й професійну інформацію можна оновлювати без зміни CraftID. Номери 00000001–00000100 зарезервовані для окремого призначення адміністратором.",
+    note: "Кожен CraftID є постійним ідентифікатором однієї сутності. Він ніколи не замінюється, не видається повторно і не переноситься на іншу сутність. Якщо ви раніше закрили обліковий запис і повертаєтесь із тією самою підтвердженою email-адресою, CraftID відновить той самий архівний запис як чернетку замість видачі нового номера. Людина і майстерня можуть мати окремі CraftID та бути пов’язаними між собою. Номери 00000001–00000100 зарезервовані для окремого призначення адміністратором.",
   },
 } as const;
 
