@@ -36,6 +36,13 @@ const copy = {
     website: "Website",
     linkedin: "LinkedIn",
     portfolio: "Portfolio",
+    archivedIdentity: "Archived CraftID record",
+    archivedTitle: "Historical CraftID",
+    archivedText: "This CraftID is no longer active. A minimal historical record remains available so products and documents already carrying this identifier can still be traced to the registered professional or workshop.",
+    archivedStatus: "Archived",
+    archivedSince: "Archived",
+    historicalCountry: "Country at archive",
+    historicalNotice: "This archived record is retained for provenance and record-integrity purposes. It does not indicate current activity, certification or quality approval.",
   },
   uk: {
     identity: "Запис професійної ідентичності",
@@ -49,6 +56,13 @@ const copy = {
     website: "Вебсайт",
     linkedin: "LinkedIn",
     portfolio: "Портфоліо",
+    archivedIdentity: "Архівний запис CraftID",
+    archivedTitle: "Історичний CraftID",
+    archivedText: "Цей CraftID більше не є активним. Мінімальний історичний запис зберігається, щоб вироби та документи з цим ідентифікатором можна було й надалі пов’язати із зареєстрованим професіоналом або майстернею.",
+    archivedStatus: "Архів",
+    archivedSince: "Архівовано",
+    historicalCountry: "Країна на момент архівації",
+    historicalNotice: "Цей архівний запис зберігається для provenance та цілісності реєстру. Він не означає поточну діяльність, сертифікацію чи підтвердження якості.",
   },
 } as const;
 
@@ -82,7 +96,77 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
     links: { contact_type: string; value: string; verification_level: string }[];
   } | null;
 
-  if (!record) notFound();
+  if (!record) {
+    const { data: historicalData } = await supabase.rpc("historical_craftid_record", {
+      p_craftid_number: parsed.number,
+      p_check_digits: parsed.check,
+    });
+
+    const historical = historicalData as {
+      craftid_number: number;
+      craftid_check_digits: string;
+      entity_type: "professional" | "workshop";
+      display_name: string | null;
+      country_code: string | null;
+      created_at: string | null;
+      archived_at: string | null;
+      status: "archived";
+    } | null;
+
+    if (!historical) notFound();
+
+    const historicalFormatted = formatCraftId(
+      historical.craftid_number,
+      historical.craftid_check_digits,
+    );
+
+    return (
+      <main className="publicIdentityPage">
+        <div className="container">
+          <header className="publicIdentityHeader">
+            <Link className="brand" href={`/${q}`}>CraftID</Link>
+            <div className="recordId">{t.archivedIdentity}</div>
+          </header>
+
+          <section className="publicIdentityHero archivedIdentityHero">
+            <div className="publicIdentityIntro">
+              <div>
+                <div className="recordId">CraftID {historicalFormatted}</div>
+                <h1>{historical.display_name ?? t.archivedTitle}</h1>
+                <p className="profileRole">
+                  {historical.entity_type === "professional" ? "Professional" : "Workshop"} · {t.archivedStatus}
+                </p>
+              </div>
+            </div>
+            <div className="trustStamp archivedTrustStamp">
+              <span>CraftID</span>
+              <strong>{historicalFormatted}</strong>
+            </div>
+          </section>
+
+          <section className="archivedRecordPanel">
+            <p>{t.archivedText}</p>
+            <dl className="archivedRecordFacts">
+              {historical.country_code ? (
+                <div>
+                  <dt>{t.historicalCountry}</dt>
+                  <dd>{historical.country_code}</dd>
+                </div>
+              ) : null}
+              {historical.archived_at ? (
+                <div>
+                  <dt>{t.archivedSince}</dt>
+                  <dd>{new Date(historical.archived_at).toLocaleDateString(locale === "uk" ? "uk-UA" : "en-GB")}</dd>
+                </div>
+              ) : null}
+            </dl>
+          </section>
+
+          <p className="publicIdentityNotice">{t.historicalNotice}</p>
+        </div>
+      </main>
+    );
+  }
 
   const claims = record.claims.filter((claim) => claim.claim_type === "skill");
   const links = record.links;
