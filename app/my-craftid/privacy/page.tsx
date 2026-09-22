@@ -100,7 +100,6 @@ export default async function PrivacyPage({ searchParams }: Props) {
           <input type="hidden" name="entityId" value={entity.id} />
           <div className="toggleList">
             <label><input type="checkbox" name="showProfilePhoto" defaultChecked={settings?.show_profile_photo} />{t.photo}</label>
-            <label><input type="checkbox" name="showCity" defaultChecked={settings?.show_city} />{t.city}</label>
             <label><input type="checkbox" name="showLanguages" defaultChecked={settings?.show_languages} />{t.languages}</label>
             <label><input type="checkbox" name="showPortfolio" defaultChecked={settings?.show_portfolio} />{t.portfolio}</label>
             <label><input type="checkbox" name="showQualifications" defaultChecked={settings?.show_qualifications} />{t.qualifications}</label>
