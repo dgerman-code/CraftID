@@ -8,6 +8,25 @@ type Props = {
   searchParams: Promise<{ error?: string; message?: string; edit?: string }>;
 };
 
+type AdminPartner = {
+  id: string;
+  legal_name_en: string;
+  legal_name_uk: string | null;
+  short_name_en: string | null;
+  short_name_uk: string | null;
+  country_code: string;
+  partner_role: string;
+  status: string;
+  agreement_status: string;
+  website_url: string | null;
+  description_en: string | null;
+  description_uk: string | null;
+  scope_note: string | null;
+  is_public: boolean;
+  sort_order: number;
+  updated_at: string;
+};
+
 const roleLabels: Record<string, string> = {
   european_coordinator: "European Coordinator",
   national_coordinating_partner: "National Coordinating Partner",
@@ -38,10 +57,11 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
   const { data: role } = await supabase.rpc("current_staff_role");
   if (role !== "admin") redirect("/admin");
 
-  const { data: partners, error } = await supabase
+  const { data: partnersData, error } = await supabase
     .rpc("admin_partner_organisations");
+  const partners = (partnersData ?? []) as AdminPartner[];
 
-  const edit = sp.edit ? (partners ?? []).find((partner) => partner.id === sp.edit) : null;
+  const edit = sp.edit ? partners.find((partner) => partner.id === sp.edit) : null;
 
   return (
     <main className="adminPage">
@@ -65,7 +85,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
               <div className="eyebrow">Network</div>
               <h2>Partner register</h2>
             </div>
-            <span>{partners?.length ?? 0}</span>
+            <span>{partners.length}</span>
           </div>
 
           <div className="adminTable">
@@ -78,7 +98,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
               <span></span>
             </div>
 
-            {(partners ?? []).map((partner) => (
+            {partners.map((partner) => (
               <div className="adminTableRow adminPartnerColumns" key={partner.id}>
                 <div className="adminRegistryIdentity">
                   <strong>{partner.short_name_en || partner.legal_name_en}</strong>
@@ -98,7 +118,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
               </div>
             ))}
 
-            {!partners?.length ? <p className="emptyState adminEmptyTable">No partner organisations yet.</p> : null}
+            {!partners.length ? <p className="emptyState adminEmptyTable">No partner organisations yet.</p> : null}
           </div>
         </section>
 
