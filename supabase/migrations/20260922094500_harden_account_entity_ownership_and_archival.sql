@@ -11,7 +11,7 @@ returns trigger
 language plpgsql
 security invoker
 set search_path = pg_catalog, auth
-as $
+as $body$
 begin
   if new.id is distinct from old.id then
     raise exception 'CraftID entity id is immutable';
@@ -40,7 +40,7 @@ begin
 
   return new;
 end;
-$$;
+$body$;
 
 revoke all on function private.protect_craftid_entity_identity()
 from public, anon, authenticated;
