@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { saveSkillProfile } from "./actions";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ claimId: string }>;
-  searchParams: Promise<{ lang?: string; error?: string; message?: string }>;
+  searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }>;
 };
 
 const optionLabels = {
@@ -135,12 +135,10 @@ export default async function SkillProfilePage({ params, searchParams }: Props) 
   const locale = localeFrom(sp.lang);
   const t = copy[locale];
   const labels = optionLabels[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
-
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
+  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(locale, entity.id);
 
   const { data: claim } = await supabase
     .from("claims")
@@ -151,14 +149,7 @@ export default async function SkillProfilePage({ params, searchParams }: Props) 
 
   if (!claim) redirect(`/my-craftid/claims${q}`);
 
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id")
-    .eq("id", claim.entity_id)
-    .eq("owner_user_id", userId)
-    .single();
-
-  if (!entity) redirect(`/my-craftid/claims${q}`);
+  if (claim.entity_id !== entity.id) redirect(`/my-craftid/claims${q}`);
 
   const [{ data: definitions }, { data: observations }] = await Promise.all([
     supabase
@@ -192,6 +183,7 @@ export default async function SkillProfilePage({ params, searchParams }: Props) 
         <form className="indicatorForm" action={saveSkillProfile}>
           <input type="hidden" name="lang" value={locale} />
           <input type="hidden" name="claimId" value={claim.id} />
+          <input type="hidden" name="entityId" value={entity.id} />
 
           {definitions?.map((definition) => {
             const options = Array.isArray(definition.options) ? definition.options as string[] : [];
