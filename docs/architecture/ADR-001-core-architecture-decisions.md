@@ -190,7 +190,7 @@ Public map rules:
 - no private home address;
 - no production capacity attached to public map points;
 - no sensitive social attributes attached to public points;
-- exact workshop/business addresses are stored separately as private operational data and are not published by the current public profile or map; any future exact-location publication requires a separately designed explicit-consent and revocation flow;
+- exact workshop/business addresses are stored separately from coarse geography; Workshop CraftID owners may explicitly opt in to publishing the exact address in the public Workshop profile, with revocable consent; Professional CraftID cannot publish an exact address through this mechanism; the Craft Skills Map remains aggregate/coarse and does not consume exact addresses;
 - no disclosure of protected/private evidence.
 
 The map should support:
