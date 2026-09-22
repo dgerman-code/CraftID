@@ -7,12 +7,13 @@ import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 export async function respondToInstitutionalReferral(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const entityId = String(formData.get("entityId") ?? "").trim();
+  const fallbackQ = lang === "uk" ? "?lang=uk" : "";
   const referralId = String(formData.get("referralId") ?? "");
   const status = String(formData.get("status") ?? "");
   const note = String(formData.get("note") ?? "").trim();
 
   if (!referralId || !["accepted","declined"].includes(status)) {
-    redirect(`/my-craftid/referrals${q}`);
+    redirect(`/my-craftid/referrals${fallbackQ}`);
   }
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
