@@ -60,13 +60,12 @@ export default async function NetworkPage({ searchParams }: Props) {
   const t = copy[locale];
   const supabase = await createClient();
 
-  const { data: partners } = await supabase
-    .from("partner_organisations")
-    .select("id, legal_name_en, legal_name_uk, short_name_en, short_name_uk, country_code, partner_role, website_url, description_en, description_uk, sort_order")
-    .eq("status", "confirmed")
-    .eq("is_public", true)
-    .order("sort_order", { ascending: true })
-    .order("legal_name_en", { ascending: true });
+  const { data: partners, error: partnersError } = await supabase
+    .rpc("public_partner_organisations");
+
+  if (partnersError) {
+    console.error("Unable to load public partner organisations", partnersError);
+  }
 
   return (
     <>
