@@ -3311,3 +3311,79 @@ button {
   color: var(--muted);
   line-height: 1.5;
 }
+
+
+/* My CraftID entity switcher */
+.entitySwitcher {
+  margin: 22px 0 28px;
+  padding: 18px 0 20px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.entitySwitcher > div:first-child {
+  max-width: 760px;
+}
+
+.entitySwitcher > div:first-child p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.entitySwitcherRecords {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.entitySwitcherRecords form {
+  margin: 0;
+}
+
+.entitySwitchCard {
+  min-height: 96px;
+  width: 100%;
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.entitySwitchCard:hover {
+  border-color: var(--accent);
+}
+
+.entitySwitchCard.active {
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.entitySwitchCard span,
+.entitySwitchCard small {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.entitySwitchCard strong {
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.entitySwitchCreate {
+  border-style: dashed;
+}
+
+@media (max-width: 900px) {
+  .entitySwitcherRecords {
+    grid-template-columns: 1fr;
+  }
+}
