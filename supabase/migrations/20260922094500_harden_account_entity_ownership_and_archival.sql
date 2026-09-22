@@ -10,8 +10,8 @@ create or replace function private.protect_craftid_entity_identity()
 returns trigger
 language plpgsql
 security invoker
-set search_path = pg_catalog
-as $$
+set search_path = pg_catalog, auth
+as $
 begin
   if new.id is distinct from old.id then
     raise exception 'CraftID entity id is immutable';
@@ -30,7 +30,12 @@ begin
   end if;
 
   if new.owner_user_id is distinct from old.owner_user_id then
-    raise exception 'CraftID owner cannot be changed through ordinary updates';
+    -- The only ownership mutation allowed is FK-driven detachment when the
+    -- authentication account itself is removed. End users cannot satisfy the
+    -- entity UPDATE RLS check with owner_user_id = null.
+    if not (new.owner_user_id is null and old.owner_user_id is not null and (select auth.uid()) is null) then
+      raise exception 'CraftID owner cannot be changed through ordinary updates';
+    end if;
   end if;
 
   return new;
@@ -204,7 +209,10 @@ begin
   update public.professional_workshop_relationships r
   set status = case when r.status in ('active','pending') then 'ended' else r.status end,
       visibility = 'private',
-      ends_on = coalesce(r.ends_on, current_date),
+      ends_on = coalesce(
+        r.ends_on,
+        case when r.starts_on is not null and r.starts_on > current_date then r.starts_on else current_date end
+      ),
       updated_at = now()
   where exists (
       select 1 from public.craftid_entities e
