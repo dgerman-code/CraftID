@@ -20,6 +20,7 @@ const copy = {
     skills: "Skills",
     about: "About",
     location: "Location",
+    exactAddress: "Workshop address",
     noSkills: "No skills added yet.",
     noAbout: "No description added yet.",
     notSet: "Not set",
@@ -38,6 +39,7 @@ const copy = {
     skills: "Навички",
     about: "Про практику",
     location: "Місце",
+    exactAddress: "Адреса майстерні",
     noSkills: "Навички ще не додані.",
     noAbout: "Опис ще не додано.",
     notSet: "Не вказано",
@@ -98,7 +100,7 @@ export default async function PreviewPage({ searchParams }: Props) {
       .single(),
     supabase
       .from("entity_business_addresses")
-      .select("address_line1, address_line2, postal_code, locality, country_code")
+      .select("address_line1, address_line2, postal_code, locality, country_code, show_in_public_profile")
       .eq("entity_id", entity.id)
       .maybeSingle(),
     supabase
@@ -126,14 +128,17 @@ export default async function PreviewPage({ searchParams }: Props) {
     location = [record.region, record.country_code].filter(Boolean).join(", ");
   } else if (privacy?.location_precision === "city") {
     location = [record.city, record.region, record.country_code].filter(Boolean).join(", ");
-  } else if (privacy?.location_precision === "exact_business_location" && address) {
-    location = [
-      address.address_line1,
-      address.address_line2,
-      [address.postal_code, address.locality].filter(Boolean).join(" "),
-      address.country_code,
-    ].filter(Boolean).join(", ");
   }
+
+  const exactAddress =
+    entity.entity_type === "workshop" && address?.show_in_public_profile
+      ? [
+          address.address_line1,
+          address.address_line2,
+          [address.postal_code, address.locality].filter(Boolean).join(" "),
+          address.country_code,
+        ].filter(Boolean).join(", ")
+      : "";
 
   return (
     <main className="workspacePage previewPage">
@@ -160,6 +165,13 @@ export default async function PreviewPage({ searchParams }: Props) {
             <aside>
               <div className="eyebrow">{t.location}</div>
               <p>{location || t.notSet}</p>
+
+              {exactAddress ? (
+                <>
+                  <div className="eyebrow previewSkillsLabel">{t.exactAddress}</div>
+                  <p>{exactAddress}</p>
+                </>
+              ) : null}
 
               <div className="eyebrow previewSkillsLabel">{t.skills}</div>
               {skills.length ? (
