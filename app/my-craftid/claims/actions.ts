@@ -9,13 +9,14 @@ const allowedTypes = new Set(["skill", "experience", "qualification", "workshop_
 export async function addClaim(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const entityId = String(formData.get("entityId") ?? "").trim();
+  const fallbackQ = lang === "uk" ? "?lang=uk" : "";
   const type = String(formData.get("claimType") ?? "");
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
   const visibility = String(formData.get("visibility") ?? "public") === "private" ? "private" : "public";
 
   if (!allowedTypes.has(type) || !title) {
-    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent("Claim type and title are required")}`);
+    redirect(`/my-craftid/claims${fallbackQ}${fallbackQ ? "&" : "?"}error=${encodeURIComponent("Claim type and title are required")}`);
   }
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
@@ -44,10 +45,11 @@ export async function addClaim(formData: FormData) {
 export async function addSkillClaims(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const entityId = String(formData.get("entityId") ?? "").trim();
+  const fallbackQ = lang === "uk" ? "?lang=uk" : "";
   const selected = [...new Set(formData.getAll("skillId").map((value) => String(value)).filter(Boolean))];
 
   if (!selected.length) {
-    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(
+    redirect(`/my-craftid/claims${fallbackQ}${fallbackQ ? "&" : "?"}error=${encodeURIComponent(
       lang === "uk" ? "Оберіть щонайменше одну навичку" : "Choose at least one skill",
     )}`);
   }
