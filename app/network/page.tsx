@@ -5,6 +5,20 @@ export const dynamic = "force-dynamic";
 
 type Props = { searchParams: Promise<{ lang?: string }> };
 
+type PublicPartner = {
+  id: string;
+  legal_name_en: string;
+  legal_name_uk: string | null;
+  short_name_en: string | null;
+  short_name_uk: string | null;
+  country_code: string;
+  partner_role: string;
+  website_url: string | null;
+  description_en: string | null;
+  description_uk: string | null;
+  sort_order: number;
+};
+
 const roleLabels = {
   en: {
     european_coordinator: "European Coordinator",
@@ -60,8 +74,9 @@ export default async function NetworkPage({ searchParams }: Props) {
   const t = copy[locale];
   const supabase = await createClient();
 
-  const { data: partners, error: partnersError } = await supabase
+  const { data: partnersData, error: partnersError } = await supabase
     .rpc("public_partner_organisations");
+  const partners = (partnersData ?? []) as PublicPartner[];
 
   if (partnersError) {
     console.error("Unable to load public partner organisations", partnersError);
@@ -91,9 +106,9 @@ export default async function NetworkPage({ searchParams }: Props) {
 
         <section className="section editorialSection">
           <div className="container">
-            {(partners ?? []).length ? (
+            {partners.length ? (
               <div className="partnerPublicList">
-                {(partners ?? []).map((partner) => {
+                {partners.map((partner) => {
                   const name =
                     locale === "uk"
                       ? partner.legal_name_uk || partner.legal_name_en
