@@ -43,7 +43,41 @@ export async function updatePrivacy(formData: FormData) {
   }
 
   const hasAnyAddress = Boolean(addressLine1 || addressLine2 || postalCode || locality || countryCode);
+  const wantsExactPublic =
+    entity.entity_type === "workshop" &&
+    formData.get("showExactAddressPublic") === "on";
+  const confirmsExactPublic =
+    formData.get("confirmExactAddressPublic") === "on";
+
+  if (wantsExactPublic && !confirmsExactPublic) {
+    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(
+      lang === "uk"
+        ? "Підтвердьте згоду на публікацію повної адреси майстерні."
+        : "Confirm consent before publishing the full workshop address.",
+    )}`);
+  }
+
+  if (wantsExactPublic && (!addressLine1 || !locality || !countryCode)) {
+    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(
+      lang === "uk"
+        ? "Для публічної адреси потрібні адреса, населений пункт і код країни."
+        : "A public workshop address requires address line 1, locality and country code.",
+    )}`);
+  }
+
   if (hasAnyAddress) {
+    const { data: existingAddress } = await supabase
+      .from("entity_business_addresses")
+      .select("show_in_public_profile, public_consent_at")
+      .eq("entity_id", entity.id)
+      .maybeSingle();
+
+    const publicConsentAt = wantsExactPublic
+      ? existingAddress?.show_in_public_profile && existingAddress.public_consent_at
+        ? existingAddress.public_consent_at
+        : new Date().toISOString()
+      : null;
+
     const { error: addressError } = await supabase
       .from("entity_business_addresses")
       .upsert({
@@ -53,6 +87,8 @@ export async function updatePrivacy(formData: FormData) {
         postal_code: postalCode || null,
         locality: locality || null,
         country_code: countryCode || null,
+        show_in_public_profile: wantsExactPublic,
+        public_consent_at: publicConsentAt,
       }, { onConflict: "entity_id" });
 
     if (addressError) {
