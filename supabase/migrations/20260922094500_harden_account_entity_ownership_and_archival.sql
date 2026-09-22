@@ -161,7 +161,7 @@ returns integer
 language plpgsql
 security definer
 set search_path = pg_catalog, auth, public, private
-as $$
+as $close$
 declare
   v_user_id uuid := (select auth.uid());
   v_count integer := 0;
@@ -241,7 +241,7 @@ begin
 
   return v_count;
 end;
-$;
+$close$;
 
 revoke all on function private.close_my_craftid_account_impl()
 from public, anon, authenticated;
