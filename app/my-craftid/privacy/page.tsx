@@ -21,9 +21,8 @@ const copy = {
     country: "Country only",
     region: "Region",
     cityLevel: "City",
-    exact: "Exact address (optional)",
     exactTitle: "Optional exact address",
-    exactText: "Add an exact workshop or business address only if you want CraftID to store it. It stays private unless you explicitly choose Exact address above.",
+    exactText: "You may store an exact workshop or business address for future operational use. CraftID does not currently publish exact addresses in public profiles or on the map.",
     address1: "Address line 1",
     address2: "Address line 2",
     postalCode: "Postal code",
@@ -32,7 +31,7 @@ const copy = {
     save: "Save privacy settings",
     saved: "Privacy settings saved.",
     back: "Back to My CraftID",
-    warning: "Exact address is optional. For individual professionals, avoid publishing a private home address. Use this only for a workshop, studio, shop or other location you intentionally want to disclose.",
+    warning: "Public location is limited to country, region or city. Exact addresses remain private. For individual professionals, do not enter a private home address unless there is a clear operational need.",
     evidence: "Evidence files remain private regardless of these public profile settings.",
   },
   uk: {
@@ -48,9 +47,8 @@ const copy = {
     country: "Лише країна",
     region: "Регіон",
     cityLevel: "Місто",
-    exact: "Точна адреса (за бажанням)",
     exactTitle: "Точна адреса за бажанням",
-    exactText: "Додайте точну адресу майстерні або бізнесу лише за бажанням. Вона залишається приватною, доки ви явно не оберете «Точна адреса» вище.",
+    exactText: "За бажанням можна зберегти точну адресу майстерні або бізнесу для майбутніх операційних сценаріїв. CraftID наразі не публікує точні адреси у профілях чи на карті.",
     address1: "Адреса, рядок 1",
     address2: "Адреса, рядок 2",
     postalCode: "Поштовий індекс",
@@ -59,7 +57,7 @@ const copy = {
     save: "Зберегти налаштування приватності",
     saved: "Налаштування приватності збережено.",
     back: "Назад до Мій CraftID",
-    warning: "Точна адреса не є обов’язковою. Для індивідуальних професіоналів не публікуйте приватну домашню адресу. Використовуйте цю опцію лише для майстерні, студії, магазину або іншого місця, яке ви свідомо хочете показати.",
+    warning: "Публічна локація обмежена рівнем країни, регіону або міста. Точні адреси залишаються приватними. Для індивідуальних професіоналів не вказуйте домашню адресу без чіткої операційної потреби.",
     evidence: "Файли доказів залишаються приватними незалежно від цих налаштувань публічного профілю.",
   },
 } as const;
@@ -112,7 +110,6 @@ export default async function PrivacyPage({ searchParams }: Props) {
               <option value="country">{t.country}</option>
               <option value="region">{t.region}</option>
               <option value="city">{t.cityLevel}</option>
-              <option value="exact_business_location">{t.exact}</option>
             </select>
           </label>
 
