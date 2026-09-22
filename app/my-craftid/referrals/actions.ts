@@ -2,11 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 
 export async function respondToInstitutionalReferral(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const entityId = String(formData.get("entityId") ?? "").trim();
   const referralId = String(formData.get("referralId") ?? "");
   const status = String(formData.get("status") ?? "");
   const note = String(formData.get("note") ?? "").trim();
@@ -15,19 +15,10 @@ export async function respondToInstitutionalReferral(formData: FormData) {
     redirect(`/my-craftid/referrals${q}`);
   }
 
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id")
-    .eq("owner_user_id", userId)
-    .limit(1)
-    .single();
-
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(entityId);
+  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  const q = ownerWorkspaceQuery(lang, entity.id);
 
   const { error } = await supabase
     .from("institutional_referrals")
@@ -40,10 +31,10 @@ export async function respondToInstitutionalReferral(formData: FormData) {
     .eq("status", "invited");
 
   if (error) {
-    redirect(`/my-craftid/referrals${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
+    redirect(`/my-craftid/referrals${q}&error=${encodeURIComponent(error.message)}`);
   }
 
   revalidatePath("/my-craftid/referrals");
   revalidatePath("/admin/referrals");
-  redirect(`/my-craftid/referrals${q ? `${q}&` : "?"}message=updated`);
+  redirect(`/my-craftid/referrals${q}&message=updated`);
 }
