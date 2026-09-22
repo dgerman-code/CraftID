@@ -102,9 +102,11 @@ export default async function PreviewPage({ searchParams }: Props) {
       .eq("entity_id", entity.id)
       .maybeSingle(),
     supabase
-      .from("public_contact_links")
+      .from("entity_contact_points")
       .select("contact_type, value, verification_level, verified_at, last_checked_at")
-      .eq("entity_id", entity.id),
+      .eq("entity_id", entity.id)
+      .eq("show_in_public_profile", true)
+      .in("contact_type", ["website", "linkedin", "portfolio"]),
   ]);
 
   let photoUrl: string | null = null;
