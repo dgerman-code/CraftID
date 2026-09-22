@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { logout } from "@/app/login/actions";
 import { localeFrom } from "@/components/site-shell";
-import { createWorkshopCraftId } from "./actions";
+import { closeCraftIdAccount, createWorkshopCraftId } from "./actions";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 
 export const dynamic = "force-dynamic";
@@ -62,6 +62,12 @@ const copy = {
     workshopCreated: "Workshop CraftID created and linked to your professional record.",
     workshopExists: "You already have an active Workshop CraftID.",
     relationshipNote: "Personal and workshop records remain separate CraftIDs. Their relationship can be managed without merging professional evidence.",
+    account: "Account",
+    closeAccount: "Close CraftID account",
+    closeAccountText: "Your active CraftID records will be archived immediately and removed from Registry, Discover and Map. Existing CraftID numbers will remain resolvable as minimal historical records so products and documents already carrying the number do not become unverifiable.",
+    closeAccountRetention: "Public contacts, profile images and active profile details will no longer be disclosed. The CraftID number is never reassigned.",
+    closeConfirm: 'Type "close" to confirm',
+    closeButton: "Archive records and close account",
   },
   uk: {
     eyebrow: "Мій CraftID",
@@ -109,6 +115,12 @@ const copy = {
     workshopCreated: "CraftID майстерні створено та пов’язано з вашим професійним записом.",
     workshopExists: "У вас уже є активний CraftID майстерні.",
     relationshipNote: "Персональний запис і майстерня залишаються окремими CraftID. Їхній зв’язок можна керувати без об’єднання професійних доказів.",
+    account: "Обліковий запис",
+    closeAccount: "Закрити обліковий запис CraftID",
+    closeAccountText: "Ваші активні записи CraftID будуть негайно перенесені в архів і зникнуть з Registry, Discover та Map. Уже видані номери CraftID залишаться доступними як мінімальні історичні записи, щоб вироби й документи з цим номером можна було перевірити.",
+    closeAccountRetention: "Публічні контакти, фото профілю та активні дані профілю більше не розкриватимуться. Номер CraftID ніколи не буде виданий іншій особі.",
+    closeConfirm: "Введіть «закрити» для підтвердження",
+    closeButton: "Архівувати записи та закрити обліковий запис",
   },
 } as const;
 
@@ -274,6 +286,28 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
               <Link href={`${href}${selectedQuery}`}>{t.open} →</Link>
             </article>
           ))}
+        </section>
+
+        <section className="accountClosureSection">
+          <div>
+            <div className="eyebrow">{t.account}</div>
+            <h2>{t.closeAccount}</h2>
+            <p>{t.closeAccountText}</p>
+            <p className="privacyNote">{t.closeAccountRetention}</p>
+          </div>
+          <form className="accountClosureForm" action={closeCraftIdAccount}>
+            <input type="hidden" name="lang" value={locale} />
+            <label>
+              {t.closeConfirm}
+              <input
+                name="confirmation"
+                autoComplete="off"
+                placeholder={locale === "uk" ? "закрити" : "close"}
+                required
+              />
+            </label>
+            <button className="button dangerButton" type="submit">{t.closeButton}</button>
+          </form>
         </section>
       </div>
     </main>
