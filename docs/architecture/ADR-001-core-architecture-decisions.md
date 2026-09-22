@@ -364,6 +364,28 @@ CraftID should not be branded as CraftID Europe at this stage.
 
 Country expansion should happen through national and sectoral partners rather than immediately declaring one exclusive national operator per country.
 
+## Decision 16 — CraftID is permanent and entity-bound
+
+A CraftID identifies one entity for the lifetime of that entity.
+
+Core invariants:
+- a CraftID number is never changed;
+- a CraftID number is never reassigned;
+- a CraftID number is never transferred to a different entity;
+- Professional and Workshop are separate entity identities and therefore may have separate CraftIDs;
+- closing an account archives the entity record but does not destroy or free the CraftID number;
+- returning users recover the same archived CraftID rather than receiving a replacement number;
+- recovery always returns the record as draft and does not silently restore previous public visibility;
+- ordinary ownership mutation is prohibited.
+
+Account control and entity identity are separate concepts.
+
+For Professional CraftID, transfer of the identity to another person is prohibited.
+
+For Workshop CraftID, future governance may allow a controlled change of authorised account administrator where the workshop entity itself remains the same. Such a change is an administrative-control transfer, not a CraftID transfer.
+
+Automatic recovery may use a private continuity mechanism linked to the previously verified account identity. The raw login email must not be stored in the public CraftID registry. Recovery from a different email or disputed ownership requires a separate identity-review process.
+
 ## Implementation sequence
 
 ### Foundation Hardening
