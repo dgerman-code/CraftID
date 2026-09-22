@@ -32,6 +32,10 @@ type PublicRecord = {
   professional_title: string | null;
   craft_sector: string | null;
   location: string | null;
+  location_country_code: string | null;
+  location_region: string | null;
+  location_city: string | null;
+  location_precision: "country" | "region" | "city" | null;
   about: string | null;
   has_public_photo: boolean;
   languages: string[];
@@ -60,12 +64,6 @@ function formatCraftId(number: number, check: string) {
 
 function normalized(value?: string) {
   return (value ?? "").trim().toLocaleLowerCase();
-}
-
-function locationCountry(location: string | null) {
-  if (!location) return "";
-  const parts = location.split(",").map((part) => part.trim()).filter(Boolean);
-  return parts.at(-1) ?? "";
 }
 
 const statusRank: Record<string, number> = {
@@ -138,11 +136,11 @@ const copy = {
     claimStatus: "Highest visible claim status",
     noClaimStatus: "No reviewed public claim",
     mapTitle: "Craft Skills Map",
-    mapText: "Explore privacy-safe geographic aggregates of published CraftID records. Exact addresses are never shown, and map groups below five records are suppressed.",
+    mapText: "Explore privacy-safe geographic aggregates of published CraftID records. Exact addresses are never shown, and small map groups are suppressed before data reaches the map client.",
     listView: "List",
     mapView: "Map",
     mapped: "map groups",
-    mapPrivacy: "Map positions are approximate aggregates. Groups with fewer than 5 records are not displayed.",
+    mapPrivacy: "Map positions are approximate aggregates. The configured minimum disclosure threshold is enforced server-side.",
   },
   uk: {
     eyebrow: "Публічний реєстр",
@@ -177,11 +175,11 @@ const copy = {
     claimStatus: "Найвищий статус видимого твердження",
     noClaimStatus: "Немає переглянутих публічних тверджень",
     mapTitle: "Карта ремісничих навичок",
-    mapText: "Переглядайте приватно-безпечні географічні агрегати опублікованих записів CraftID. Точні адреси не показуються, а групи з менш ніж п’ятьма записами приховуються.",
+    mapText: "Переглядайте приватно-безпечні географічні агрегати опублікованих записів CraftID. Точні адреси не показуються, а малі групи приховуються до передавання даних у клієнт карти.",
     listView: "Список",
     mapView: "Карта",
     mapped: "груп на карті",
-    mapPrivacy: "Позиції на карті є приблизними агрегатами. Групи з менш ніж 5 записами не відображаються.",
+    mapPrivacy: "Позиції на карті є приблизними агрегатами. Налаштований мінімальний поріг розкриття застосовується на сервері.",
   },
 } as const;
 
@@ -212,12 +210,25 @@ export default async function DiscoverPage({ searchParams }: Props) {
     }
   }
 
-  const { data: publishedEntities } = await supabase
-    .from("craftid_entities")
-    .select("craftid_number, craftid_check_digits")
-    .eq("public_status", "published")
-    .order("craftid_number", { ascending: true })
-    .limit(100);
+  const [{ data: publishedEntities }, { data: suppressionRule }] = await Promise.all([
+    supabase
+      .from("craftid_entities")
+      .select("craftid_number, craftid_check_digits")
+      .eq("public_status", "published")
+      .order("craftid_number", { ascending: true })
+      .limit(100),
+    supabase
+      .from("aggregation_suppression_rules")
+      .select("minimum_distinct_entities")
+      .eq("category", "general")
+      .maybeSingle(),
+  ]);
+
+  const configuredThreshold = Number(suppressionRule?.minimum_distinct_entities);
+  const generalSuppressionThreshold =
+    Number.isInteger(configuredThreshold) && configuredThreshold >= 2
+      ? configuredThreshold
+      : 5;
 
   const resolved = await Promise.all(
     (publishedEntities ?? []).map(async (entity) => {
@@ -243,7 +254,11 @@ export default async function DiscoverPage({ searchParams }: Props) {
   ).sort((a, b) => a.localeCompare(b));
 
   const countryOptions = Array.from(
-    new Set(publicRecords.map((record) => locationCountry(record.location)).filter(Boolean)),
+    new Set(
+      publicRecords
+        .map((record) => record.location_country_code)
+        .filter((value): value is string => Boolean(value)),
+    ),
   ).sort((a, b) => a.localeCompare(b));
 
   const searchTerm = normalized(params.q);
@@ -268,7 +283,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
       !craftFilter ||
       [role, ...skills].some((value) => normalized(value) === craftFilter);
     const matchesCountry =
-      !countryFilter || normalized(locationCountry(record.location)) === countryFilter;
+      !countryFilter || normalized(record.location_country_code ?? "") === countryFilter;
     const matchesType = !typeFilter || normalized(record.entity_type) === typeFilter;
 
     return matchesSearch && matchesCraft && matchesCountry && matchesType;
@@ -277,13 +292,22 @@ export default async function DiscoverPage({ searchParams }: Props) {
   const view = params.view === "map" ? "map" : "list";
 
   const mapCandidates = filteredRecords.flatMap((record) => {
-    const coordinate = resolvePublicMapCoordinate(record.location);
-    if (!coordinate || !record.location) return [];
+    const coordinate = resolvePublicMapCoordinate({
+      countryCode: record.location_country_code,
+      city: record.location_city,
+      precision: record.location_precision,
+    });
+    if (!coordinate) return [];
+
+    const location =
+      coordinate.precision === "city"
+        ? record.location ?? record.location_city ?? record.location_country_code
+        : record.location_country_code;
+
+    if (!location) return [];
 
     return [{
-      location: coordinate.precision === "country"
-        ? locationCountry(record.location)
-        : record.location,
+      location,
       lat: coordinate.lat,
       lng: coordinate.lng,
       precision: coordinate.precision,
@@ -308,7 +332,9 @@ export default async function DiscoverPage({ searchParams }: Props) {
     }
   }
 
-  const mapPoints = [...mapGroups.values()].filter((point) => point.count >= 5);
+  const mapPoints = [...mapGroups.values()].filter(
+    (point) => point.count >= generalSuppressionThreshold,
+  );
 
   const filterQuery = new URLSearchParams();
   if (locale === "uk") filterQuery.set("lang", "uk");
@@ -437,7 +463,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
                 <CraftSkillsMap locale={locale} points={mapPoints} />
                 <div className="mapMetaLine">
                   <span>{mapPoints.length} {t.mapped}</span>
-                  <span>{t.mapPrivacy}</span>
+                  <span>{t.mapPrivacy} k ≥ {generalSuppressionThreshold}.</span>
                 </div>
               </>
             ) : filteredRecords.length ? (
