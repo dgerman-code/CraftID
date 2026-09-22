@@ -1,14 +1,11 @@
 type CraftSkillsMapProps = {
   locale: "en" | "uk";
   points: Array<{
-    craftId: string;
-    name: string;
-    role: string;
     location: string;
     lat: number;
     lng: number;
     precision: "city" | "country";
-    href: string;
+    count: number;
   }>;
 };
 
@@ -28,29 +25,25 @@ export function CraftSkillsMap({ locale, points }: CraftSkillsMapProps) {
           empty: "Поки немає опублікованих записів із доступною для карти локацією.",
           city: "Рівень міста",
           country: "Рівень країни",
-          open: "Відкрити запис",
+          records: "записів",
         }
       : {
           empty: "No published records with a map-ready public location yet.",
           city: "City level",
           country: "Country level",
-          open: "Open record",
+          records: "records",
         };
 
   const safePoints = points.map((point) => ({
     ...point,
-    craftId: escapeHtml(point.craftId),
-    name: escapeHtml(point.name),
-    role: escapeHtml(point.role),
     location: escapeHtml(point.location),
-    href: escapeHtml(point.href),
   }));
 
   const data = JSON.stringify(safePoints).replaceAll("<", "\\u003c");
   const emptyText = JSON.stringify(labels.empty);
   const cityText = JSON.stringify(labels.city);
   const countryText = JSON.stringify(labels.country);
-  const openText = JSON.stringify(labels.open);
+  const recordsText = JSON.stringify(labels.records);
 
   const srcDoc = `<!doctype html>
 <html lang="${locale}">
@@ -77,7 +70,7 @@ export function CraftSkillsMap({ locale, points }: CraftSkillsMapProps) {
     const emptyText = ${emptyText};
     const cityText = ${cityText};
     const countryText = ${countryText};
-    const openText = ${openText};
+    const recordsText = ${recordsText};
 
     const map = new maplibregl.Map({
       container: 'map',
@@ -94,12 +87,9 @@ export function CraftSkillsMap({ locale, points }: CraftSkillsMapProps) {
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [point.lng, point.lat] },
         properties: {
-          craftId: point.craftId,
-          name: point.name,
-          role: point.role,
           location: point.location,
           precision: point.precision,
-          href: point.href
+          count: point.count
         }
       }));
 
@@ -114,73 +104,43 @@ export function CraftSkillsMap({ locale, points }: CraftSkillsMapProps) {
       map.addSource('craftid', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features },
-        cluster: true,
-        clusterMaxZoom: 10,
-        clusterRadius: 45
       });
 
       map.addLayer({
-        id: 'clusters',
+        id: 'groups',
         type: 'circle',
         source: 'craftid',
-        filter: ['has', 'point_count'],
         paint: {
           'circle-color': '#1e3a5f',
-          'circle-radius': ['step', ['get', 'point_count'], 18, 10, 23, 40, 30],
+          'circle-radius': ['interpolate', ['linear'], ['get', 'count'], 5, 13, 20, 18, 100, 26],
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': 2
         }
       });
 
       map.addLayer({
-        id: 'cluster-count',
+        id: 'group-count',
         type: 'symbol',
         source: 'craftid',
-        filter: ['has', 'point_count'],
         layout: {
-          'text-field': ['get', 'point_count_abbreviated'],
-          'text-size': 12
+          'text-field': ['to-string', ['get', 'count']],
+          'text-size': 11
         },
         paint: { 'text-color': '#ffffff' }
       });
 
-      map.addLayer({
-        id: 'unclustered',
-        type: 'circle',
-        source: 'craftid',
-        filter: ['!', ['has', 'point_count']],
-        paint: {
-          'circle-color': '#1e3a5f',
-          'circle-radius': 8,
-          'circle-stroke-color': '#ffffff',
-          'circle-stroke-width': 2
-        }
-      });
-
-      map.on('click', 'clusters', async (event) => {
-        const feature = map.queryRenderedFeatures(event.point, { layers: ['clusters'] })[0];
-        if (!feature) return;
-        const clusterId = feature.properties.cluster_id;
-        const source = map.getSource('craftid');
-        const zoom = await source.getClusterExpansionZoom(clusterId);
-        map.easeTo({ center: feature.geometry.coordinates, zoom });
-      });
-
-      map.on('click', 'unclustered', (event) => {
+      map.on('click', 'groups', (event) => {
         const feature = event.features && event.features[0];
         if (!feature) return;
         const p = feature.properties;
         const precision = p.precision === 'city' ? cityText : countryText;
         const html =
-          '<div class="popup-id">' + p.craftId + '</div>' +
-          '<div class="popup-name">' + p.name + '</div>' +
-          '<div class="popup-meta">' + (p.role || '') + '</div>' +
-          '<div class="popup-meta">' + (p.location || '') + ' · ' + precision + '</div>' +
-          '<a class="popup-link" href="' + p.href + '" target="_top">' + openText + ' →</a>';
+          '<div class="popup-name">' + p.location + '</div>' +
+          '<div class="popup-meta">' + p.count + ' ' + recordsText + ' · ' + precision + '</div>';
         new maplibregl.Popup({ offset: 12 }).setLngLat(feature.geometry.coordinates).setHTML(html).addTo(map);
       });
 
-      for (const layer of ['clusters', 'unclustered']) {
+      for (const layer of ['groups']) {
         map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
         map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
       }
