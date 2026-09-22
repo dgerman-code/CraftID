@@ -141,7 +141,7 @@ const copy = {
     mapText: "Explore privacy-safe geographic aggregates of published CraftID records. Exact addresses are never shown, and map groups below five records are suppressed.",
     listView: "List",
     mapView: "Map",
-    mapped: "mapped records",
+    mapped: "map groups",
     mapPrivacy: "Map positions are approximate aggregates. Groups with fewer than 5 records are not displayed.",
   },
   uk: {
@@ -180,7 +180,7 @@ const copy = {
     mapText: "Переглядайте приватно-безпечні географічні агрегати опублікованих записів CraftID. Точні адреси не показуються, а групи з менш ніж п’ятьма записами приховуються.",
     listView: "Список",
     mapView: "Карта",
-    mapped: "записів на карті",
+    mapped: "груп на карті",
     mapPrivacy: "Позиції на карті є приблизними агрегатами. Групи з менш ніж 5 записами не відображаються.",
   },
 } as const;
@@ -281,7 +281,9 @@ export default async function DiscoverPage({ searchParams }: Props) {
     if (!coordinate || !record.location) return [];
 
     return [{
-      location: record.location,
+      location: coordinate.precision === "country"
+        ? locationCountry(record.location)
+        : record.location,
       lat: coordinate.lat,
       lng: coordinate.lng,
       precision: coordinate.precision,
