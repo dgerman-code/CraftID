@@ -11,21 +11,20 @@ function safeName(name: string) {
 export async function uploadEvidence(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const entityId = String(formData.get("entityId") ?? "").trim();
-  const fallbackQ = lang === "uk" ? "?lang=uk" : "";
   const title = String(formData.get("title") ?? "").trim();
   const type = String(formData.get("evidenceType") ?? "").trim();
   const issuer = String(formData.get("issuer") ?? "").trim();
   const claimId = String(formData.get("claimId") ?? "").trim();
   const file = formData.get("file");
 
-  if (!title || !type || !(file instanceof File) || file.size === 0) {
-    redirect(`/my-craftid/evidence${fallbackQ}${fallbackQ ? "&" : "?"}error=${encodeURIComponent("Title, evidence type and file are required")}`);
-  }
-
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
   if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
   if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
   const q = ownerWorkspaceQuery(lang, entity.id);
+
+  if (!title || !type || !(file instanceof File) || file.size === 0) {
+    redirect(`/my-craftid/evidence${q}&error=${encodeURIComponent("Title, evidence type and file are required")}`);
+  }
 
   const path = `${userId}/${entity.id}/${crypto.randomUUID()}-${safeName(file.name)}`;
   const bytes = await file.arrayBuffer();
