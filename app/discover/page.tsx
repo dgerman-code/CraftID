@@ -138,11 +138,11 @@ const copy = {
     claimStatus: "Highest visible claim status",
     noClaimStatus: "No reviewed public claim",
     mapTitle: "Craft Skills Map",
-    mapText: "Explore published professionals and workshops by privacy-safe city or country centroids. CraftID does not expose private home addresses on the map.",
+    mapText: "Explore privacy-safe geographic aggregates of published CraftID records. Exact addresses are never shown, and map groups below five records are suppressed.",
     listView: "List",
     mapView: "Map",
     mapped: "mapped records",
-    mapPrivacy: "Map positions are approximate and follow the public location disclosed by each profile.",
+    mapPrivacy: "Map positions are approximate aggregates. Groups with fewer than 5 records are not displayed.",
   },
   uk: {
     eyebrow: "Публічний реєстр",
@@ -177,11 +177,11 @@ const copy = {
     claimStatus: "Найвищий статус видимого твердження",
     noClaimStatus: "Немає переглянутих публічних тверджень",
     mapTitle: "Карта ремісничих навичок",
-    mapText: "Переглядайте опублікованих професіоналів і майстерні за приватно-безпечними центроїдами міста або країни. CraftID не показує приватні домашні адреси на карті.",
+    mapText: "Переглядайте приватно-безпечні географічні агрегати опублікованих записів CraftID. Точні адреси не показуються, а групи з менш ніж п’ятьма записами приховуються.",
     listView: "Список",
     mapView: "Карта",
     mapped: "записів на карті",
-    mapPrivacy: "Позиції на карті є приблизними та відповідають публічній локації, яку розкрив власник профілю.",
+    mapPrivacy: "Позиції на карті є приблизними агрегатами. Групи з менш ніж 5 записами не відображаються.",
   },
 } as const;
 
@@ -276,24 +276,37 @@ export default async function DiscoverPage({ searchParams }: Props) {
 
   const view = params.view === "map" ? "map" : "list";
 
-  const mapPoints = filteredRecords.flatMap((record) => {
+  const mapCandidates = filteredRecords.flatMap((record) => {
     const coordinate = resolvePublicMapCoordinate(record.location);
     if (!coordinate || !record.location) return [];
 
-    const formatted = formatCraftId(record.craftid_number, record.craftid_check_digits);
-    const route = formatted.replace("#", "");
-
     return [{
-      craftId: `CraftID ${formatted}`,
-      name: record.display_name,
-      role: record.professional_title ?? record.craft_sector ?? "",
       location: record.location,
       lat: coordinate.lat,
       lng: coordinate.lng,
       precision: coordinate.precision,
-      href: `/id/${route}${q}`,
     }];
   });
+
+  const mapGroups = new Map<string, {
+    location: string;
+    lat: number;
+    lng: number;
+    precision: "city" | "country";
+    count: number;
+  }>();
+
+  for (const point of mapCandidates) {
+    const key = `${point.precision}:${point.lat.toFixed(4)}:${point.lng.toFixed(4)}`;
+    const current = mapGroups.get(key);
+    if (current) {
+      current.count += 1;
+    } else {
+      mapGroups.set(key, { ...point, count: 1 });
+    }
+  }
+
+  const mapPoints = [...mapGroups.values()].filter((point) => point.count >= 5);
 
   const filterQuery = new URLSearchParams();
   if (locale === "uk") filterQuery.set("lang", "uk");
