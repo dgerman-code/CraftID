@@ -7,7 +7,7 @@ import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 export async function updatePrivacy(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const entityId = String(formData.get("entityId") ?? "").trim();
-  const allowedPrecision = new Set(["country", "region", "city", "exact_business_location"]);
+  const allowedPrecision = new Set(["country", "region", "city"]);
   const precision = String(formData.get("locationPrecision") ?? "city");
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
@@ -34,6 +34,12 @@ export async function updatePrivacy(formData: FormData) {
     redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(error.message)}`);
   }
 
+  if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) {
+    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(
+      lang === "uk" ? "Код країни адреси має містити 2 літери." : "Address country code must contain 2 letters.",
+    )}`);
+  }
+
   const hasAnyAddress = Boolean(addressLine1 || addressLine2 || postalCode || locality || countryCode);
   if (hasAnyAddress) {
     const { error: addressError } = await supabase
@@ -49,6 +55,15 @@ export async function updatePrivacy(formData: FormData) {
 
     if (addressError) {
       redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(addressError.message)}`);
+    }
+  } else {
+    const { error: addressDeleteError } = await supabase
+      .from("entity_business_addresses")
+      .delete()
+      .eq("entity_id", entity.id);
+
+    if (addressDeleteError) {
+      redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(addressDeleteError.message)}`);
     }
   }
 
