@@ -4,19 +4,13 @@ export type MapCoordinate = {
   precision: "city" | "country";
 };
 
-type Coordinate = { lat: number; lng: number };
-
-const COUNTRY_NAMES_BY_CODE: Record<string, string> = {
-  AT: "austria", BE: "belgium", BG: "bulgaria", HR: "croatia", CY: "cyprus",
-  CZ: "czechia", DK: "denmark", EE: "estonia", FI: "finland", FR: "france",
-  DE: "germany", GR: "greece", HU: "hungary", IE: "ireland", IT: "italy",
-  LV: "latvia", LT: "lithuania", LU: "luxembourg", MT: "malta", NL: "netherlands",
-  PL: "poland", PT: "portugal", RO: "romania", SK: "slovakia", SI: "slovenia",
-  ES: "spain", SE: "sweden", UA: "ukraine", GB: "united kingdom",
-  NO: "norway", CH: "switzerland", IS: "iceland", LI: "liechtenstein",
-  MD: "moldova", AL: "albania", ME: "montenegro", MK: "north macedonia",
-  RS: "serbia", BA: "bosnia and herzegovina",
+export type PublicMapLocation = {
+  countryCode: string | null;
+  city: string | null;
+  precision: "country" | "region" | "city" | null;
 };
+
+type Coordinate = { lat: number; lng: number };
 
 const COUNTRY_CENTROIDS_BY_CODE: Record<string, Coordinate> = {
   AT:{lat:47.5162,lng:14.5501}, BE:{lat:50.5039,lng:4.4699},
@@ -41,86 +35,66 @@ const COUNTRY_CENTROIDS_BY_CODE: Record<string, Coordinate> = {
   BA:{lat:43.9159,lng:17.6791},
 };
 
-const COUNTRY_CODE_BY_NAME: Record<string, string> = Object.fromEntries(
-  Object.entries(COUNTRY_NAMES_BY_CODE).map(([code, name]) => [name, code]),
-);
-
-Object.assign(COUNTRY_CODE_BY_NAME, {
-  "україна": "UA",
-  "бельгія": "BE",
-  "польща": "PL",
-  "німеччина": "DE",
-  "нідерланди": "NL",
-  "франція": "FR",
-});
-
 const CITY_CENTROIDS: Record<string, Coordinate> = {
-  "kyiv, ukraine": { lat: 50.4501, lng: 30.5234 },
-  "київ, ukraine": { lat: 50.4501, lng: 30.5234 },
-  "kiev, ukraine": { lat: 50.4501, lng: 30.5234 },
-  "lviv, ukraine": { lat: 49.8397, lng: 24.0297 },
-  "львів, ukraine": { lat: 49.8397, lng: 24.0297 },
-  "odesa, ukraine": { lat: 46.4825, lng: 30.7233 },
-  "odessa, ukraine": { lat: 46.4825, lng: 30.7233 },
-  "одеса, ukraine": { lat: 46.4825, lng: 30.7233 },
-  "kharkiv, ukraine": { lat: 49.9935, lng: 36.2304 },
-  "харків, ukraine": { lat: 49.9935, lng: 36.2304 },
-  "dnipro, ukraine": { lat: 48.4647, lng: 35.0462 },
-  "дніпро, ukraine": { lat: 48.4647, lng: 35.0462 },
-  "uzhhorod, ukraine": { lat: 48.6208, lng: 22.2879 },
-  "ужгород, ukraine": { lat: 48.6208, lng: 22.2879 },
-  "ivano-frankivsk, ukraine": { lat: 48.9226, lng: 24.7111 },
-  "івано-франківськ, ukraine": { lat: 48.9226, lng: 24.7111 },
-  "ternopil, ukraine": { lat: 49.5535, lng: 25.5948 },
-  "тернопіль, ukraine": { lat: 49.5535, lng: 25.5948 },
-  "chernivtsi, ukraine": { lat: 48.2915, lng: 25.9403 },
-  "чернівці, ukraine": { lat: 48.2915, lng: 25.9403 },
-  "vinnytsia, ukraine": { lat: 49.2331, lng: 28.4682 },
-  "вінниця, ukraine": { lat: 49.2331, lng: 28.4682 },
-  "poltava, ukraine": { lat: 49.5883, lng: 34.5514 },
-  "полтава, ukraine": { lat: 49.5883, lng: 34.5514 },
-  "brussels, belgium": { lat: 50.8503, lng: 4.3517 },
-  "bruxelles, belgium": { lat: 50.8503, lng: 4.3517 },
-  "брюссель, belgium": { lat: 50.8503, lng: 4.3517 },
-  "antwerp, belgium": { lat: 51.2194, lng: 4.4025 },
-  "antwerpen, belgium": { lat: 51.2194, lng: 4.4025 },
-  "антверпен, belgium": { lat: 51.2194, lng: 4.4025 },
-  "ghent, belgium": { lat: 51.0543, lng: 3.7174 },
-  "gent, belgium": { lat: 51.0543, lng: 3.7174 },
-  "leuven, belgium": { lat: 50.8798, lng: 4.7005 },
-  "liege, belgium": { lat: 50.6326, lng: 5.5797 },
-  "liège, belgium": { lat: 50.6326, lng: 5.5797 },
+  "kyiv|UA": { lat: 50.4501, lng: 30.5234 },
+  "київ|UA": { lat: 50.4501, lng: 30.5234 },
+  "kiev|UA": { lat: 50.4501, lng: 30.5234 },
+  "lviv|UA": { lat: 49.8397, lng: 24.0297 },
+  "львів|UA": { lat: 49.8397, lng: 24.0297 },
+  "odesa|UA": { lat: 46.4825, lng: 30.7233 },
+  "odessa|UA": { lat: 46.4825, lng: 30.7233 },
+  "одеса|UA": { lat: 46.4825, lng: 30.7233 },
+  "kharkiv|UA": { lat: 49.9935, lng: 36.2304 },
+  "харків|UA": { lat: 49.9935, lng: 36.2304 },
+  "dnipro|UA": { lat: 48.4647, lng: 35.0462 },
+  "дніпро|UA": { lat: 48.4647, lng: 35.0462 },
+  "uzhhorod|UA": { lat: 48.6208, lng: 22.2879 },
+  "ужгород|UA": { lat: 48.6208, lng: 22.2879 },
+  "ivano-frankivsk|UA": { lat: 48.9226, lng: 24.7111 },
+  "івано-франківськ|UA": { lat: 48.9226, lng: 24.7111 },
+  "ternopil|UA": { lat: 49.5535, lng: 25.5948 },
+  "тернопіль|UA": { lat: 49.5535, lng: 25.5948 },
+  "chernivtsi|UA": { lat: 48.2915, lng: 25.9403 },
+  "чернівці|UA": { lat: 48.2915, lng: 25.9403 },
+  "vinnytsia|UA": { lat: 49.2331, lng: 28.4682 },
+  "вінниця|UA": { lat: 49.2331, lng: 28.4682 },
+  "poltava|UA": { lat: 49.5883, lng: 34.5514 },
+  "полтава|UA": { lat: 49.5883, lng: 34.5514 },
+  "brussels|BE": { lat: 50.8503, lng: 4.3517 },
+  "bruxelles|BE": { lat: 50.8503, lng: 4.3517 },
+  "brussel|BE": { lat: 50.8503, lng: 4.3517 },
+  "брюссель|BE": { lat: 50.8503, lng: 4.3517 },
+  "antwerp|BE": { lat: 51.2194, lng: 4.4025 },
+  "antwerpen|BE": { lat: 51.2194, lng: 4.4025 },
+  "антверпен|BE": { lat: 51.2194, lng: 4.4025 },
+  "ghent|BE": { lat: 51.0543, lng: 3.7174 },
+  "gent|BE": { lat: 51.0543, lng: 3.7174 },
+  "leuven|BE": { lat: 50.8798, lng: 4.7005 },
+  "liege|BE": { lat: 50.6326, lng: 5.5797 },
+  "liège|BE": { lat: 50.6326, lng: 5.5797 },
+  "paris|FR": { lat: 48.8566, lng: 2.3522 },
+  "warsaw|PL": { lat: 52.2297, lng: 21.0122 },
+  "warszawa|PL": { lat: 52.2297, lng: 21.0122 },
+  "krakow|PL": { lat: 50.0647, lng: 19.945 },
+  "kraków|PL": { lat: 50.0647, lng: 19.945 },
+  "amsterdam|NL": { lat: 52.3676, lng: 4.9041 },
 };
 
 function normalise(value: string) {
   return value.normalize("NFKC").trim().toLocaleLowerCase().replace(/\s+/g, " ");
 }
 
-function countryCodeFromToken(token: string) {
-  const upper = token.trim().toUpperCase();
-  if (COUNTRY_CENTROIDS_BY_CODE[upper]) return upper;
-  return COUNTRY_CODE_BY_NAME[normalise(token)] ?? null;
-}
+export function resolvePublicMapCoordinate(location: PublicMapLocation): MapCoordinate | null {
+  const countryCode = (location.countryCode ?? "").trim().toUpperCase();
+  const country = COUNTRY_CENTROIDS_BY_CODE[countryCode];
+  if (!country) return null;
 
-export function resolvePublicMapCoordinate(location: string | null): MapCoordinate | null {
-  if (!location) return null;
-
-  const normalized = normalise(location);
-  const parts = normalized.split(",").map((part) => part.trim()).filter(Boolean);
-  const countryToken = parts.at(-1) ?? normalized;
-  const countryCode = countryCodeFromToken(countryToken);
-
-  if (parts.length >= 2 && countryCode) {
-    const canonicalCountry = COUNTRY_NAMES_BY_CODE[countryCode];
-    const cityCountry = `${parts[0]}, ${canonicalCountry}`;
-    const city = CITY_CENTROIDS[cityCountry];
+  if (location.precision === "city" && location.city) {
+    const city = CITY_CENTROIDS[`${normalise(location.city)}|${countryCode}`];
     if (city) return { ...city, precision: "city" };
   }
 
-  if (countryCode) {
-    const country = COUNTRY_CENTROIDS_BY_CODE[countryCode];
-    return { ...country, precision: "country" };
-  }
-
-  return null;
+  // Region-level records and cities without a known centroid deliberately fall
+  // back to the country centroid rather than guessing a more precise location.
+  return { ...country, precision: "country" };
 }
