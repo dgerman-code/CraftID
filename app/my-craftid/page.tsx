@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { logout } from "@/app/login/actions";
 import { localeFrom } from "@/components/site-shell";
-import { closeCraftIdAccount, createWorkshopCraftId } from "./actions";
+import { closeCraftIdAccount, createAdditionalCraftId } from "./actions";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 
 export const dynamic = "force-dynamic";
@@ -58,8 +58,11 @@ const copy = {
     archived: "Archived",
     records: "Your CraftID records",
     switch: "Switch record",
+    createProfessional: "Create Professional CraftID",
     createWorkshop: "Create Workshop CraftID",
+    professionalCreated: "Professional CraftID created and linked to your workshop record.",
     workshopCreated: "Workshop CraftID created and linked to your professional record.",
+    professionalExists: "You already have an active Professional CraftID.",
     workshopExists: "You already have an active Workshop CraftID.",
     relationshipNote: "Personal and workshop records remain separate CraftIDs. Their relationship can be managed without merging professional evidence.",
     account: "Account",
@@ -111,8 +114,11 @@ const copy = {
     archived: "Архів",
     records: "Ваші записи CraftID",
     switch: "Перемкнути запис",
+    createProfessional: "Створити CraftID професіонала",
     createWorkshop: "Створити CraftID майстерні",
+    professionalCreated: "CraftID професіонала створено та пов’язано з записом майстерні.",
     workshopCreated: "CraftID майстерні створено та пов’язано з вашим професійним записом.",
+    professionalExists: "У вас уже є активний CraftID професіонала.",
     workshopExists: "У вас уже є активний CraftID майстерні.",
     relationshipNote: "Персональний запис і майстерня залишаються окремими CraftID. Їхній зв’язок можна керувати без об’єднання професійних доказів.",
     account: "Обліковий запис",
@@ -179,6 +185,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
   if (!nextSteps.length && entity.public_status === "published") nextSteps.push(t.maintain);
 
   const selectedQuery = ownerWorkspaceQuery(locale, entity.id);
+  const hasProfessional = entities.some((item) => item.entity_type === "professional");
   const hasWorkshop = entities.some((item) => item.entity_type === "workshop");
 
   return (
@@ -223,9 +230,20 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
                 </Link>
               );
             })}
-            {!hasWorkshop && entities.some((item) => item.entity_type === "professional") ? (
-              <form action={createWorkshopCraftId}>
+            {!hasProfessional ? (
+              <form action={createAdditionalCraftId}>
                 <input type="hidden" name="lang" value={locale} />
+                <input type="hidden" name="entityType" value="professional" />
+                <button className="entitySwitchCard entitySwitchCreate" type="submit">
+                  <span>+</span>
+                  <strong>{t.createProfessional}</strong>
+                </button>
+              </form>
+            ) : null}
+            {!hasWorkshop ? (
+              <form action={createAdditionalCraftId}>
+                <input type="hidden" name="lang" value={locale} />
+                <input type="hidden" name="entityType" value="workshop" />
                 <button className="entitySwitchCard entitySwitchCreate" type="submit">
                   <span>+</span>
                   <strong>{t.createWorkshop}</strong>
@@ -236,7 +254,9 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
         </section>
 
         {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
+        {sp.message === "professional_created" ? <p className="formMessage">{t.professionalCreated}</p> : null}
         {sp.message === "workshop_created" ? <p className="formMessage">{t.workshopCreated}</p> : null}
+        {sp.message === "professional_exists" ? <p className="formMessage">{t.professionalExists}</p> : null}
         {sp.message === "workshop_exists" ? <p className="formMessage">{t.workshopExists}</p> : null}
 
         <div className="recordTopbar">
