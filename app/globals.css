@@ -3444,3 +3444,58 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Archived CraftID resolver */
+.archivedIdentityHero {
+  border-bottom: 1px solid var(--line);
+}
+
+.archivedTrustStamp {
+  border-color: var(--line);
+  background: transparent;
+}
+
+.archivedRecordPanel {
+  max-width: 860px;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.archivedRecordPanel > p {
+  margin: 0 0 24px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.archivedRecordFacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.archivedRecordFacts > div {
+  padding: 14px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.archivedRecordFacts dt {
+  color: var(--muted);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.archivedRecordFacts dd {
+  margin: 6px 0 0;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .archivedRecordFacts {
+    grid-template-columns: 1fr;
+  }
+}
