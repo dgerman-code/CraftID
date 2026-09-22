@@ -7,12 +7,13 @@ import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 export async function updateContactRequestStatus(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const entityId = String(formData.get("entityId") ?? "").trim();
+  const fallbackQ = lang === "uk" ? "?lang=uk" : "";
   const requestId = String(formData.get("requestId") ?? "");
   const status = String(formData.get("status") ?? "");
   const allowed = new Set(["accepted", "declined", "closed", "spam"]);
 
   if (!requestId || !allowed.has(status)) {
-    redirect(`/my-craftid/requests${q}`);
+    redirect(`/my-craftid/requests${fallbackQ}`);
   }
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
