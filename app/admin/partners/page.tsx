@@ -39,10 +39,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
   if (role !== "admin") redirect("/admin");
 
   const { data: partners, error } = await supabase
-    .from("partner_organisations")
-    .select("id, legal_name_en, legal_name_uk, short_name_en, short_name_uk, country_code, partner_role, status, agreement_status, website_url, description_en, description_uk, scope_note, is_public, sort_order, updated_at")
-    .order("sort_order", { ascending: true })
-    .order("legal_name_en", { ascending: true });
+    .rpc("admin_partner_organisations");
 
   const edit = sp.edit ? (partners ?? []).find((partner) => partner.id === sp.edit) : null;
 
