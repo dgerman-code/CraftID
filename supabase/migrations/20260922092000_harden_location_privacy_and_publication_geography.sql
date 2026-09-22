@@ -93,7 +93,7 @@ returns table(
   country_code text,
   region text,
   city text,
-  precision text,
+  disclosure_precision text,
   public_label text
 )
 language sql
@@ -115,7 +115,7 @@ as $$
         when e.entity_type = 'professional' then pp.city
         else wp.city
       end as city,
-      coalesce(ps.location_precision, 'country') as precision
+      coalesce(ps.location_precision, 'country') as disclosure_precision
     from public.craftid_entities e
     left join public.privacy_settings ps on ps.entity_id = e.id
     left join public.professional_profiles pp
@@ -128,25 +128,25 @@ as $$
     select
       nullif(btrim(country_code), '') as country_code,
       case
-        when precision in ('region','city') then nullif(btrim(region), '')
+        when disclosure_precision in ('region','city') then nullif(btrim(region), '')
         else null
       end as region,
       case
-        when precision = 'city' then nullif(btrim(city), '')
+        when disclosure_precision = 'city' then nullif(btrim(city), '')
         else null
       end as city,
-      precision
+      disclosure_precision
     from source
   )
   select
     country_code,
     region,
     city,
-    precision,
+    disclosure_precision,
     nullif(
       case
-        when precision = 'country' then country_code
-        when precision = 'region' then
+        when disclosure_precision = 'country' then country_code
+        when disclosure_precision = 'region' then
           array_to_string(array_remove(array[region, country_code], null), ', ')
         else
           array_to_string(array_remove(array[city, region, country_code], null), ', ')
@@ -272,7 +272,7 @@ begin
     g.country_code,
     g.region,
     g.city,
-    g.precision,
+    g.disclosure_precision,
     g.public_label
   into
     v_geo_country,
@@ -403,7 +403,7 @@ begin
     g.country_code,
     g.region,
     g.city,
-    g.precision,
+    g.disclosure_precision,
     g.public_label
   into
     v_country,
