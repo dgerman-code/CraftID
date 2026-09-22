@@ -229,13 +229,19 @@ begin
     'craftid_account_closed',
     jsonb_build_object(
       'archived_entity_count', v_count,
-      'historical_resolver_retained', true
+      'historical_resolver_retained', true,
+      'login_account_deleted', true
     )
   );
 
+  -- Delete the authentication account only after the CraftID records have been
+  -- archived and public disclosures switched off. The CraftID FK uses SET NULL,
+  -- so the immutable identifiers remain as historical registry records.
+  delete from auth.users where id = v_user_id;
+
   return v_count;
 end;
-$$;
+$;
 
 revoke all on function private.close_my_craftid_account_impl()
 from public, anon, authenticated;
