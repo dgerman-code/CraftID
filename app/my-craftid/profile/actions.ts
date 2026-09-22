@@ -23,6 +23,12 @@ export async function updateProfile(formData: FormData) {
     redirect(`/my-craftid/profile${q}&error=${encodeURIComponent("Display name is required")}`);
   }
 
+  if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) {
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(
+      lang === "uk" ? "Код країни має містити 2 літери." : "Country code must contain 2 letters.",
+    )}`);
+  }
+
   const result =
     entity.entity_type === "professional"
       ? await supabase.from("professional_profiles").update({
