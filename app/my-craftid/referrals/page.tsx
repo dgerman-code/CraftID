@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { respondToInstitutionalReferral } from "./actions";
 
 export const dynamic = "force-dynamic";
-type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
+type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
 
 const copy = {
   en: {
@@ -48,21 +48,11 @@ export default async function ReferralsPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
   const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
-
-  const supabase = await createClient();
-  const { data: auth } = await supabase.auth.getClaims();
-  const userId = auth?.claims?.sub;
-  if (!userId) redirect(`/login${q}`);
-
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id")
-    .eq("owner_user_id", userId)
-    .limit(1)
-    .single();
-
-  if (!entity) redirect(`/onboarding${q}`);
+  const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
+  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
+  if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
 
   const [{ data: referrals }, { data: contacts }] = await Promise.all([
     supabase
@@ -119,6 +109,7 @@ export default async function ReferralsPage({ searchParams }: Props) {
               {r.status === "invited" ? (
                 <form className="workspaceForm compactForm" action={respondToInstitutionalReferral}>
                   <input type="hidden" name="lang" value={locale} />
+                  <input type="hidden" name="entityId" value={entity.id} />
                   <input type="hidden" name="referralId" value={r.id} />
                   <label>{t.note}<textarea name="note" rows={3} /></label>
                   <div className="requestActions">
