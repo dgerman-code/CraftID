@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { formatCraftId } from "@/lib/certificate";
+import { getSiteUrl } from "@/lib/site-url";
 import { issueCertificate } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +46,7 @@ const copy = {
     snapshot:
       "A certificate is an issued snapshot. If the profile changes later, the verification page still shows the original issue data and separately shows the current CraftID status.",
     currentCraftId: "CraftID",
+    domainWarning: "Important: the verification QR currently uses a temporary technical domain. Do not print certificates for long-term use at scale until the final CraftID production domain is connected.",
   },
   uk: {
     eyebrow: "Сертифікат CraftID",
@@ -73,6 +75,7 @@ const copy = {
     snapshot:
       "Сертифікат є зафіксованим випуском. Якщо профіль зміниться пізніше, сторінка перевірки зберігає первинні дані випуску й окремо показує поточний статус CraftID.",
     currentCraftId: "CraftID",
+    domainWarning: "Важливо: QR-перевірка зараз використовує тимчасовий технічний домен. Не друкуйте сертифікати для довгострокового масового використання, доки не буде підключено фінальний production-домен CraftID.",
   },
 } as const;
 
@@ -103,6 +106,8 @@ export default async function CertificateWorkspacePage({ searchParams }: Props) 
 
   const rows = certificates ?? [];
   const canIssue = entity.public_status === "published";
+  const siteUrl = getSiteUrl();
+  const isTemporaryDomain = siteUrl.includes("vercel.app") || siteUrl.includes("localhost");
   const craftId = formatCraftId(
     entity.craftid_number,
     entity.craftid_check_digits,
@@ -121,6 +126,9 @@ export default async function CertificateWorkspacePage({ searchParams }: Props) 
         {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
         {sp.message === "issued" ? (
           <p className="formMessage">{t.issued}</p>
+        ) : null}
+        {isTemporaryDomain ? (
+          <p className="privacyNote markDomainWarning">{t.domainWarning}</p>
         ) : null}
 
         <section className="certificateSummaryCard">
