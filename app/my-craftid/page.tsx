@@ -4,16 +4,13 @@ import { logout } from "@/app/login/actions";
 import { localeFrom } from "@/components/site-shell";
 import { closeCraftIdAccount, createAdditionalCraftId } from "./actions";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
+import { formatCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 
 type Props = {
   searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }>;
 };
-
-function formatCraftId(value: number | string, checkDigits: string) {
-  return `#${String(value).padStart(8, "0")}-${checkDigits}`;
-}
 
 const copy = {
   en: {
@@ -230,7 +227,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
                 >
                   <span>{item.entity_type === "professional" ? t.typeProfessional : t.typeWorkshop}</span>
                   <strong>{itemProfile?.display_name ?? t.recordFallback}</strong>
-                  <small>{formatCraftId(item.craftid_number, item.craftid_check_digits)}</small>
+                  <small>CraftID #{formatCraftId(item.craftid_number, item.craftid_check_digits)}</small>
                 </Link>
               );
             })}
@@ -266,7 +263,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
         <div className="recordTopbar">
           <div>
             <span className="recordType">{typeLabel}</span>
-            <h1>{formatCraftId(entity.craftid_number, entity.craftid_check_digits)}</h1>
+            <h1>CraftID #{formatCraftId(entity.craftid_number, entity.craftid_check_digits)}</h1>
           </div>
           <div className="dashboardStatus">
             <span>{t.status}</span>
