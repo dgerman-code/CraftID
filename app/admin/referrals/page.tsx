@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
 import { createInstitutionalReferral } from "./actions";
+import { formatCraftIdWithHash } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
@@ -87,7 +88,7 @@ export default async function AdminReferralsPage({ searchParams }: Props) {
 
             <form className="workspaceForm compactForm" action={createInstitutionalReferral}>
               <input type="hidden" name="lang" value={locale} />
-              <label>{t.craftId}<input name="craftId" placeholder="00000101-86" required /></label>
+              <label>{t.craftId}<input name="craftId" placeholder="0000-0101-86" required /></label>
               <label>{t.organisation}<input name="organisation" required /></label>
               <div className="formGrid">
                 <label>{t.contactName}<input name="contactName" /></label>
@@ -111,7 +112,7 @@ export default async function AdminReferralsPage({ searchParams }: Props) {
               const e = byId.get(r.target_entity_id);
               return (
                 <article className="claimItem" key={r.id}>
-                  <span className="recordId">{e ? `#${String(e.craftid_number).padStart(8,"0")}-${e.craftid_check_digits}` : "CraftID"}</span>
+                  <span className="recordId">{e ? formatCraftIdWithHash(e.craftid_number, e.craftid_check_digits) : "CraftID"}</span>
                   <h3>{r.title}</h3>
                   <p>{r.requester_organisation}</p>
                   <div className="claimMeta">
