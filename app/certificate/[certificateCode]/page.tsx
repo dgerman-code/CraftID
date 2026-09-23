@@ -8,6 +8,7 @@ import {
   normalizeCertificateCode,
   type PublicCraftIdCertificate,
 } from "@/lib/certificate";
+import { formatCertificateNumber } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +24,7 @@ const copy = {
     valid: "Certificate record found",
     revoked: "This certificate has been revoked",
     craftId: "CraftID",
-    certificateId: "Certificate ID",
+    certificateId: "Certificate No.",
     recordType: "Record type",
     professional: "Professional",
     workshop: "Workshop",
@@ -45,7 +46,7 @@ const copy = {
     valid: "Запис сертифіката знайдено",
     revoked: "Цей сертифікат відкликано",
     craftId: "CraftID",
-    certificateId: "Certificate ID",
+    certificateId: "Certificate No.",
     recordType: "Тип запису",
     professional: "Професіонал",
     workshop: "Майстерня",
@@ -138,7 +139,11 @@ export default async function CertificateVerificationPage({
           <dl>
             <div>
               <dt>{t.certificateId}</dt>
-              <dd>{certificate.certificate_code}</dd>
+              <dd>{formatCertificateNumber(
+                certificate.craftid_number,
+                certificate.craftid_check_digits,
+                certificate.version_no,
+              )}</dd>
             </div>
             <div>
               <dt>{t.craftId}</dt>
