@@ -20,6 +20,7 @@ export default async function AdminDashboardPage() {
     evidencePending,
     openRequests,
     activeReferrals,
+    issuedCertificates,
     recentEntities,
     recentAudit,
   ] = await Promise.all([
@@ -29,6 +30,7 @@ export default async function AdminDashboardPage() {
     supabase.from("evidence_items").select("id", { count: "exact", head: true }).in("review_status", ["evidence_submitted", "document_reviewed"]),
     supabase.from("contact_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
     supabase.from("institutional_referrals").select("id", { count: "exact", head: true }).eq("status", "invited"),
+    supabase.from("craftid_certificates").select("id", { count: "exact", head: true }).eq("status", "issued"),
     supabase
       .from("craftid_entities")
       .select("id, craftid_number, craftid_check_digits, entity_type, public_status, created_at")
@@ -62,6 +64,7 @@ export default async function AdminDashboardPage() {
     ["Evidence requiring attention", evidencePending.count ?? 0, "/admin/review"],
     ["Pending contact requests", openRequests.count ?? 0, "/admin"],
     ["Open institutional invitations", activeReferrals.count ?? 0, "/admin/referrals"],
+    ["Issued certificates", issuedCertificates.count ?? 0, "/admin/certificates"],
   ] as const;
 
   return (
