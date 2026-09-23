@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { formatCraftId } from "@/lib/craftid-format";
 
 export async function assignCraftIdNumber(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
@@ -42,8 +43,8 @@ export async function assignCraftIdNumber(formData: FormData) {
 
   const assigned = Array.isArray(data) ? data[0] : data;
   const result = assigned
-    ? `${String(assigned.craftid_number).padStart(8, "0")}-${assigned.craftid_check_digits}`
-    : String(requestedNumber).padStart(8, "0");
+    ? formatCraftId(assigned.craftid_number, assigned.craftid_check_digits)
+    : String(requestedNumber).padStart(8, "0").replace(/(\d{4})(\d{4})/, "$1-$2");
 
   revalidatePath("/admin/identifiers");
   redirect(`/admin/identifiers${q ? `${q}&` : "?"}message=${encodeURIComponent(result)}`);
