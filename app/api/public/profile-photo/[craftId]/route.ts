@@ -1,17 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { parseCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ craftId: string }> };
-
-function parseCraftId(value: string) {
-  const match = value.match(/^(?:#)?0*(\d+)-(\d{2})$/);
-  if (!match) return null;
-  const number = Number(match[1]);
-  if (!Number.isSafeInteger(number) || number < 1) return null;
-  return { number, check: match[2] };
-}
 
 const notFound = () => new NextResponse("Not found", { status: 404 });
 
