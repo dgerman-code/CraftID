@@ -48,6 +48,31 @@ function normalized(value?: string) {
   return (value ?? "").trim().toLocaleLowerCase();
 }
 
+async function loadAllPublishedEntityIdentifiers(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+) {
+  const pageSize = 500;
+  const rows: { craftid_number: number; craftid_check_digits: string }[] = [];
+
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await supabase
+      .from("craftid_entities")
+      .select("craftid_number, craftid_check_digits")
+      .eq("public_status", "published")
+      .order("craftid_number", { ascending: true })
+      .range(from, from + pageSize - 1);
+
+    if (error) throw error;
+
+    const page = data ?? [];
+    rows.push(...page);
+
+    if (page.length < pageSize) break;
+  }
+
+  return rows;
+}
+
 const statusRank: Record<string, number> = {
   self_declared: 0,
   evidence_submitted: 1,
@@ -192,13 +217,8 @@ export default async function DiscoverPage({ searchParams }: Props) {
     }
   }
 
-  const [{ data: publishedEntities }, { data: suppressionRule }] = await Promise.all([
-    supabase
-      .from("craftid_entities")
-      .select("craftid_number, craftid_check_digits")
-      .eq("public_status", "published")
-      .order("craftid_number", { ascending: true })
-      .limit(100),
+  const [publishedEntities, { data: suppressionRule }] = await Promise.all([
+    loadAllPublishedEntityIdentifiers(supabase),
     supabase
       .from("aggregation_suppression_rules")
       .select("minimum_distinct_entities")
@@ -213,7 +233,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
       : 5;
 
   const resolved = await Promise.all(
-    (publishedEntities ?? []).map(async (entity) => {
+    publishedEntities.map(async (entity) => {
       const { data } = await supabase.rpc("public_craftid_profile", {
         p_craftid_number: entity.craftid_number,
         p_check_digits: entity.craftid_check_digits,
