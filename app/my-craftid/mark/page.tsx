@@ -6,7 +6,7 @@ import { localeFrom } from "@/components/site-shell";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
-type Props = { searchParams: Promise<{ lang?: string; entity?: string }> };
+type Props = { searchParams: Promise<{ lang?: string; entity?: string; origin?: string }> };
 
 function formatCraftId(value: number | string, checkDigits: string) {
   return `${String(value).padStart(8, "0")}-${checkDigits}`;
@@ -34,6 +34,13 @@ const copy = {
     downloadQr: "Download QR (PNG)",
     downloadBadge: "Download badge (SVG)",
     downloadLabel: "Download maker label (SVG)",
+    origin: "Crafted in country label",
+    originText: "Add a country-of-production statement to a CraftID label. This does not create a separate product record.",
+    originCountry: "Country wording",
+    originPlaceholder: "Belgium",
+    originGenerate: "Generate label",
+    originDownload: "Download Crafted in label (SVG)",
+    originNote: "The country wording is added to the label separately from the CraftID identity. It is not shown as Verified or certified by CraftID.",
     domainWarning: "Important: this is still running on a temporary technical domain. Do not print permanent QR labels at scale until the final CraftID production domain is connected.",
   },
   uk: {
@@ -57,6 +64,13 @@ const copy = {
     downloadQr: "Завантажити QR (PNG)",
     downloadBadge: "Завантажити badge (SVG)",
     downloadLabel: "Завантажити макет (SVG)",
+    origin: "Лейбл Crafted in [Country]",
+    originText: "Додайте до CraftID-лейбла зазначення країни виготовлення. Це не створює окремий запис виробу.",
+    originCountry: "Назва країни",
+    originPlaceholder: "Belgium",
+    originGenerate: "Створити лейбл",
+    originDownload: "Завантажити Crafted in лейбл (SVG)",
+    originNote: "Назва країни додається до лейбла окремо від професійної ідентичності CraftID. Вона не позначається як Verified або сертифікована CraftID.",
     domainWarning: "Важливо: зараз CraftID ще працює на тимчасовому технічному домені. Не друкуйте постійні QR-етикетки масово, доки не буде підключено фінальний production-домен CraftID.",
   },
 } as const;
@@ -72,8 +86,8 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
   if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
 
   const profile = entity.entity_type === "professional"
-    ? await supabase.from("professional_profiles").select("display_name").eq("entity_id", entity.id).single()
-    : await supabase.from("workshop_profiles").select("display_name").eq("entity_id", entity.id).single();
+    ? await supabase.from("professional_profiles").select("display_name, country_code").eq("entity_id", entity.id).single()
+    : await supabase.from("workshop_profiles").select("display_name, country_code").eq("entity_id", entity.id).single();
 
   const craftId = formatCraftId(entity.craftid_number, entity.craftid_check_digits);
   const siteUrl = getSiteUrl();
@@ -86,6 +100,14 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
   const isTemporaryDomain = siteUrl.includes("vercel.app") || siteUrl.includes("localhost");
   const embed = `<a href="${profileUrl}" rel="me noopener" target="_blank"><img src="${badgeUrl}" alt="CraftID #${craftId}" width="560" height="120"></a>`;
   const displayName = profile.data?.display_name ?? "CraftID";
+  const displayNames = new Intl.DisplayNames([locale === "uk" ? "uk" : "en"], { type: "region" });
+  const defaultOrigin = profile.data?.country_code
+    ? displayNames.of(profile.data.country_code) ?? profile.data.country_code
+    : "";
+  const origin = (sp.origin ?? "").trim().replace(/\s+/g, " ").slice(0, 64);
+  const originLabelUrl = origin
+    ? `/api/mark/origin-label?craftId=${encodeURIComponent(craftId)}&origin=${encodeURIComponent(origin)}`
+    : "";
 
   return (
     <main className="workspacePage markWorkspace">
@@ -145,9 +167,46 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
           </div>
           <div className="markPhysicalText">
             <div className="eyebrow">{t.physical}</div>
-            <code>Professional identity: CraftID #{craftId}</code>
+            <code>{entity.entity_type === "professional" ? "Professional" : "Workshop"} identity: CraftID #{craftId}</code>
           </div>
           <a className="button markAssetButton" href={labelDownloadUrl}>{t.downloadLabel}</a>
+        </section>
+
+        <section className="originLabelSection">
+          <div className="eyebrow">{t.origin}</div>
+          <h2>{t.origin}</h2>
+          <p className="fieldHelp">{t.originText}</p>
+
+          <form className="originLabelForm" action="/my-craftid/mark" method="get">
+            {locale === "uk" ? <input type="hidden" name="lang" value="uk" /> : null}
+            <input type="hidden" name="entity" value={entity.id} />
+            <label>
+              {t.originCountry}
+              <input
+                name="origin"
+                defaultValue={origin || defaultOrigin}
+                placeholder={t.originPlaceholder}
+                maxLength={64}
+                required
+              />
+            </label>
+            <button className="button buttonPrimary" type="submit">{t.originGenerate}</button>
+          </form>
+
+          <p className="privacyNote">{t.originNote}</p>
+
+          {origin ? (
+            <div className="originLabelResult">
+              <img
+                className="originLabelPreview"
+                src={originLabelUrl}
+                alt={`CraftID Crafted in ${origin} label`}
+              />
+              <a className="button markAssetButton" href={originLabelUrl}>
+                {t.originDownload}
+              </a>
+            </div>
+          ) : null}
         </section>
       </div>
     </main>
