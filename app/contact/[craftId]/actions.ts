@@ -2,18 +2,13 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-
-function parseCraftId(value: string) {
-  const match = value.match(/^(?:#)?0*(\d+)(?:-\d{2})?$/);
-  if (!match) return null;
-  const number = Number(match[1]);
-  return Number.isSafeInteger(number) && number > 0 ? number : null;
-}
+import { parseCraftId } from "@/lib/craftid-format";
 
 export async function submitPublicContactRequest(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
   const rawCraftId = String(formData.get("craftId") ?? "");
-  const number = parseCraftId(rawCraftId);
+  const parsed = parseCraftId(rawCraftId);
+  const number = parsed?.number ?? null;
   const q = lang === "uk" ? "?lang=uk" : "";
 
   if (!number) {
