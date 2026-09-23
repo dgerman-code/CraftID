@@ -22,6 +22,7 @@ const labels = {
     language: "Language",
     privacy: "Privacy",
     governance: "Governance",
+    verifyCertificate: "Verify certificate",
     footerLine: "Professional identity · skills · evidence · trust",
   },
   uk: {
@@ -35,6 +36,7 @@ const labels = {
     language: "Мова",
     privacy: "Приватність",
     governance: "Управління",
+    verifyCertificate: "Перевірити сертифікат",
     footerLine: "Професійна ідентичність · навички · докази · довіра",
   },
 } as const;
@@ -91,6 +93,7 @@ export function SiteFooter({ locale }: { locale: PublicLocale }) {
         <nav className="footerNav" aria-label="Footer navigation">
           <Link href={withLocale("/privacy", locale)}>{t.privacy}</Link>
           <Link href={withLocale("/governance", locale)}>{t.governance}</Link>
+          <Link href={withLocale("/certificate", locale)}>{t.verifyCertificate}</Link>
           <span>{t.footerLine}</span>
         </nav>
       </div>
