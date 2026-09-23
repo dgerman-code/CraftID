@@ -5,6 +5,8 @@ type HomeProps = { searchParams: Promise<{ lang?: string }> };
 
 const copy = {
   en: {
+    pilotLabel: "Pilot platform",
+    pilotText: "CraftID is currently in active development and testing. Features, data structures and workflows may change before public launch.",
     eyebrow: "Professional identity infrastructure",
     title: "Professional identity, built on evidence.",
     intro: "CraftID is a European-oriented professional identity, skills and evidence infrastructure for craftspeople, workshops and craft-based micro-enterprises.",
@@ -44,6 +46,8 @@ const copy = {
     methodology: "Read the methodology",
   },
   uk: {
+    pilotLabel: "Пілотна платформа",
+    pilotText: "CraftID зараз перебуває в активній розробці та тестуванні. Функції, структура даних і робочі процеси можуть змінюватися до публічного запуску.",
     eyebrow: "Інфраструктура професійної ідентичності",
     title: "Професійна ідентичність, побудована на доказах.",
     intro: "CraftID — європейсько-орієнтована інфраструктура професійної ідентичності, навичок і доказів для майстрів, майстерень та мікропідприємств у сфері ремесел.",
@@ -93,6 +97,12 @@ export default async function HomePage({ searchParams }: HomeProps) {
     <>
       <SiteHeader locale={locale} pathname="/" />
       <main>
+        <aside className="pilotNotice" aria-label={t.pilotLabel}>
+          <div className="container pilotNoticeInner">
+            <strong>{t.pilotLabel}</strong>
+            <span>{t.pilotText}</span>
+          </div>
+        </aside>
         <section className="hero">
           <div className="container">
             <div className="eyebrow">{t.eyebrow}</div>
