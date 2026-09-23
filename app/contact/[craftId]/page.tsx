@@ -61,6 +61,10 @@ export default async function ContactPage({ params, searchParams }: Props) {
   const locale = localeFrom(sp.lang);
   const t = copy[locale];
   const q = locale === "uk" ? "?lang=uk" : "";
+  const parsedCraftId = parseCraftId(craftId);
+  const displayCraftId = parsedCraftId
+    ? formatCraftId(parsedCraftId.number, parsedCraftId.check)
+    : craftId;
 
   return (
     <main className="workspacePage">
@@ -69,7 +73,7 @@ export default async function ContactPage({ params, searchParams }: Props) {
         <div className="eyebrow">{t.eyebrow}</div>
         <h1>{t.title}</h1>
         <p className="workspaceIntro">{t.intro}</p>
-        <div className="recordId">CraftID #{craftId}</div>
+        <div className="recordId">CraftID #{displayCraftId}</div>
         <p className="privacyNote">{t.privacy}</p>
 
         {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
