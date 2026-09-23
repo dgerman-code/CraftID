@@ -15,6 +15,7 @@ const nav = [
   { href: "/admin/publication", label: "Publication Queue", adminOnly: true },
   { href: "/admin/review", label: "Reviews", adminOnly: false },
   { href: "/admin/referrals", label: "Institutional Opportunities", adminOnly: true },
+  { href: "/admin/support", label: "Support & Interests", adminOnly: true },
   { href: "/admin/partners", label: "Partner Organisations", adminOnly: true },
   { href: "/admin/certificates", label: "Certificates", adminOnly: true },
   { href: "/admin/taxonomy", label: "Taxonomy", adminOnly: true },
