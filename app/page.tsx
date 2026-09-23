@@ -20,6 +20,22 @@ const copy = {
       ["Evidence", "Link individual professional claims to supporting material. Evidence is private by default and is not automatically made public."],
       ["Trust", "Public records distinguish clearly between self-declared information, submitted evidence and claims that have undergone review."],
     ],
+    valueEyebrow: "For craft professionals",
+    valueTitle: "One identity. Practical value over time.",
+    valueIntro: "CraftID is designed to be more than a profile. It gives a craft professional a permanent reference that can be used across products, professional communication, applications and changing places of work.",
+    valueItems: [
+      ["Permanent CraftID", "One professional identifier that can be used on products, packaging, business cards, websites, CVs, catalogues and applications. The CraftID remains tied to the same professional or workshop over time."],
+      ["Public professional profile", "A buyer, fair organiser, partner or institution can follow the CraftID or QR code to see who the maker is and what professional practice they present publicly."],
+      ["Evidence-backed skills history", "Skills, experience, training, qualifications and other claims can gradually be connected to supporting evidence and attestations, while keeping evidence private unless disclosure is explicitly intended."],
+      ["Professional Identity Certificate", "A downloadable CraftID Professional Identity Certificate with a QR code is planned for use in professional communication, applications and printed materials."],
+      ["Product traceability", "When a CraftID is placed on a product or document, the identifier can remain resolvable over time so the registered maker or workshop can still be identified even if the active account is later closed."],
+      ["Privacy control", "The CraftID owner decides what is public: country, region or city, profile details, contacts and photo. Workshop owners may also explicitly choose whether to publish an exact business address."],
+      ["Professional ↔ Workshop link", "A Professional CraftID can be linked to a Workshop CraftID without merging the two identities, so a person keeps their own professional record when a workshop, employer or place of practice changes."],
+      ["Transparent trust", "CraftID does not claim that a maker is ‘good’ or globally certified. It shows structured professional information and distinguishes self-declared information, evidence and reviewed claims."],
+      ["Access through the partner network", "As the network develops, CraftID can be used by national and sectoral partners, craft organisations, fairs, education providers and support programmes as a structured professional reference."],
+      ["Portable across countries", "A craft professional can move country, change workshop or enter a new market without losing the same CraftID and the continuity of their professional record."],
+      ["Free participation in the first phase", "Creating and holding a CraftID is free for craft professionals during the first phase, lowering the barrier to joining the common professional infrastructure."],
+    ],
     audience: "Who CraftID is for",
     profTitle: "For professionals and workshops",
     profText: "Build a portable professional record that is independent of a marketplace, employer or single project. Present skills, practice and evidence without turning the profile into a sales listing.",
@@ -44,6 +60,22 @@ const copy = {
       ["Навички та практика", "Описуйте професійно застосовувані навички та пов’язуйте їх із досвідом, кваліфікаціями, портфоліо і професійними зв’язками."],
       ["Докази", "Пов’язуйте окремі професійні твердження з підтвердними матеріалами. Докази за замовчуванням є приватними."],
       ["Довіра", "Публічний запис чітко розрізняє самостійно заявлену інформацію, подані докази та твердження, що пройшли перевірку."],
+    ],
+    valueEyebrow: "Для майстрів",
+    valueTitle: "Одна ідентичність. Практична цінність упродовж професійного шляху.",
+    valueIntro: "CraftID задуманий як більше, ніж просто профіль. Майстер отримує постійний професійний ідентифікатор, який можна використовувати на виробах, у професійній комунікації, заявках і при зміні місця роботи чи країни.",
+    valueItems: [
+      ["Постійний CraftID", "Один професійний ідентифікатор, який можна використовувати на виробах, пакуванні, візитках, сайті, CV, каталогах і заявках. CraftID залишається прив’язаним до того самого майстра або майстерні впродовж часу."],
+      ["Публічний професійний профіль", "Покупець, організатор ярмарку, партнер або інституція можуть перейти за CraftID чи QR-кодом і побачити, хто є виробником та яку професійну практику він показує публічно."],
+      ["Історія навичок, підкріплена доказами", "Навички, досвід, навчання, кваліфікації та інші твердження можна поступово пов’язувати з доказами та attestations, при цьому самі докази залишаються приватними, якщо їх розкриття окремо не передбачено."],
+      ["Professional Identity Certificate", "Планується завантажуваний CraftID Professional Identity Certificate у PDF із QR-кодом для професійної комунікації, заявок і друкованих матеріалів."],
+      ["Прослідковуваність виробів", "Якщо CraftID нанесено на виріб або документ, ідентифікатор може залишатися доступним для перевірки з часом, щоб можна було встановити зареєстрованого майстра або майстерню навіть після закриття активного акаунта."],
+      ["Контроль приватності", "Власник CraftID сам визначає, що є публічним: країна, регіон або місто, дані профілю, контакти та фото. Власник Workshop CraftID також може окремо вирішити, чи публікувати точну бізнес-адресу."],
+      ["Зв’язок Professional ↔ Workshop", "Professional CraftID можна пов’язати з Workshop CraftID без об’єднання двох ідентичностей. Майстер зберігає власний професійний запис навіть при зміні майстерні, роботодавця або місця практики."],
+      ["Прозора модель довіри", "CraftID не заявляє, що майстер є «хорошим» або глобально сертифікованим. Платформа показує структуровану професійну інформацію та розрізняє самостійно заявлені дані, докази й перевірені твердження."],
+      ["Доступ через мережу партнерів", "У міру розвитку мережі CraftID може використовуватися національними та галузевими партнерами, ремісничими організаціями, ярмарками, освітніми установами та програмами підтримки як структурований професійний орієнтир."],
+      ["Переносимість між країнами", "Майстер може переїхати в іншу країну, змінити майстерню або вийти на новий ринок, не втрачаючи той самий CraftID і безперервність свого професійного запису."],
+      ["Безкоштовна участь на першому етапі", "Створення та використання CraftID для майстрів є безкоштовним на першому етапі, що знижує бар’єр для приєднання до спільної професійної інфраструктури."],
     ],
     audience: "Для кого CraftID",
     profTitle: "Для майстрів і майстерень",
@@ -102,6 +134,25 @@ export default async function HomePage({ searchParams }: HomeProps) {
               {t.cards.map(([title, text], index) => (
                 <article className="informationCard" key={title}>
                   <span className="choiceIndex">0{index + 1}</span>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section editorialSection">
+          <div className="container">
+            <div className="sectionLead">
+              <div className="eyebrow">{t.valueEyebrow}</div>
+              <h2>{t.valueTitle}</h2>
+              <p>{t.valueIntro}</p>
+            </div>
+            <div className="informationGrid">
+              {t.valueItems.map(([title, text], index) => (
+                <article className="informationCard" key={title}>
+                  <span className="choiceIndex">{String(index + 1).padStart(2, "0")}</span>
                   <h3>{title}</h3>
                   <p>{text}</p>
                 </article>
