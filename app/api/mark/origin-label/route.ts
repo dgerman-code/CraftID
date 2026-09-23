@@ -117,10 +117,12 @@ export async function GET(request: NextRequest) {
     .replace(/^-+|-+$/g, "")
     .toLowerCase() || "origin";
 
+  const download = request.nextUrl.searchParams.get("download") === "1";
+
   return new NextResponse(svg, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Content-Disposition": `attachment; filename="craftid-crafted-in-${safeOrigin}-${parsed.formatted}.svg"`,
+      "Content-Disposition": `${download ? "attachment" : "inline"}; filename="craftid-crafted-in-${safeOrigin}-${parsed.formatted}.svg"`,
       "Cache-Control": "private, max-age=0, must-revalidate",
       "X-Robots-Tag": "noindex",
     },
