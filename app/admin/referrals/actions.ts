@@ -3,13 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-
-function parseCraftId(value: string) {
-  const match = value.match(/^(?:#)?0*(\d+)(?:-\d{2})?$/);
-  if (!match) return null;
-  const n = Number(match[1]);
-  return Number.isSafeInteger(n) && n > 0 ? n : null;
-}
+import { parseCraftId } from "@/lib/craftid-format";
 
 export async function createInstitutionalReferral(formData: FormData) {
   const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
@@ -39,7 +33,7 @@ export async function createInstitutionalReferral(formData: FormData) {
   const { data: entity } = await supabase
     .from("craftid_entities")
     .select("id, public_status")
-    .eq("craftid_number", craftId)
+    .eq("craftid_number", craftId.number)
     .neq("public_status", "archived")
     .maybeSingle();
 
