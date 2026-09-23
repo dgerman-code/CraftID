@@ -38,7 +38,7 @@ export async function GET(
   );
 
   if (!isCertificateCode(code)) {
-    return new NextResponse("Invalid Certificate ID", { status: 400 });
+    return new NextResponse("Invalid Certificate No.", { status: 400 });
   }
 
   const locale =
