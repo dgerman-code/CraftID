@@ -47,6 +47,8 @@ const copy = {
     requestsText: "Review controlled enquiries without publishing your private email or phone.",
     referrals: "Institutional opportunities",
     referralsText: "Review project, partnership, training and commission invitations routed through CraftID.",
+    certificate: "CraftID Certificate",
+    certificateText: "Issue and download a versioned identity certificate with a public Certificate ID and QR verification.",
     mark: "CraftID Mark",
     markText: "Use your CraftID on websites, product cards, workshop signage and print. The mark identifies a CraftID record; it is not a certification or quality seal.",
     open: "Open",
@@ -103,6 +105,8 @@ const copy = {
     requestsText: "Переглядайте контрольовані звернення без публікації вашого приватного email або телефону.",
     referrals: "Інституційні можливості",
     referralsText: "Переглядайте запрошення до проєктів, партнерств, навчання та замовлень, передані через CraftID.",
+    certificate: "Сертифікат CraftID",
+    certificateText: "Випускайте та завантажуйте версійний сертифікат ідентичності з публічним Certificate ID та QR-перевіркою.",
     mark: "CraftID Mark",
     markText: "Використовуйте CraftID на вебсайті, картках виробів, вивісці майстерні та у друці. CraftID Mark ідентифікує запис CraftID, але не є сертифікацією або знаком якості.",
     open: "Відкрити",
@@ -297,6 +301,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             [t.public, t.publicText, "/my-craftid/preview"],
             [t.requests, t.requestsText, "/my-craftid/requests"],
             [t.referrals, t.referralsText, "/my-craftid/referrals"],
+            [t.certificate, t.certificateText, "/my-craftid/certificate"],
             [t.mark, t.markText, "/my-craftid/mark"],
           ].map(([title, text, href], index) => (
             <article className="dashboardModule" key={title}>
