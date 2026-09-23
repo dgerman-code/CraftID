@@ -438,3 +438,22 @@ It also creates a clear distinction between:
 - commercial readiness;
 - institutional intelligence;
 - donor impact reporting.
+
+
+## Public identifier presentation
+
+The canonical human-readable CraftID presentation is:
+
+`CraftID #0000-0173-86`
+
+The identifier body remains the existing permanent numeric CraftID plus its two MOD-97 check digits. The additional hyphen is presentation-only and does not change the stored identifier, its ownership, its lifecycle, or its check-digit calculation.
+
+Public interfaces should use the grouped `4-4-2` presentation consistently for Professional and Workshop records. Entity type, country, craft and national ecosystem are descriptive attributes and are not encoded into the permanent identifier.
+
+Input parsing must remain backwards compatible. Interfaces may accept grouped, legacy and compact forms such as `0000-0173-86`, `00000173-86`, `#0000-0173-86` and `0000017386`, while rendering the grouped public form.
+
+Identity certificates use the public certificate number:
+
+`Certificate No. 0000-0173-86/01`
+
+The suffix after `/` is the certificate version. Internal immutable certificate codes may remain implementation identifiers for database and routing integrity, but they should not be presented as the primary public certificate number.
