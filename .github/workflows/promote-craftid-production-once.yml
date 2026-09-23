@@ -1,0 +1,38 @@
+name: Promote CraftID production once
+
+on:
+  push:
+    branches:
+      - chore/initial-platform-baseline
+    paths:
+      - .github/workflows/promote-craftid-production-once.yml
+
+jobs:
+  promote:
+    if: contains(github.event.head_commit.message, 'Promote CraftID deployment')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Vercel token is configured
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::VERCEL_TOKEN secret is not configured in this repository."
+            exit 1
+          fi
+
+      - name: Promote ready deployment to production
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npx --yes vercel@59.25.0 promote craft-mmgrvgg06-hcus-projects.vercel.app \
+            --scope hcus-projects \
+            --token="$VERCEL_TOKEN"
+
+      - name: Inspect promoted deployment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npx --yes vercel@59.25.0 inspect craft-mmgrvgg06-hcus-projects.vercel.app \
+            --scope hcus-projects \
+            --token="$VERCEL_TOKEN"
