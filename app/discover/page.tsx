@@ -4,6 +4,7 @@ import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
 import { createClient } from "@/lib/supabase/server";
 import { CraftSkillsMap } from "@/components/craft-skills-map";
 import { resolvePublicMapCoordinate } from "@/lib/public-map";
+import { formatCraftId, parseCraftId } from "@/lib/craftid-format";
 
 type Props = {
   searchParams: Promise<{
@@ -42,25 +43,6 @@ type PublicRecord = {
   claims: PublicClaim[];
   links: { contact_type: string; value: string; verification_level: string }[];
 };
-
-function parseCraftId(value: string) {
-  const compact = value.trim().replace(/^CraftID\s*/i, "").replace(/^#/, "");
-  const match = compact.match(/^0*(\d+)-(\d{2})$/);
-  if (!match) return null;
-
-  const number = Number(match[1]);
-  if (!Number.isSafeInteger(number) || number < 1) return null;
-
-  return {
-    number,
-    check: match[2],
-    route: `${String(number).padStart(8, "0")}-${match[2]}`,
-  };
-}
-
-function formatCraftId(number: number, check: string) {
-  return `#${String(number).padStart(8, "0")}-${check}`;
-}
 
 function normalized(value?: string) {
   return (value ?? "").trim().toLocaleLowerCase();
@@ -111,7 +93,7 @@ const copy = {
     idTitle: "Find a CraftID record",
     idText: "Use the permanent CraftID number to open a published professional or workshop record directly.",
     idLabel: "CraftID number",
-    idPlaceholder: "#00000101-86",
+    idPlaceholder: "#0000-0101-86",
     idButton: "Open record",
     idHint: "Enter the full CraftID number, including the two check digits.",
     idInvalid: "Enter a valid CraftID in the format #00000101-86.",
@@ -150,7 +132,7 @@ const copy = {
     idTitle: "Знайти запис CraftID",
     idText: "Використовуйте постійний номер CraftID, щоб одразу відкрити опублікований запис професіонала або майстерні.",
     idLabel: "Номер CraftID",
-    idPlaceholder: "#00000101-86",
+    idPlaceholder: "#0000-0101-86",
     idButton: "Відкрити запис",
     idHint: "Введіть повний номер CraftID разом із двома контрольними цифрами.",
     idInvalid: "Введіть коректний CraftID у форматі #00000101-86.",
@@ -203,7 +185,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
       });
 
       if (profile) {
-        redirect(`/id/${parsed.route}${q}`);
+        redirect(`/id/${parsed.formatted}${q}`);
       }
 
       lookupError = t.idMissing;
@@ -473,7 +455,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
                     .filter((claim) => claim.claim_type === "skill")
                     .slice(0, 4);
                   const status = strongestClaimStatus(record.claims ?? []);
-                  const formatted = formatCraftId(record.craftid_number, record.craftid_check_digits);
+                  const formatted = "#" + formatCraftId(record.craftid_number, record.craftid_check_digits);
                   const route = formatted.replace("#", "");
                   const role = record.professional_title ?? record.craft_sector ?? "";
                   const statusLabel = status
