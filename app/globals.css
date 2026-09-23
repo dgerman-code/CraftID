@@ -3499,3 +3499,160 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* CraftID certificate */
+.certificateSummaryCard,
+.certificateInfoPanel,
+.certificateHistorySection {
+  margin-top: 32px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.certificateSummaryCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  border-top: 2px solid var(--accent);
+}
+
+.certificateCraftId {
+  display: block;
+  margin-top: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.35rem;
+  color: var(--accent);
+}
+
+.certificateInfoPanel p {
+  max-width: 780px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.certificateHistoryList {
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.certificateHistoryItem {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) 140px 140px minmax(260px, auto);
+  gap: 18px;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.certificateHistoryItem > div:not(.certificateActions) {
+  display: grid;
+  gap: 5px;
+}
+
+.certificateHistoryItem span {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.certificateActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.certificateVerificationPage {
+  min-height: 100vh;
+  padding: 40px 0 96px;
+  background: var(--page);
+}
+
+.certificateVerificationContainer {
+  max-width: 980px;
+}
+
+.certificateVerifyHero {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  align-items: flex-start;
+  margin-top: 44px;
+  padding: 42px 0 34px;
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--line);
+}
+
+.certificateVerifyHero.revoked {
+  border-top-color: #8b2d2d;
+}
+
+.certificateVerifyHero h1 {
+  margin: 10px 0 16px;
+  font-size: clamp(2.4rem, 4.5vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.certificateVerifyName {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.certificateFacts {
+  margin-top: 30px;
+}
+
+.certificateFacts dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.certificateFacts dl > div {
+  min-height: 92px;
+  padding: 20px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.certificateFacts dt {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.certificateFacts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.certificateVerifyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 28px 0;
+}
+
+@media (max-width: 900px) {
+  .certificateSummaryCard,
+  .certificateHistoryItem,
+  .certificateFacts dl {
+    grid-template-columns: 1fr;
+  }
+
+  .certificateActions {
+    justify-content: flex-start;
+  }
+
+  .certificateVerifyHero {
+    flex-direction: column;
+  }
+}
