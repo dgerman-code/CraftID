@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { formatCraftId } from "@/lib/certificate";
+import { formatCertificateNumber } from "@/lib/craftid-format";
 import { getSiteUrl } from "@/lib/site-url";
 import { issueCertificate } from "./actions";
 
@@ -182,7 +183,11 @@ export default async function CertificateWorkspacePage({ searchParams }: Props) 
                     key={certificate.certificate_code}
                   >
                     <div>
-                      <strong>{certificate.certificate_code}</strong>
+                      <strong>{formatCertificateNumber(
+                        entity.craftid_number,
+                        entity.craftid_check_digits,
+                        certificate.version_no,
+                      )}</strong>
                       <span>
                         {t.version} {certificate.version_no}
                       </span>
