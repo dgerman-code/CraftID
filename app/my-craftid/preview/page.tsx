@@ -3,13 +3,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
+import { formatCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string }> };
-
-function formatCraftId(value: number | string, checkDigits: string) {
-  return `#${String(value).padStart(8, "0")}-${checkDigits}`;
-}
 
 const copy = {
   en: {
@@ -150,7 +147,7 @@ export default async function PreviewPage({ searchParams }: Props) {
         <section className="ownerPreviewCard">
           <div className="ownerPreviewHeader">
             <div>
-              <div className="recordId">CraftID {formatCraftId(entity.craftid_number, entity.craftid_check_digits)}</div>
+              <div className="recordId">CraftID #{formatCraftId(entity.craftid_number, entity.craftid_check_digits)}</div>
               <h1>{record.display_name}</h1>
               <p className="profileRole">{record.professional_title ?? record.craft_sector ?? ""}</p>
             </div>
