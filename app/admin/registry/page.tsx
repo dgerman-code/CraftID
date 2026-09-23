@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { formatCraftIdWithHash } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 
@@ -12,9 +13,7 @@ type Props = {
   }>;
 };
 
-function formatId(number: number | string, check: string) {
-  return `#${String(number).padStart(8, "0")}-${check}`;
-}
+const formatId = formatCraftIdWithHash;
 
 export default async function RegistryPage({ searchParams }: Props) {
   const filters = await searchParams;
