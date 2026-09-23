@@ -33,9 +33,10 @@ export async function GET(request: NextRequest) {
     p_craftid_number: parsed.number,
     p_check_digits: parsed.check,
   });
-  const published = publicProfile as { display_name: string } | null;
+  const published = publicProfile as { display_name: string; entity_type: "professional" | "workshop" } | null;
 
   let ownName: string | null = null;
+  let ownType: "professional" | "workshop" | null = null;
   if (!published) {
     const { data: entity } = await supabase
       .from("craftid_entities")
@@ -51,8 +52,11 @@ export async function GET(request: NextRequest) {
       : await supabase.from("workshop_profiles").select("display_name").eq("entity_id", entity.id).single();
 
     ownName = profile.data?.display_name ?? null;
+    ownType = entity.entity_type as "professional" | "workshop";
   }
 
+  const entityType = published?.entity_type ?? ownType ?? "professional";
+  const recordLabel = entityType === "workshop" ? "Workshop identity record" : "Professional identity record";
   const displayName = esc(published?.display_name ?? ownName ?? "CraftID");
   const canonical = new URL(`id/${parsed.formatted}`, getSiteUrl()).toString();
 
@@ -79,7 +83,7 @@ export async function GET(request: NextRequest) {
     <text x="42" y="82" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#111412">CraftID</text>
     <text x="42" y="132" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="24" fill="#1e3a5f">#${parsed.formatted}</text>
     <text x="42" y="196" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#111412">${displayName}</text>
-    <text x="42" y="242" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#59615c">Professional identity record</text>
+    <text x="42" y="242" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#59615c">${recordLabel}</text>
     <text x="42" y="292" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#59615c">${esc(canonical)}</text>
     <image href="${qrData}" x="610" y="52" width="238" height="238"/>
     <text x="610" y="318" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#59615c">Scan to view the CraftID record</text>
