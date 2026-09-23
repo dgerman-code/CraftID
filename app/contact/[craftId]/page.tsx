@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { localeFrom } from "@/components/site-shell";
+import { formatCraftId, parseCraftId } from "@/lib/craftid-format";
 import { submitPublicContactRequest } from "./actions";
 
 export const dynamic = "force-dynamic";
