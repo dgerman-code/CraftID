@@ -22,6 +22,7 @@ const copy = {
     issued: "Certificate issued",
     verify: "Scan to verify this certificate and view the current CraftID status.",
     disclaimer: "This certificate confirms registration and identity within the CraftID professional identity infrastructure. It is not a professional qualification, statutory licence, quality certification, accreditation, or EU institutional endorsement.",
+    revoked: "REVOKED",
     instrument: "CraftID - professional identity, skills and evidence infrastructure",
   },
   uk: {
@@ -38,6 +39,7 @@ const copy = {
     issued: "Дата випуску сертифіката",
     verify: "Скануйте QR-код, щоб перевірити сертифікат і поточний статус CraftID.",
     disclaimer: "Цей сертифікат підтверджує реєстрацію та ідентичність у професійній інфраструктурі CraftID. Він не є професійною кваліфікацією, законодавчою ліцензією, сертифікацією якості, акредитацією чи інституційним схваленням ЄС.",
+    revoked: "ВІДКЛИКАНО",
     instrument: "CraftID - інфраструктура професійної ідентичності, навичок і доказів",
   },
 } as const;
@@ -114,6 +116,25 @@ export async function renderCraftIdCertificatePdf(input: {
   page.drawRectangle({ x: 18, y: height - 26, width: width - 36, height: 8, color: navy });
 
   page.drawText("CraftID", { x: 52, y: height - 74, size: 24, font: bold, color: ink });
+
+  if (certificate.certificate_status === "revoked") {
+    page.drawRectangle({
+      x: width - 190,
+      y: height - 92,
+      width: 138,
+      height: 28,
+      borderColor: rgb(139 / 255, 45 / 255, 45 / 255),
+      borderWidth: 1,
+    });
+    const revokedWidth = bold.widthOfTextAtSize(t.revoked, 11);
+    page.drawText(t.revoked, {
+      x: width - 121 - revokedWidth / 2,
+      y: height - 82,
+      size: 11,
+      font: bold,
+      color: rgb(139 / 255, 45 / 255, 45 / 255),
+    });
+  }
   page.drawText(certificate.certificate_code, {
     x: 52,
     y: height - 98,
