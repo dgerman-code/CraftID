@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { parseCraftId } from "@/lib/craftid-format";
 import { getSiteUrl } from "@/lib/site-url";
-import { parseCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
+
+function normalizeOrigin(value: string | null) {
+  const origin = (value ?? "").trim().replace(/\s+/g, " ");
+  if (!origin || origin.length > 64) return null;
+  return origin;
+}
 
 function esc(value: string) {
   return value.replace(/[&<>"']/g, (char) => ({
