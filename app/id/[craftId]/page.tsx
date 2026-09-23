@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
+import { formatCraftId, parseCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 
@@ -10,18 +11,6 @@ type Props = {
   params: Promise<{ craftId: string }>;
   searchParams: Promise<{ lang?: string }>;
 };
-
-function parseCraftId(value: string) {
-  const match = value.match(/^(?:#)?0*(\d+)-(\d{2})$/);
-  if (!match) return null;
-  const number = Number(match[1]);
-  if (!Number.isSafeInteger(number) || number < 1) return null;
-  return { number, check: match[2] };
-}
-
-function formatCraftId(number: number | string, check: string) {
-  return `#${String(number).padStart(8, "0")}-${check}`;
-}
 
 const copy = {
   en: {
@@ -124,7 +113,7 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
 
     if (!historical) notFound();
 
-    const historicalFormatted = formatCraftId(
+    const historicalFormatted = "#" + formatCraftId(
       historical.craftid_number,
       historical.craftid_check_digits,
     );
@@ -192,7 +181,7 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
       ].filter(Boolean).join(", ")
     : "";
 
-  const formatted = formatCraftId(record.craftid_number, record.craftid_check_digits);
+  const formatted = "#" + formatCraftId(record.craftid_number, record.craftid_check_digits);
   const routeId = formatted.replace("#", "");
 
   return (
