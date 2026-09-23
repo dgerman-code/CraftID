@@ -3,13 +3,12 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
 import { assignCraftIdNumber } from "./actions";
+import { formatCraftIdWithHash } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
 
-function formatId(number: number | string, check: string) {
-  return `#${String(number).padStart(8, "0")}-${check}`;
-}
+const formatId = formatCraftIdWithHash;
 
 const copy = {
   en: {
