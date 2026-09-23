@@ -1,27 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { parseCraftId } from "@/lib/craftid-format";
 import { getSiteUrl } from "@/lib/site-url";
+import { parseCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
-
-function parseCraftId(value: string | null) {
-  if (!value) return null;
-  const match = value.match(/^(?:#)?0*(\d+)-(\d{2})$/);
-  if (!match) return null;
-  const number = Number(match[1]);
-  if (!Number.isSafeInteger(number) || number < 1) return null;
-  return {
-    number,
-    check: match[2],
-    formatted: String(number).padStart(8, "0") + "-" + match[2],
-  };
-}
-
-function normalizeOrigin(value: string | null) {
-  const origin = (value ?? "").trim().replace(/\s+/g, " ");
-  if (!origin || origin.length > 64) return null;
-  return origin;
-}
 
 function esc(value: string) {
   return value.replace(/[&<>"']/g, (char) => ({
