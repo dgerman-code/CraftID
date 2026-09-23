@@ -2,6 +2,7 @@ import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb, type PDFFont } from "pdf-lib";
 import type { PublicCraftIdCertificate } from "@/lib/certificate";
 import { formatCraftId } from "@/lib/certificate";
+import { formatCertificateNumber } from "@/lib/craftid-format";
 
 type CertificateLocale = "en" | "uk";
 
@@ -13,7 +14,7 @@ const copy = {
     workshopTitle: "CRAFTID WORKSHOP IDENTITY CERTIFICATE",
     confirms: "This certificate confirms that the identity record shown below is registered within CraftID under the permanent identifier stated.",
     craftId: "CraftID",
-    certificateId: "Certificate ID",
+    certificateId: "Certificate No.",
     recordType: "Record type",
     professional: "Professional",
     workshop: "Workshop",
@@ -30,7 +31,7 @@ const copy = {
     workshopTitle: "СЕРТИФІКАТ ІДЕНТИЧНОСТІ МАЙСТЕРНІ CRAFTID",
     confirms: "Цей сертифікат підтверджує, що наведений нижче запис ідентичності зареєстрований у CraftID під зазначеним постійним ідентифікатором.",
     craftId: "CraftID",
-    certificateId: "Certificate ID",
+    certificateId: "Certificate No.",
     recordType: "Тип запису",
     professional: "Професіонал",
     workshop: "Майстерня",
@@ -97,7 +98,13 @@ export async function renderCraftIdCertificatePdf(input: {
   const bold = await pdf.embedFont(boldFontBytes, { subset: true });
   const qr = await pdf.embedPng(qrPng);
 
-  pdf.setTitle(certificate.certificate_code + " - CraftID Identity Certificate");
+  const certificateNumber = formatCertificateNumber(
+    certificate.craftid_number,
+    certificate.craftid_check_digits,
+    certificate.version_no,
+  );
+
+  pdf.setTitle(certificateNumber + " - CraftID Identity Certificate");
   pdf.setAuthor("CraftID");
   pdf.setSubject("CraftID identity registration certificate");
   pdf.setCreator("CraftID");
@@ -135,7 +142,7 @@ export async function renderCraftIdCertificatePdf(input: {
       color: rgb(139 / 255, 45 / 255, 45 / 255),
     });
   }
-  page.drawText(certificate.certificate_code, {
+  page.drawText("Certificate No. " + certificateNumber, {
     x: 52,
     y: height - 98,
     size: 9.5,
@@ -178,7 +185,7 @@ export async function renderCraftIdCertificatePdf(input: {
 
   const facts = [
     [t.craftId, craftId],
-    [t.certificateId, certificate.certificate_code],
+    [t.certificateId, certificateNumber],
     [t.recordType, certificate.entity_type === "professional" ? t.professional : t.workshop],
     [t.country, certificate.issued_country_code ?? "-"],
     [t.firstRegistered, dateLabel(certificate.entity_created_at, locale)],
