@@ -34,6 +34,7 @@ export async function createInstitutionalReferral(formData: FormData) {
     .from("craftid_entities")
     .select("id, public_status")
     .eq("craftid_number", craftId.number)
+    .eq("craftid_check_digits", craftId.check)
     .neq("public_status", "archived")
     .maybeSingle();
 
