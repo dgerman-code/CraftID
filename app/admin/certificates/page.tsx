@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatCraftId } from "@/lib/certificate";
+import { formatCertificateNumber } from "@/lib/craftid-format";
 import { revokeCertificate } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +39,7 @@ export default async function AdminCertificatesPage({ searchParams }: Props) {
       <section className="adminPanel">
         <div className="adminTable">
           <div className="adminTableHead certificateAdminHead">
-            <span>Certificate ID</span>
+            <span>Certificate No.</span>
             <span>CraftID / holder</span>
             <span>Issued</span>
             <span>Status / action</span>
@@ -53,7 +54,11 @@ export default async function AdminCertificatesPage({ searchParams }: Props) {
             return (
               <div className="adminTableRow certificateAdminRow" key={certificate.certificate_code}>
                 <div>
-                  <strong>{certificate.certificate_code}</strong>
+                  <strong>{formatCertificateNumber(
+                    certificate.craftid_number,
+                    certificate.craftid_check_digits,
+                    certificate.version_no,
+                  )}</strong>
                   <small>Version {certificate.version_no} · {certificate.entity_type}</small>
                 </div>
                 <div>
