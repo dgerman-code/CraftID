@@ -21,7 +21,8 @@ type Props = {
 const copy = {
   en: {
     eyebrow: "CraftID Certificate",
-    title: "Professional identity certificate",
+    titleProfessional: "Professional identity certificate",
+    titleWorkshop: "Workshop identity certificate",
     intro:
       "Issue a versioned PDF certificate for this CraftID. Each certificate has its own Certificate ID and public verification page.",
     back: "Back to My CraftID",
@@ -50,7 +51,8 @@ const copy = {
   },
   uk: {
     eyebrow: "Сертифікат CraftID",
-    title: "Сертифікат професійної ідентичності",
+    titleProfessional: "Сертифікат професійної ідентичності",
+    titleWorkshop: "Сертифікат ідентичності майстерні",
     intro:
       "Створюйте версійний PDF-сертифікат для цього CraftID. Кожен сертифікат має власний Certificate ID та публічну сторінку перевірки.",
     back: "Назад до Мій CraftID",
@@ -120,7 +122,7 @@ export default async function CertificateWorkspacePage({ searchParams }: Props) 
           ← {t.back}
         </Link>
         <div className="eyebrow">{t.eyebrow}</div>
-        <h1>{t.title}</h1>
+        <h1>{entity.entity_type === "professional" ? t.titleProfessional : t.titleWorkshop}</h1>
         <p className="workspaceIntro">{t.intro}</p>
 
         {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
