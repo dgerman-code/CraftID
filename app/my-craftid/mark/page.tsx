@@ -4,13 +4,10 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { getSiteUrl } from "@/lib/site-url";
+import { formatCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; origin?: string }> };
-
-function formatCraftId(value: number | string, checkDigits: string) {
-  return `${String(value).padStart(8, "0")}-${checkDigits}`;
-}
 
 const copy = {
   en: {
