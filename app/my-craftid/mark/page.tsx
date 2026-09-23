@@ -202,7 +202,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
                 src={originLabelUrl}
                 alt={`CraftID Crafted in ${origin} label`}
               />
-              <a className="button markAssetButton" href={originLabelUrl}>
+              <a className="button markAssetButton" href={originLabelUrl + "&download=1"}>
                 {t.originDownload}
               </a>
             </div>
