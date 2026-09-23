@@ -1,3 +1,5 @@
+import { formatCraftId as formatCraftIdValue, normalizeCertificateLookup } from "@/lib/craftid-format";
+
 export type PublicCraftIdCertificate = {
   certificate_id: string;
   certificate_code: string;
@@ -18,11 +20,11 @@ export type PublicCraftIdCertificate = {
 };
 
 export function formatCraftId(number: number | string, checkDigits: string) {
-  return String(number).padStart(8, "0") + "-" + checkDigits;
+  return formatCraftIdValue(number, checkDigits);
 }
 
 export function normalizeCertificateCode(value: string) {
-  return value.trim().toUpperCase();
+  return normalizeCertificateLookup(value);
 }
 
 export function isCertificateCode(value: string) {
