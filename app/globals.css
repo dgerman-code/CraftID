@@ -3777,3 +3777,40 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Pilot notice */
+.pilotNotice {
+  border-bottom: 1px solid var(--line);
+  background: var(--ink);
+  color: #fff;
+}
+
+.pilotNoticeInner {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.pilotNoticeInner strong {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pilotNoticeInner span {
+  opacity: 0.86;
+}
+
+@media (max-width: 720px) {
+  .pilotNoticeInner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
