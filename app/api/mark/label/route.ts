@@ -81,10 +81,10 @@ export async function GET(request: NextRequest) {
     <text x="610" y="318" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#59615c">Scan to view the CraftID record</text>
   </svg>`;
 
-  return new NextResponse(svg, {
+  const download = request.nextUrl.searchParams.get("download") === "1";\n\n  return new NextResponse(svg, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Content-Disposition": `attachment; filename="craftid-maker-label-${parsed.formatted}.svg"`,
+      "Content-Disposition": `${download ? "attachment" : "inline"}; filename="craftid-round-sticker-${parsed.formatted}.svg"`,
       "Cache-Control": "private, max-age=0, must-revalidate",
       "X-Robots-Tag": "noindex",
     },
