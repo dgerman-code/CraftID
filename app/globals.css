@@ -4632,3 +4632,47 @@ button {
     font-size: 0.86em;
   }
 }
+
+
+/* Core logic final density correction */
+
+/* Core Logic is a compact index, not a full content section. */
+.homeLogicSection {
+  padding-top: 26px;
+  padding-bottom: 22px;
+}
+
+.homeLogicSection .logic {
+  margin-top: 16px;
+}
+
+.homeLogicSection .logicItem {
+  min-height: 78px;
+  padding: 14px 14px 12px 0;
+}
+
+.homeLogicSection .logicItem strong {
+  margin-bottom: 12px;
+  font-size: 0.68rem;
+}
+
+@media (max-width: 800px) {
+  .homeLogicSection {
+    padding-top: 24px;
+    padding-bottom: 22px;
+  }
+
+  .homeLogicSection .logic {
+    margin-top: 14px;
+  }
+
+  .homeLogicSection .logicItem {
+    min-height: 0;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  .homeLogicSection .logicItem strong {
+    margin-bottom: 10px;
+  }
+}
