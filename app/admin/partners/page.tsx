@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { savePartnerOrganisation } from "./actions";
@@ -24,17 +25,13 @@ type AdminPartner = {
   scope_note: string | null;
   is_public: boolean;
   sort_order: number;
+  logo_path: string | null;
   updated_at: string;
 };
 
 const roleLabels: Record<string, string> = {
-  european_coordinator: "European Coordinator",
-  national_coordinating_partner: "National Coordinating Partner",
-  sectoral_partner: "Sectoral Partner",
-  regional_partner: "Regional Partner",
-  vet_skills_partner: "VET / Skills Partner",
-  knowledge_partner: "Knowledge Partner",
-  ecosystem_partner: "Ecosystem Partner",
+  national_operator: "National Operator",
+  partner: "Partner",
 };
 
 const statusLabels: Record<string, string> = {
@@ -62,6 +59,9 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
   const partners = (partnersData ?? []) as AdminPartner[];
 
   const edit = sp.edit ? partners.find((partner) => partner.id === sp.edit) : null;
+  const editLogoUrl = edit?.logo_path
+    ? supabase.storage.from("partner-logos").getPublicUrl(edit.logo_path).data.publicUrl
+    : null;
 
   return (
     <main className="adminPage">
@@ -69,8 +69,8 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
         <div className="eyebrow">European partner network</div>
         <h1>Partner Organisations</h1>
         <p>
-          Manage national, sectoral, regional, skills and knowledge partners.
-          Lifecycle status and public visibility are controlled separately.
+          Manage national operators and partner organisations.
+          One confirmed National Operator may be designated per country; multiple Partners may coexist.
         </p>
       </div>
 
@@ -100,10 +100,22 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
 
             {partners.map((partner) => (
               <div className="adminTableRow adminPartnerColumns" key={partner.id}>
-                <div className="adminRegistryIdentity">
-                  <strong>{partner.short_name_en || partner.legal_name_en}</strong>
+                <div className="adminPartnerIdentityCell">
+                  <div className="adminPartnerLogoThumb">
+                    {partner.logo_path ? (
+                      <img
+                        src={supabase.storage.from("partner-logos").getPublicUrl(partner.logo_path).data.publicUrl}
+                        alt=""
+                      />
+                    ) : (
+                      <span>{(partner.short_name_en || partner.legal_name_en).slice(0, 2).toUpperCase()}</span>
+                    )}
+                  </div>
+                  <div className="adminRegistryIdentity">
+                    <strong>{partner.short_name_en || partner.legal_name_en}</strong>
                   <span>{partner.legal_name_en}</span>
-                  {partner.legal_name_uk ? <small>{partner.legal_name_uk}{partner.short_name_uk ? ` · ${partner.short_name_uk}` : ""}</small> : null}
+                    {partner.legal_name_uk ? <small>{partner.legal_name_uk}{partner.short_name_uk ? ` · ${partner.short_name_uk}` : ""}</small> : null}
+                  </div>
                 </div>
                 <div className="adminRegistryIdentity">
                   <strong>{partner.country_code}</strong>
@@ -126,7 +138,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
           <div className="eyebrow">{edit ? "Edit partner" : "New partner"}</div>
           <h2>{edit ? edit.legal_name_en : "Add partner organisation"}</h2>
 
-          <form className="adminStatusForm" action={savePartnerOrganisation}>
+          <form className="adminStatusForm" action={savePartnerOrganisation} encType="multipart/form-data">
             <input type="hidden" name="id" value={edit?.id ?? ""} />
 
             <label>
@@ -150,6 +162,27 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
               </label>
             </div>
 
+            <div className="adminPartnerLogoField">
+              <div>
+                <span className="adminFieldLabel">Organisation logo</span>
+                <p className="fieldHelp">PNG, JPG or WebP · max 2 MB. Shown in the public partner network.</p>
+              </div>
+              <div className="adminPartnerLogoControl">
+                <div className="adminPartnerLogoPreview">
+                  {editLogoUrl ? <img src={editLogoUrl} alt="" /> : <span>No logo</span>}
+                </div>
+                <div className="adminPartnerLogoActions">
+                  <input name="logo" type="file" accept="image/png,image/jpeg,image/webp" />
+                  {edit?.logo_path ? (
+                    <label className="adminCheckbox">
+                      <input name="removeLogo" type="checkbox" />
+                      Remove current logo
+                    </label>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+
             <div className="adminFormSplit">
               <label>
                 Country code
@@ -163,7 +196,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
 
             <label>
               Partner role
-              <select name="partnerRole" defaultValue={edit?.partner_role ?? "sectoral_partner"}>
+              <select name="partnerRole" defaultValue={edit?.partner_role ?? "partner"}>
                 {Object.entries(roleLabels).map(([value, label]) => (
                   <option key={value} value={value}>{label}</option>
                 ))}

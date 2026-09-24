@@ -49,6 +49,8 @@ export function SiteHeader({
   pathname: string;
 }) {
   const t = labels[locale];
+  const isActive = (path: string) =>
+    pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
 
   return (
     <header className="header">
@@ -58,11 +60,11 @@ export function SiteHeader({
         </Link>
         <div className="headerRight">
           <nav className="nav" aria-label="Primary navigation">
-            <Link href={withLocale("/discover", locale)}>{t.discover}</Link>
-            <Link href={withLocale("/skills", locale)}>{t.skills}</Link>
-            <Link href={withLocale("/methodology", locale)}>{t.methodology}</Link>
-            <Link href={withLocale("/network", locale)}>{t.network}</Link>
-            <Link href={withLocale("/about", locale)}>{t.about}</Link>
+            <Link className={isActive("/discover") ? "active" : ""} href={withLocale("/discover", locale)}>{t.discover}</Link>
+            <Link className={isActive("/skills") ? "active" : ""} href={withLocale("/skills", locale)}>{t.skills}</Link>
+            <Link className={isActive("/methodology") ? "active" : ""} href={withLocale("/methodology", locale)}>{t.methodology}</Link>
+            <Link className={isActive("/network") ? "active" : ""} href={withLocale("/network", locale)}>{t.network}</Link>
+            <Link className={isActive("/about") ? "active" : ""} href={withLocale("/about", locale)}>{t.about}</Link>
           </nav>
           <div className="languageSwitch" aria-label={t.language}>
             <Link className={locale === "en" ? "active" : ""} href={pathname}>

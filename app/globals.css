@@ -79,6 +79,15 @@ button {
   letter-spacing: 0.08em;
 }
 
+.nav a {
+  transition: color 120ms ease, font-weight 120ms ease;
+}
+
+.nav a.active {
+  color: var(--ink);
+  font-weight: 800;
+}
+
 .textLink {
   font-size: 0.8rem;
   font-weight: 700;
@@ -3812,5 +3821,667 @@ button {
     align-items: flex-start;
     flex-direction: column;
     gap: 4px;
+  }
+}
+
+
+/* CraftID visual density and multilingual resilience pass */
+
+/*
+ * Keep the editorial/institutional character, but remove layout assumptions
+ * that depend on short English copy. Cards grow with content, dividers keep
+ * a safe distance from text, and operational screens are intentionally denser.
+ */
+
+/* Global vertical rhythm */
+.hero {
+  padding-top: 76px;
+  padding-bottom: 82px;
+}
+
+.section {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+.pageHero,
+.profileHero {
+  padding-top: 68px;
+  padding-bottom: 62px;
+}
+
+.workspacePage {
+  padding-top: 48px;
+  padding-bottom: 76px;
+}
+
+.onboardingPage,
+.recordPage {
+  padding-top: 48px;
+  padding-bottom: 76px;
+}
+
+.onboardingTopline {
+  margin-bottom: 44px;
+}
+
+.sectionLead {
+  margin-bottom: 32px;
+}
+
+/* Multilingual headline resilience */
+.hero h1 {
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+}
+
+.pageHero h1,
+.profileHero h1 {
+  line-height: 0.97;
+  letter-spacing: -0.045em;
+}
+
+.onboardingTitle,
+.workspacePage h1,
+.recordTopbar h1 {
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* Cards: content decides height; actions stay clear of dividers */
+.choiceGrid {
+  margin-top: 34px;
+}
+
+.choiceCard {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  padding: 28px;
+}
+
+.choiceCard h2 {
+  margin-top: 30px;
+  margin-bottom: 14px;
+}
+
+.choiceCard p {
+  min-height: 0;
+  margin-bottom: 0;
+}
+
+.choiceHint {
+  margin-top: 14px;
+  margin-bottom: 24px;
+}
+
+.choiceCard .button {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.informationCard,
+.taxonomyCard,
+.statusCard {
+  min-height: 0;
+  padding: 26px;
+}
+
+.informationCard h3,
+.taxonomyCard h3,
+.statusCard h3 {
+  margin-top: 28px;
+}
+
+.splitFeature > article {
+  min-height: 0;
+  padding: 30px;
+}
+
+.logicItem {
+  min-height: 132px;
+}
+
+.logicItem strong {
+  margin-bottom: 30px;
+}
+
+.dashboardModule {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.dashboardModule p {
+  min-height: 0;
+}
+
+.dashboardModule a {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+/* Owner workspace: tighter but still breathable */
+.workspaceForm {
+  gap: 18px;
+  margin-top: 30px;
+  padding-top: 26px;
+}
+
+.profileImageSection {
+  margin-top: 30px;
+  padding-top: 24px;
+}
+
+.contactSection {
+  margin-top: 50px;
+}
+
+/*
+ * Contact consent controls sit below the value field. This prevents long UA
+ * labels from being squeezed into a narrow side column and removes tall gaps.
+ */
+.contactRow {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 18px 0 22px;
+}
+
+.contactVisibilityGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  align-items: flex-start;
+  align-self: auto;
+}
+
+.contactVisibilityGroup .contactVisibility,
+.contactVisibility {
+  min-height: 0;
+  margin: 0;
+  align-items: flex-start;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.contactVisibility input {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+/* Dividers should never visually collide with copy */
+.onboardingGuide {
+  margin-top: 24px;
+  margin-bottom: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.claimTrustStep {
+  padding-top: 26px;
+  padding-bottom: 26px;
+}
+
+.partnerPublicCard {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.adminTableRow {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+/* Compact mobile rhythm without crowding */
+@media (max-width: 800px) {
+  .hero {
+    padding-top: 60px;
+    padding-bottom: 66px;
+  }
+
+  .section {
+    padding-top: 46px;
+    padding-bottom: 46px;
+  }
+
+  .pageHero,
+  .profileHero {
+    padding-top: 54px;
+    padding-bottom: 50px;
+  }
+
+  .workspacePage,
+  .onboardingPage,
+  .recordPage {
+    padding-top: 36px;
+    padding-bottom: 60px;
+  }
+
+  .onboardingTopline {
+    margin-bottom: 34px;
+  }
+
+  .choiceCard {
+    padding: 24px;
+  }
+
+  .contactVisibilityGroup {
+    display: grid;
+    gap: 10px;
+  }
+}
+
+
+/* Home page composition refinement */
+
+/*
+ * The home page is read as one continuous argument. Keep the large headline,
+ * but reduce the dead zones between hero, core logic and the first explanation.
+ */
+.homeHero {
+  padding-top: 62px;
+  padding-bottom: 46px;
+}
+
+.homeHero .actions {
+  margin-top: 28px;
+}
+
+.homeLogicSection {
+  padding-top: 40px;
+  padding-bottom: 38px;
+}
+
+.homeLogicSection .logic {
+  margin-top: 22px;
+}
+
+.homeLogicSection .logicItem {
+  min-height: 104px;
+  padding-top: 20px;
+  padding-bottom: 18px;
+}
+
+.homeLogicSection .logicItem strong {
+  margin-bottom: 24px;
+}
+
+.homeEditorialSection {
+  padding-top: 46px;
+}
+
+.homeEditorialSection .sectionLead {
+  margin-bottom: 28px;
+}
+
+@media (max-width: 800px) {
+  .homeHero {
+    padding-top: 48px;
+    padding-bottom: 38px;
+  }
+
+  .homeLogicSection {
+    padding-top: 34px;
+    padding-bottom: 34px;
+  }
+
+  .homeLogicSection .logic {
+    margin-top: 18px;
+  }
+
+  .homeLogicSection .logicItem {
+    min-height: 0;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+}
+
+
+/* Admin compact density pass */
+
+/*
+ * Operational screens use a denser scale than the public editorial site.
+ * This intentionally approximates a ~90% browser zoom without transforms,
+ * preserving crisp text, real layout dimensions and responsive behaviour.
+ */
+@media (min-width: 981px) {
+  .adminApp {
+    grid-template-columns: 224px minmax(0, 1fr);
+  }
+
+  .adminSidebar {
+    padding: 22px 16px 18px;
+  }
+
+  .adminBrandBlock {
+    gap: 4px;
+    padding-bottom: 19px;
+  }
+
+  .adminBrand {
+    font-size: 1.3rem;
+  }
+
+  .adminNav {
+    margin-top: 18px;
+  }
+
+  .adminNav a {
+    padding: 9px 10px;
+    font-size: 0.76rem;
+  }
+
+  .adminSidebarFooter {
+    gap: 8px;
+    padding-top: 18px;
+  }
+
+  .adminTopbar {
+    min-height: 60px;
+    padding-left: 28px;
+    padding-right: 28px;
+  }
+
+  .adminTopbar strong {
+    font-size: 0.84rem;
+  }
+
+  .adminContent {
+    padding: 26px 28px 32px;
+  }
+
+  .adminPageHeader {
+    margin-bottom: 22px;
+  }
+
+  .adminPageHeader h1,
+  .adminEntityHeader h1 {
+    margin-top: 6px;
+    margin-bottom: 8px;
+    font-size: clamp(1.9rem, 3vw, 3.15rem);
+  }
+
+  .adminPageHeader p,
+  .adminEntityHeader p {
+    max-width: 760px;
+    font-size: 0.92rem;
+    line-height: 1.48;
+  }
+
+  .adminDetailGrid {
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 18px;
+  }
+
+  .adminPanel {
+    padding: 18px;
+  }
+
+  .adminPanel + .adminPanel {
+    margin-top: 16px;
+  }
+
+  .adminPanelHeader {
+    min-height: 44px;
+    margin-bottom: 14px;
+  }
+
+  .adminPanelHeader h2,
+  .adminPanel > h2 {
+    font-size: 1.08rem;
+  }
+
+  .adminTableHead {
+    min-height: 36px;
+    font-size: 0.63rem;
+  }
+
+  .adminTableRow {
+    min-height: 48px;
+    padding: 8px 0;
+    font-size: 0.75rem;
+  }
+
+  .adminRegistryIdentity strong {
+    font-size: 0.73rem;
+  }
+
+  .adminRegistryIdentity {
+    gap: 2px;
+  }
+
+  .adminStatus {
+    padding: 4px 6px;
+    font-size: 0.61rem;
+  }
+
+  .adminStatusForm {
+    gap: 11px;
+    margin-top: 14px;
+  }
+
+  .adminFilters label,
+  .adminStatusForm label,
+  .adminGrantForm label {
+    gap: 5px;
+    font-size: 0.63rem;
+  }
+
+  .adminFilters input,
+  .adminFilters select,
+  .adminStatusForm input,
+  .adminStatusForm select,
+  .adminGrantForm input,
+  .adminGrantForm select {
+    min-height: 36px;
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+
+  .adminStatusForm textarea {
+    min-height: 76px;
+    padding: 7px 8px;
+    font-size: 0.8rem;
+  }
+
+  .adminFormSplit {
+    gap: 9px;
+  }
+
+  .adminMetricGrid {
+    margin-bottom: 26px;
+  }
+
+  .adminMetric {
+    min-height: 128px;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .adminMetric strong {
+    font-size: 2rem;
+  }
+
+  .adminDashboardGrid {
+    gap: 18px;
+  }
+
+  .adminFilters {
+    gap: 9px;
+    padding: 13px;
+  }
+
+  .adminBreadcrumbs {
+    margin-bottom: 18px;
+  }
+
+  .adminEntityHeader {
+    gap: 28px;
+    padding-bottom: 20px;
+  }
+
+  .adminReadinessGrid {
+    margin-top: 18px;
+    margin-bottom: 18px;
+  }
+
+  .adminReadinessGrid article {
+    min-height: 86px;
+    gap: 14px;
+    padding: 12px;
+  }
+
+  .adminDefinitionGrid > div {
+    padding: 11px;
+  }
+
+  .adminRecordList article {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  .adminGrantForm {
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .adminPartnerColumns {
+    grid-template-columns:
+      minmax(190px, 1.55fr)
+      minmax(150px, 1.05fr)
+      100px
+      125px
+      60px
+      44px;
+    gap: 10px;
+  }
+}
+
+
+/* Partner logo administration */
+
+.adminPartnerLogoField {
+  display: grid;
+  gap: 10px;
+  padding: 12px 0 14px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.adminFieldLabel {
+  display: block;
+  color: var(--muted);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.adminPartnerLogoControl {
+  display: grid;
+  grid-template-columns: 94px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.adminPartnerLogoPreview {
+  width: 94px;
+  height: 66px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.adminPartnerLogoPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+.adminPartnerLogoActions {
+  display: grid;
+  gap: 8px;
+}
+
+.adminPartnerLogoActions input[type="file"] {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 0.76rem;
+}
+
+.adminPartnerIdentityCell {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 9px;
+  align-items: center;
+  min-width: 0;
+}
+
+.adminPartnerLogoThumb {
+  width: 42px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+}
+
+.adminPartnerLogoThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+
+.partnerPublicLogo {
+  width: 132px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+}
+
+.partnerPublicLogo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+
+@media (max-width: 800px) {
+  .adminPartnerLogoControl {
+    grid-template-columns: 78px minmax(0, 1fr);
+  }
+
+  .adminPartnerLogoPreview {
+    width: 78px;
+    height: 58px;
+  }
+
+  .partnerPublicLogo {
+    width: 112px;
+    height: 72px;
   }
 }
