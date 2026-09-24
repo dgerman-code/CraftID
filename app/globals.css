@@ -4828,3 +4828,20 @@ button {
     padding-bottom: 16px;
   }
 }
+
+
+/* Core Logic divider clearance */
+/* Keep the first label aligned to the container; offset following cells from dividers. */
+.publicInfoPage .homeLogicSection .logicItem {
+  padding-left: 14px;
+}
+
+.publicInfoPage .homeLogicSection .logicItem:first-child {
+  padding-left: 0;
+}
+
+@media (max-width: 800px) {
+  .publicInfoPage .homeLogicSection .logicItem {
+    padding-left: 0;
+  }
+}
