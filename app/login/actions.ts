@@ -18,7 +18,13 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(error.message)}`);
+    const message =
+      error.code === "email_not_confirmed"
+        ? lang === "uk"
+          ? "Email ще не підтверджено. Скористайтеся повторним надсиланням нижче."
+          : "Email is not confirmed yet. Use the resend option below."
+        : error.message;
+    redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(message)}`);
   }
 
   const { data: entity } = await supabase
@@ -65,8 +71,8 @@ export async function resendConfirmation(formData: FormData) {
 
   const message =
     lang === "uk"
-      ? "Нове письмо підтвердження надіслано"
-      : "A new confirmation email has been sent";
+      ? "Якщо цей email належить непідтвердженому обліковому запису, нове посилання підтвердження було запитано. Перевірте також Spam."
+      : "If this email belongs to an unconfirmed account, a new confirmation link was requested. Also check Spam.";
 
   redirect(`/login${q ? `${q}&` : "?"}message=${encodeURIComponent(message)}`);
 }
