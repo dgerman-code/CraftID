@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
 import { createClient } from "@/lib/supabase/server";
 
