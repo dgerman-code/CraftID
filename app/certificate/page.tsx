@@ -11,7 +11,7 @@ const copy = {
   en: {
     eyebrow: "Certificate verification",
     title: "Verify a CraftID certificate.",
-    intro: "Enter the Certificate No. printed on a CraftID Identity Certificate to open its public verification record.",
+    intro: "Enter the Certificate No. printed on a CraftID Record Certificate to open its public verification record.",
     label: "Certificate No.",
     placeholder: "0000-0101-86/01",
     button: "Verify certificate",
@@ -22,7 +22,7 @@ const copy = {
   uk: {
     eyebrow: "Перевірка сертифіката",
     title: "Перевірте сертифікат CraftID.",
-    intro: "Введіть номер сертифіката, надрукований на CraftID Identity Certificate, щоб відкрити його публічний запис перевірки.",
+    intro: "Введіть номер сертифіката, надрукований на сертифікаті запису CraftID, щоб відкрити його публічний запис перевірки.",
     label: "Номер сертифіката",
     placeholder: "0000-0101-86/01",
     button: "Перевірити сертифікат",
