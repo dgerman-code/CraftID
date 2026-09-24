@@ -4,15 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-const roles = new Set([
-  "european_coordinator",
-  "national_coordinating_partner",
-  "sectoral_partner",
-  "regional_partner",
-  "vet_skills_partner",
-  "knowledge_partner",
-  "ecosystem_partner",
-]);
+const roles = new Set(["national_operator", "partner"])
 
 const statuses = new Set(["invited", "in_discussion", "confirmed", "inactive"]);
 const agreementStatuses = new Set(["none", "draft", "mandate_on_file", "agreement_signed"]);
