@@ -81,7 +81,9 @@ export async function GET(request: NextRequest) {
     <text x="610" y="318" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#59615c">Scan to view the CraftID record</text>
   </svg>`;
 
-  const download = request.nextUrl.searchParams.get("download") === "1";\n\n  return new NextResponse(svg, {
+  const download = request.nextUrl.searchParams.get("download") === "1";
+
+  return new NextResponse(svg, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
       "Content-Disposition": `${download ? "attachment" : "inline"}; filename="craftid-round-sticker-${parsed.formatted}.svg"`,
