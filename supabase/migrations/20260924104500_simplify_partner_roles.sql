@@ -2,6 +2,9 @@
 -- Platform access remains admin/reviewer in private.staff_roles.
 -- Partner organisations are either a national operator or a general partner.
 
+alter table public.partner_organisations
+  drop constraint if exists partner_organisations_partner_role_check;
+
 update public.partner_organisations
 set partner_role = case
   when partner_role = 'national_coordinating_partner' then 'national_operator'
@@ -9,9 +12,6 @@ set partner_role = case
 end,
 updated_at = now()
 where partner_role not in ('national_operator','partner');
-
-alter table public.partner_organisations
-  drop constraint if exists partner_organisations_partner_role_check;
 
 alter table public.partner_organisations
   add constraint partner_organisations_partner_role_check
