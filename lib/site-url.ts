@@ -1,19 +1,13 @@
-const PREVIEW_BRANCH_URL =
-  "https://craft-id-git-chore-initial-platform-baseline-hcus-projects.vercel.app";
-
 export function getSiteUrl() {
   const environment = process.env.VERCEL_ENV;
 
-  let url =
-    environment === "production"
-      ? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
-      : environment === "preview"
-        ? PREVIEW_BRANCH_URL
-        : "http://localhost:3000";
-
-  if (!url.startsWith("http")) {
-    url = `https://${url}`;
+  if (environment === "production") {
+    return "https://craftid.eu/";
   }
 
-  return url.endsWith("/") ? url : `${url}/`;
+  if (environment === "preview" && process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}/`;
+  }
+
+  return "http://localhost:3000/";
 }
