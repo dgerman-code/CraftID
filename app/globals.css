@@ -79,6 +79,15 @@ button {
   letter-spacing: 0.08em;
 }
 
+.nav a {
+  transition: color 120ms ease, font-weight 120ms ease;
+}
+
+.nav a.active {
+  color: var(--ink);
+  font-weight: 800;
+}
+
 .textLink {
   font-size: 0.8rem;
   font-weight: 700;
