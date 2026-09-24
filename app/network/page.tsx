@@ -124,10 +124,12 @@ export default async function NetworkPage({ searchParams }: Props) {
                     <article className="partnerPublicCard" key={partner.id}>
                       <div className="partnerPublicMeta">
                         <div className="partnerPublicLogo">
-                          {logoUrl ? <img src={logoUrl} alt="" /> : <span>{partner.country_code}</span>}
+                          {logoUrl ? (
+                            <img src={logoUrl} alt={`${name} logo`} />
+                          ) : (
+                            <span>{partner.country_code}</span>
+                          )}
                         </div>
-                        <span className="recordId">{partner.country_code}</span>
-                        <span>{role}</span>
                       </div>
                       <div>
                         {shortName ? <div className="eyebrow">{shortName}</div> : null}
