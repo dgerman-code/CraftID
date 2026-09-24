@@ -28,13 +28,8 @@ type AdminPartner = {
 };
 
 const roleLabels: Record<string, string> = {
-  european_coordinator: "European Coordinator",
-  national_coordinating_partner: "National Coordinating Partner",
-  sectoral_partner: "Sectoral Partner",
-  regional_partner: "Regional Partner",
-  vet_skills_partner: "VET / Skills Partner",
-  knowledge_partner: "Knowledge Partner",
-  ecosystem_partner: "Ecosystem Partner",
+  national_operator: "National Operator",
+  partner: "Partner",
 };
 
 const statusLabels: Record<string, string> = {
@@ -69,8 +64,8 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
         <div className="eyebrow">European partner network</div>
         <h1>Partner Organisations</h1>
         <p>
-          Manage national, sectoral, regional, skills and knowledge partners.
-          Lifecycle status and public visibility are controlled separately.
+          Manage national operators and partner organisations.
+          One confirmed National Operator may be designated per country; multiple Partners may coexist.
         </p>
       </div>
 
@@ -163,7 +158,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
 
             <label>
               Partner role
-              <select name="partnerRole" defaultValue={edit?.partner_role ?? "sectoral_partner"}>
+              <select name="partnerRole" defaultValue={edit?.partner_role ?? "partner"}>
                 {Object.entries(roleLabels).map(([value, label]) => (
                   <option key={value} value={value}>{label}</option>
                 ))}
