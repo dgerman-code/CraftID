@@ -1,3 +1,4 @@
+// CraftID production entrypoint
 import Link from "next/link";
 import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
 
