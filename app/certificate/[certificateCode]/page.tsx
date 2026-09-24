@@ -20,7 +20,7 @@ type Props = {
 const copy = {
   en: {
     eyebrow: "Certificate verification",
-    title: "CraftID Identity Certificate",
+    title: "CraftID Record Certificate",
     valid: "Certificate record found",
     revoked: "This certificate has been revoked",
     craftId: "CraftID",
@@ -35,14 +35,14 @@ const copy = {
     download: "Download certificate PDF",
     openProfile: "Open CraftID record",
     disclaimer:
-      "This certificate confirms registration and identity within the CraftID infrastructure. It is not a professional qualification, statutory licence, quality certification, accreditation, or EU institutional endorsement.",
+      "This certificate records a versioned snapshot of a published CraftID record. It does not by itself verify legal identity, professional competence, a qualification, statutory licence, accreditation, quality, or EU institutional endorsement.",
     currentNote:
       "The certificate data above is the snapshot recorded when it was issued. Current CraftID status is shown separately.",
     revokedReason: "Revocation reason",
   },
   uk: {
     eyebrow: "Перевірка сертифіката",
-    title: "Сертифікат ідентичності CraftID",
+    title: "Сертифікат запису CraftID",
     valid: "Запис сертифіката знайдено",
     revoked: "Цей сертифікат відкликано",
     craftId: "CraftID",
@@ -57,7 +57,7 @@ const copy = {
     download: "Завантажити PDF сертифіката",
     openProfile: "Відкрити запис CraftID",
     disclaimer:
-      "Цей сертифікат підтверджує реєстрацію та ідентичність у інфраструктурі CraftID. Він не є професійною кваліфікацією, законодавчою ліцензією, сертифікацією якості, акредитацією чи інституційним схваленням ЄС.",
+      "Цей сертифікат фіксує версію опублікованого запису CraftID. Він сам по собі не підтверджує юридичну особу, професійну компетентність, кваліфікацію, законодавчу ліцензію, акредитацію, якість чи інституційне схвалення ЄС.",
     currentNote:
       "Дані сертифіката вище є зафіксованим станом на момент його випуску. Поточний статус CraftID показано окремо.",
     revokedReason: "Причина відкликання",
