@@ -17,6 +17,7 @@ type PublicPartner = {
   description_en: string | null;
   description_uk: string | null;
   sort_order: number;
+  logo_path: string | null;
 };
 
 const roleLabels = {
@@ -114,10 +115,16 @@ export default async function NetworkPage({ searchParams }: Props) {
                   const role =
                     roleLabels[locale][partner.partner_role as keyof (typeof roleLabels)[typeof locale]] ??
                     partner.partner_role;
+                  const logoUrl = partner.logo_path
+                    ? supabase.storage.from("partner-logos").getPublicUrl(partner.logo_path).data.publicUrl
+                    : null;
 
                   return (
                     <article className="partnerPublicCard" key={partner.id}>
                       <div className="partnerPublicMeta">
+                        <div className="partnerPublicLogo">
+                          {logoUrl ? <img src={logoUrl} alt="" /> : <span>{partner.country_code}</span>}
+                        </div>
                         <span className="recordId">{partner.country_code}</span>
                         <span>{role}</span>
                       </div>
