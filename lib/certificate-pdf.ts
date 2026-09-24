@@ -10,9 +10,9 @@ const A4_LANDSCAPE: [number, number] = [841.89, 595.28];
 
 const copy = {
   en: {
-    professionalTitle: "CRAFTID PROFESSIONAL IDENTITY CERTIFICATE",
-    workshopTitle: "CRAFTID WORKSHOP IDENTITY CERTIFICATE",
-    confirms: "This certificate confirms that the identity record shown below is registered within CraftID under the permanent identifier stated.",
+    professionalTitle: "CRAFTID PROFESSIONAL RECORD CERTIFICATE",
+    workshopTitle: "CRAFTID WORKSHOP RECORD CERTIFICATE",
+    confirms: "This certificate records a versioned snapshot of the published CraftID record shown below under the stated permanent identifier.",
     craftId: "CraftID",
     certificateId: "Certificate No.",
     recordType: "Record type",
@@ -22,14 +22,14 @@ const copy = {
     firstRegistered: "CraftID first registered",
     issued: "Certificate issued",
     verify: "Scan to verify this certificate and view the current CraftID status.",
-    disclaimer: "This certificate confirms registration and identity within the CraftID professional identity infrastructure. It is not a professional qualification, statutory licence, quality certification, accreditation, or EU institutional endorsement.",
+    disclaimer: "This certificate records a CraftID record snapshot. It does not by itself verify legal identity, professional competence, a qualification, statutory licence, accreditation, quality, or EU institutional endorsement.",
     revoked: "REVOKED",
     instrument: "CraftID - professional identity, skills and evidence infrastructure",
   },
   uk: {
-    professionalTitle: "СЕРТИФІКАТ ПРОФЕСІЙНОЇ ІДЕНТИЧНОСТІ CRAFTID",
-    workshopTitle: "СЕРТИФІКАТ ІДЕНТИЧНОСТІ МАЙСТЕРНІ CRAFTID",
-    confirms: "Цей сертифікат підтверджує, що наведений нижче запис ідентичності зареєстрований у CraftID під зазначеним постійним ідентифікатором.",
+    professionalTitle: "СЕРТИФІКАТ ЗАПИСУ PROFESSIONAL CRAFTID",
+    workshopTitle: "СЕРТИФІКАТ ЗАПИСУ WORKSHOP CRAFTID",
+    confirms: "Цей сертифікат фіксує версію опублікованого запису CraftID, наведеного нижче, під зазначеним постійним ідентифікатором.",
     craftId: "CraftID",
     certificateId: "Certificate No.",
     recordType: "Тип запису",
@@ -39,7 +39,7 @@ const copy = {
     firstRegistered: "Перша реєстрація CraftID",
     issued: "Дата випуску сертифіката",
     verify: "Скануйте QR-код, щоб перевірити сертифікат і поточний статус CraftID.",
-    disclaimer: "Цей сертифікат підтверджує реєстрацію та ідентичність у професійній інфраструктурі CraftID. Він не є професійною кваліфікацією, законодавчою ліцензією, сертифікацією якості, акредитацією чи інституційним схваленням ЄС.",
+    disclaimer: "Цей сертифікат фіксує версію запису CraftID. Він сам по собі не підтверджує юридичну особу, професійну компетентність, кваліфікацію, законодавчу ліцензію, акредитацію, якість чи інституційне схвалення ЄС.",
     revoked: "ВІДКЛИКАНО",
     instrument: "CraftID - інфраструктура професійної ідентичності, навичок і доказів",
   },
@@ -104,9 +104,9 @@ export async function renderCraftIdCertificatePdf(input: {
     certificate.version_no,
   );
 
-  pdf.setTitle(certificateNumber + " - CraftID Identity Certificate");
+  pdf.setTitle(certificateNumber + " - CraftID Record Certificate");
   pdf.setAuthor("CraftID");
-  pdf.setSubject("CraftID identity registration certificate");
+  pdf.setSubject("Versioned CraftID record certificate");
   pdf.setCreator("CraftID");
   pdf.setProducer("CraftID");
 
