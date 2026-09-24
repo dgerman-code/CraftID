@@ -58,7 +58,7 @@ export default async function SkillsPage({ searchParams }: Props) {
   return (
     <>
       <SiteHeader locale={locale} pathname="/skills" />
-      <main>
+      <main className="publicInfoPage">
         <section className="pageHero">
           <div className="container">
             <div className="eyebrow">{t.eyebrow}</div>
