@@ -21,22 +21,12 @@ type PublicPartner = {
 
 const roleLabels = {
   en: {
-    european_coordinator: "European Coordinator",
-    national_coordinating_partner: "National Coordinating Partner",
-    sectoral_partner: "Sectoral Partner",
-    regional_partner: "Regional Partner",
-    vet_skills_partner: "VET / Skills Partner",
-    knowledge_partner: "Knowledge Partner",
-    ecosystem_partner: "Ecosystem Partner",
+    national_operator: "National Operator",
+    partner: "Partner",
   },
   uk: {
-    european_coordinator: "Європейський координатор",
-    national_coordinating_partner: "Національний координаційний партнер",
-    sectoral_partner: "Галузевий партнер",
-    regional_partner: "Регіональний партнер",
-    vet_skills_partner: "Партнер з професійних навичок / VET",
-    knowledge_partner: "Партнер знань",
-    ecosystem_partner: "Екосистемний партнер",
+    national_operator: "Національний оператор",
+    partner: "Партнер",
   },
 } as const;
 
@@ -44,7 +34,7 @@ const copy = {
   en: {
     eyebrow: "European Network",
     title: "Partners supporting the CraftID ecosystem.",
-    intro: "CraftID develops through cooperation with national, sectoral, skills, knowledge and ecosystem organisations. Only confirmed partners are shown publicly.",
+    intro: "CraftID develops through cooperation with national operators and partner organisations. Only confirmed organisations are shown publicly.",
     pilotEyebrow: "Initial pilot network",
     pilotTitle: "Ukraine and Belgium as starting environments.",
     pilotText: "CraftID is designed as European infrastructure, with pilot implementation beginning in Ukraine and Belgium and further expansion through national and sectoral cooperation.",
@@ -57,7 +47,7 @@ const copy = {
   uk: {
     eyebrow: "Європейська мережа",
     title: "Партнери, що підтримують екосистему CraftID.",
-    intro: "CraftID розвивається через співпрацю з національними, галузевими, освітніми, експертними та екосистемними організаціями. Публічно відображаються лише підтверджені партнери.",
+    intro: "CraftID розвивається через співпрацю з національними операторами та партнерськими організаціями. Публічно відображаються лише підтверджені організації.",
     pilotEyebrow: "Початкова пілотна мережа",
     pilotTitle: "Україна та Бельгія як стартові середовища.",
     pilotText: "CraftID проєктується як європейська інфраструктура з пілотним впровадженням в Україні та Бельгії та подальшим розширенням через національну й галузеву співпрацю.",
