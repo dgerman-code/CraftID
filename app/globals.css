@@ -4676,3 +4676,155 @@ button {
     margin-bottom: 10px;
   }
 }
+
+
+/* Public editorial density pass — Home / Skills / Methodology / Network / About */
+/*
+ * Scope this pass to the five narrative public pages only. Discover, public
+ * records, auth, owner workspace and admin retain their own spacing systems.
+ */
+.publicInfoPage .pageHero {
+  padding-top: 48px;
+  padding-bottom: 42px;
+}
+
+.publicInfoPage .section {
+  padding-top: 38px;
+  padding-bottom: 38px;
+}
+
+.publicInfoPage .compactSection {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.publicInfoPage .sectionLead {
+  margin-bottom: 22px;
+}
+
+.publicInfoPage .sectionLead h2,
+.publicInfoPage .splitFeature h2,
+.publicInfoPage .trustBand h2 {
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.publicInfoPage .informationCard,
+.publicInfoPage .taxonomyCard,
+.publicInfoPage .statusCard {
+  padding: 22px;
+}
+
+.publicInfoPage .informationCard h3,
+.publicInfoPage .taxonomyCard h3,
+.publicInfoPage .statusCard h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.publicInfoPage .splitFeature > article {
+  padding: 24px;
+}
+
+.publicInfoPage .boundaryItem {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.publicInfoPage .claimTrustStep {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.publicInfoPage .trustBandInner {
+  gap: 32px;
+}
+
+.publicInfoPage .partnerPublicCard {
+  gap: 28px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+/* Home: keep the headline generous, but make the narrative continue faster. */
+.publicInfoPage .homeHero {
+  padding-top: 50px;
+  padding-bottom: 38px;
+}
+
+.publicInfoPage .homeHero .actions {
+  margin-top: 24px;
+}
+
+.publicInfoPage .homeLogicSection {
+  padding-top: 18px;
+  padding-bottom: 16px;
+}
+
+.publicInfoPage .homeLogicSection .logic {
+  margin-top: 12px;
+}
+
+.publicInfoPage .homeLogicSection .logicItem {
+  min-height: 0;
+  padding: 18px 14px 16px 0;
+}
+
+.publicInfoPage .homeLogicSection .logicItem strong {
+  margin-bottom: 14px;
+}
+
+.publicInfoPage .homeEditorialSection {
+  padding-top: 34px;
+}
+
+.publicInfoPage .homeEditorialSection .sectionLead {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 800px) {
+  .publicInfoPage .pageHero {
+    padding-top: 42px;
+    padding-bottom: 38px;
+  }
+
+  .publicInfoPage .section {
+    padding-top: 34px;
+    padding-bottom: 34px;
+  }
+
+  .publicInfoPage .compactSection {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+
+  .publicInfoPage .sectionLead {
+    margin-bottom: 20px;
+  }
+
+  .publicInfoPage .informationCard,
+  .publicInfoPage .taxonomyCard,
+  .publicInfoPage .statusCard,
+  .publicInfoPage .splitFeature > article {
+    padding: 20px;
+  }
+
+  .publicInfoPage .homeHero {
+    padding-top: 42px;
+    padding-bottom: 34px;
+  }
+
+  .publicInfoPage .homeLogicSection {
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .publicInfoPage .homeLogicSection .logic {
+    margin-top: 12px;
+  }
+
+  .publicInfoPage .homeLogicSection .logicItem {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+}
