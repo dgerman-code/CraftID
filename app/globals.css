@@ -4593,3 +4593,42 @@ button {
     height: 90px;
   }
 }
+
+
+/* CraftID number alignment */
+
+.craftIdNumberHeading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.18em 0.28em;
+}
+
+.craftIdNumberLabel {
+  font-size: 0.72em;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.craftIdNumberValue {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.055em;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .craftIdNumberHeading {
+    display: grid;
+    gap: 4px;
+  }
+
+  .craftIdNumberLabel {
+    font-size: 0.58em;
+  }
+
+  .craftIdNumberValue {
+    font-size: 0.86em;
+  }
+}
