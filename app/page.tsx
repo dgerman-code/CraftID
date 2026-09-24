@@ -104,7 +104,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
             <span>{t.pilotText}</span>
           </div>
         </aside>
-        <section className="hero">
+        <section className="hero homeHero">
           <div className="container">
             <div className="eyebrow">{t.eyebrow}</div>
             <h1>{t.title}</h1>
@@ -116,7 +116,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
           </div>
         </section>
 
-        <section className="section">
+        <section className="section homeLogicSection">
           <div className="container">
             <div className="eyebrow">{t.logicLabel}</div>
             <div className="logic">
@@ -130,7 +130,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
           </div>
         </section>
 
-        <section className="section editorialSection">
+        <section className="section editorialSection homeEditorialSection">
           <div className="container">
             <div className="sectionLead">
               <div className="eyebrow">CraftID</div>
