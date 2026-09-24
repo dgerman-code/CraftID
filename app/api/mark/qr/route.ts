@@ -9,11 +9,15 @@ export async function GET(request: NextRequest) {
   if (!craftId) return new NextResponse("Invalid CraftID", { status: 400 });
 
   const target = new URL(`id/${craftId.formatted}`, getSiteUrl()).toString();
+  const format =
+    request.nextUrl.searchParams.get("format") === "svg" ? "svg" : "png";
+
   const endpoint = new URL("https://quickchart.io/qr");
   endpoint.searchParams.set("text", target);
   endpoint.searchParams.set("size", "420");
   endpoint.searchParams.set("margin", "1");
   endpoint.searchParams.set("ecLevel", "M");
+  endpoint.searchParams.set("format", format);
 
   const response = await fetch(endpoint, {
     headers: { "User-Agent": "CraftID QR generator" },
@@ -26,11 +30,15 @@ export async function GET(request: NextRequest) {
 
   const body = await response.arrayBuffer();
   const download = request.nextUrl.searchParams.get("download") === "1";
+
   return new NextResponse(body, {
     headers: {
-      "Content-Type": response.headers.get("content-type") ?? "image/png",
+      "Content-Type":
+        response.headers.get("content-type") ??
+        (format === "svg" ? "image/svg+xml; charset=utf-8" : "image/png"),
       "Cache-Control": "public, max-age=86400, s-maxage=86400",
-      "Content-Disposition": `${download ? "attachment" : "inline"}; filename="craftid-qr-${craftId.formatted}.png"`,
+      "Content-Disposition":
+        `${download ? "attachment" : "inline"}; filename="craftid-qr-${craftId.formatted}.${format}"`,
       "X-Robots-Tag": "noindex",
     },
   });
