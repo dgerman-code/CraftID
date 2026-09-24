@@ -40,13 +40,13 @@ export default async function UsersAdminPage({ searchParams }: Props) {
           {staff.map((member) => (
             <div className="adminTableRow adminUsersColumns" key={member.user_id}>
               <div className="adminRegistryIdentity"><strong>{member.email ?? "No email"}</strong><small>{member.user_id}</small></div>
-              <span className="adminStatus">{member.role}</span>
+              <span className="adminStatus">{member.role === "admin" ? "Platform Admin" : "Platform Reviewer"}</span>
               <span>{new Date(member.created_at).toLocaleDateString("en-GB")}</span>
               <div className="adminInlineActions">
                 <form action={setStaffRole}>
                   <input type="hidden" name="userId" value={member.user_id} />
                   <input type="hidden" name="role" value={member.role === "admin" ? "reviewer" : "admin"} />
-                  <button className="textButton" type="submit">{member.role === "admin" ? "Make reviewer" : "Make admin"}</button>
+                  <button className="textButton" type="submit">{member.role === "admin" ? "Make Platform Reviewer" : "Make Platform Admin"}</button>
                 </form>
                 <form action={removeStaffRole}>
                   <input type="hidden" name="userId" value={member.user_id} />
@@ -64,7 +64,7 @@ export default async function UsersAdminPage({ searchParams }: Props) {
         <p className="fieldHelp">The account must already exist in CraftID authentication. This does not create a new login account.</p>
         <form className="adminGrantForm" action={setStaffRole}>
           <label>User UUID<input name="userId" required placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" /></label>
-          <label>Role<select name="role" defaultValue="reviewer"><option value="reviewer">Reviewer</option><option value="admin">Admin</option></select></label>
+          <label>Role<select name="role" defaultValue="reviewer"><option value="reviewer">Platform Reviewer</option><option value="admin">Platform Admin</option></select></label>
           <button className="button buttonPrimary" type="submit">Grant role</button>
         </form>
       </section>
