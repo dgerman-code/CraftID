@@ -21,11 +21,11 @@ type Props = {
 
 const copy = {
   en: {
-    eyebrow: "CraftID Certificate",
-    titleProfessional: "Professional identity certificate",
-    titleWorkshop: "Workshop identity certificate",
+    eyebrow: "CraftID Record Certificate",
+    titleProfessional: "Professional CraftID record certificate",
+    titleWorkshop: "Workshop CraftID record certificate",
     intro:
-      "Issue a versioned PDF certificate for this CraftID. Each certificate has its own Certificate ID and public verification page.",
+      "Issue a versioned PDF certificate of this CraftID record. Each certificate has its own Certificate No. and public verification page.",
     back: "Back to My CraftID",
     eligible: "Certificates can be issued for published CraftID records.",
     notEligible: "Publish this CraftID before issuing a certificate.",
@@ -42,20 +42,20 @@ const copy = {
     downloadEn: "Download PDF (EN)",
     downloadUk: "Download PDF (UA)",
     verify: "Verify certificate",
-    noteTitle: "What this certificate confirms",
+    noteTitle: "What this certificate records",
     note:
-      "The certificate confirms registration and identity within CraftID. It does not certify professional quality, a qualification, a statutory licence, accreditation, or EU institutional endorsement.",
+      "The certificate records a versioned snapshot of a published CraftID record under its permanent identifier. It does not by itself verify legal identity, professional competence, a qualification, a statutory licence, accreditation, quality, or EU institutional endorsement.",
     snapshot:
       "A certificate is an issued snapshot. If the profile changes later, the verification page still shows the original issue data and separately shows the current CraftID status.",
     currentCraftId: "CraftID",
     domainWarning: "Important: the verification QR currently uses a temporary technical domain. Do not print certificates for long-term use at scale until the final CraftID production domain is connected.",
   },
   uk: {
-    eyebrow: "Сертифікат CraftID",
-    titleProfessional: "Сертифікат професійної ідентичності",
-    titleWorkshop: "Сертифікат ідентичності майстерні",
+    eyebrow: "Сертифікат запису CraftID",
+    titleProfessional: "Сертифікат запису Professional CraftID",
+    titleWorkshop: "Сертифікат запису Workshop CraftID",
     intro:
-      "Створюйте версійний PDF-сертифікат для цього CraftID. Кожен сертифікат має власний Certificate ID та публічну сторінку перевірки.",
+      "Створюйте версійний PDF-сертифікат цього запису CraftID. Кожен сертифікат має власний номер сертифіката та публічну сторінку перевірки.",
     back: "Назад до Мій CraftID",
     eligible: "Сертифікат можна випустити для опублікованого запису CraftID.",
     notEligible: "Спочатку опублікуйте цей CraftID.",
@@ -72,9 +72,9 @@ const copy = {
     downloadEn: "Завантажити PDF (EN)",
     downloadUk: "Завантажити PDF (UA)",
     verify: "Перевірити сертифікат",
-    noteTitle: "Що підтверджує цей сертифікат",
+    noteTitle: "Що фіксує цей сертифікат",
     note:
-      "Сертифікат підтверджує реєстрацію та ідентичність у CraftID. Він не є сертифікацією професійної якості, кваліфікацією, законодавчою ліцензією, акредитацією чи інституційним схваленням ЄС.",
+      "Сертифікат фіксує версію опублікованого запису CraftID під його постійним ідентифікатором. Він сам по собі не підтверджує юридичну особу, професійну компетентність, кваліфікацію, законодавчу ліцензію, акредитацію, якість чи інституційне схвалення ЄС.",
     snapshot:
       "Сертифікат є зафіксованим випуском. Якщо профіль зміниться пізніше, сторінка перевірки зберігає первинні дані випуску й окремо показує поточний статус CraftID.",
     currentCraftId: "CraftID",
