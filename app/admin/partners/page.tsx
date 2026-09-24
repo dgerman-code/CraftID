@@ -24,6 +24,7 @@ type AdminPartner = {
   scope_note: string | null;
   is_public: boolean;
   sort_order: number;
+  logo_path: string | null;
   updated_at: string;
 };
 
@@ -57,6 +58,9 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
   const partners = (partnersData ?? []) as AdminPartner[];
 
   const edit = sp.edit ? partners.find((partner) => partner.id === sp.edit) : null;
+  const editLogoUrl = edit?.logo_path
+    ? supabase.storage.from("partner-logos").getPublicUrl(edit.logo_path).data.publicUrl
+    : null;
 
   return (
     <main className="adminPage">
@@ -95,10 +99,22 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
 
             {partners.map((partner) => (
               <div className="adminTableRow adminPartnerColumns" key={partner.id}>
-                <div className="adminRegistryIdentity">
-                  <strong>{partner.short_name_en || partner.legal_name_en}</strong>
+                <div className="adminPartnerIdentityCell">
+                  <div className="adminPartnerLogoThumb">
+                    {partner.logo_path ? (
+                      <img
+                        src={supabase.storage.from("partner-logos").getPublicUrl(partner.logo_path).data.publicUrl}
+                        alt=""
+                      />
+                    ) : (
+                      <span>{(partner.short_name_en || partner.legal_name_en).slice(0, 2).toUpperCase()}</span>
+                    )}
+                  </div>
+                  <div className="adminRegistryIdentity">
+                    <strong>{partner.short_name_en || partner.legal_name_en}</strong>
                   <span>{partner.legal_name_en}</span>
-                  {partner.legal_name_uk ? <small>{partner.legal_name_uk}{partner.short_name_uk ? ` · ${partner.short_name_uk}` : ""}</small> : null}
+                    {partner.legal_name_uk ? <small>{partner.legal_name_uk}{partner.short_name_uk ? ` · ${partner.short_name_uk}` : ""}</small> : null}
+                  </div>
                 </div>
                 <div className="adminRegistryIdentity">
                   <strong>{partner.country_code}</strong>
@@ -121,7 +137,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
           <div className="eyebrow">{edit ? "Edit partner" : "New partner"}</div>
           <h2>{edit ? edit.legal_name_en : "Add partner organisation"}</h2>
 
-          <form className="adminStatusForm" action={savePartnerOrganisation}>
+          <form className="adminStatusForm" action={savePartnerOrganisation} encType="multipart/form-data">
             <input type="hidden" name="id" value={edit?.id ?? ""} />
 
             <label>
@@ -143,6 +159,27 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
                 UA short name
                 <input name="shortNameUk" defaultValue={edit?.short_name_uk ?? ""} placeholder="РПУ-ММСП" />
               </label>
+            </div>
+
+            <div className="adminPartnerLogoField">
+              <div>
+                <span className="adminFieldLabel">Organisation logo</span>
+                <p className="fieldHelp">PNG, JPG or WebP · max 2 MB. Shown in the public partner network.</p>
+              </div>
+              <div className="adminPartnerLogoControl">
+                <div className="adminPartnerLogoPreview">
+                  {editLogoUrl ? <img src={editLogoUrl} alt="" /> : <span>No logo</span>}
+                </div>
+                <div className="adminPartnerLogoActions">
+                  <input name="logo" type="file" accept="image/png,image/jpeg,image/webp" />
+                  {edit?.logo_path ? (
+                    <label className="adminCheckbox">
+                      <input name="removeLogo" type="checkbox" />
+                      Remove current logo
+                    </label>
+                  ) : null}
+                </div>
+              </div>
             </div>
 
             <div className="adminFormSplit">
