@@ -4360,3 +4360,128 @@ button {
     gap: 10px;
   }
 }
+
+
+/* Partner logo administration */
+
+.adminPartnerLogoField {
+  display: grid;
+  gap: 10px;
+  padding: 12px 0 14px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.adminFieldLabel {
+  display: block;
+  color: var(--muted);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.adminPartnerLogoControl {
+  display: grid;
+  grid-template-columns: 94px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.adminPartnerLogoPreview {
+  width: 94px;
+  height: 66px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.adminPartnerLogoPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+.adminPartnerLogoActions {
+  display: grid;
+  gap: 8px;
+}
+
+.adminPartnerLogoActions input[type="file"] {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 0.76rem;
+}
+
+.adminPartnerIdentityCell {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 9px;
+  align-items: center;
+  min-width: 0;
+}
+
+.adminPartnerLogoThumb {
+  width: 42px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+}
+
+.adminPartnerLogoThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+
+.partnerPublicLogo {
+  width: 132px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+}
+
+.partnerPublicLogo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+
+@media (max-width: 800px) {
+  .adminPartnerLogoControl {
+    grid-template-columns: 78px minmax(0, 1fr);
+  }
+
+  .adminPartnerLogoPreview {
+    width: 78px;
+    height: 58px;
+  }
+
+  .partnerPublicLogo {
+    width: 112px;
+    height: 72px;
+  }
+}
