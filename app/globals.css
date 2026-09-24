@@ -3823,3 +3823,254 @@ button {
     gap: 4px;
   }
 }
+
+
+/* CraftID visual density and multilingual resilience pass */
+
+/*
+ * Keep the editorial/institutional character, but remove layout assumptions
+ * that depend on short English copy. Cards grow with content, dividers keep
+ * a safe distance from text, and operational screens are intentionally denser.
+ */
+
+/* Global vertical rhythm */
+.hero {
+  padding-top: 76px;
+  padding-bottom: 82px;
+}
+
+.section {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+.pageHero,
+.profileHero {
+  padding-top: 68px;
+  padding-bottom: 62px;
+}
+
+.workspacePage {
+  padding-top: 48px;
+  padding-bottom: 76px;
+}
+
+.onboardingPage,
+.recordPage {
+  padding-top: 48px;
+  padding-bottom: 76px;
+}
+
+.onboardingTopline {
+  margin-bottom: 44px;
+}
+
+.sectionLead {
+  margin-bottom: 32px;
+}
+
+/* Multilingual headline resilience */
+.hero h1 {
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+}
+
+.pageHero h1,
+.profileHero h1 {
+  line-height: 0.97;
+  letter-spacing: -0.045em;
+}
+
+.onboardingTitle,
+.workspacePage h1,
+.recordTopbar h1 {
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+/* Cards: content decides height; actions stay clear of dividers */
+.choiceGrid {
+  margin-top: 34px;
+}
+
+.choiceCard {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  padding: 28px;
+}
+
+.choiceCard h2 {
+  margin-top: 30px;
+  margin-bottom: 14px;
+}
+
+.choiceCard p {
+  min-height: 0;
+  margin-bottom: 0;
+}
+
+.choiceHint {
+  margin-top: 14px;
+  margin-bottom: 24px;
+}
+
+.choiceCard .button {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.informationCard,
+.taxonomyCard,
+.statusCard {
+  min-height: 0;
+  padding: 26px;
+}
+
+.informationCard h3,
+.taxonomyCard h3,
+.statusCard h3 {
+  margin-top: 28px;
+}
+
+.splitFeature > article {
+  min-height: 0;
+  padding: 30px;
+}
+
+.logicItem {
+  min-height: 132px;
+}
+
+.logicItem strong {
+  margin-bottom: 30px;
+}
+
+.dashboardModule {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.dashboardModule p {
+  min-height: 0;
+}
+
+.dashboardModule a {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+/* Owner workspace: tighter but still breathable */
+.workspaceForm {
+  gap: 18px;
+  margin-top: 30px;
+  padding-top: 26px;
+}
+
+.profileImageSection {
+  margin-top: 30px;
+  padding-top: 24px;
+}
+
+.contactSection {
+  margin-top: 50px;
+}
+
+/*
+ * Contact consent controls sit below the value field. This prevents long UA
+ * labels from being squeezed into a narrow side column and removes tall gaps.
+ */
+.contactRow {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 18px 0 22px;
+}
+
+.contactVisibilityGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  align-items: flex-start;
+  align-self: auto;
+}
+
+.contactVisibilityGroup .contactVisibility,
+.contactVisibility {
+  min-height: 0;
+  margin: 0;
+  align-items: flex-start;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.contactVisibility input {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+/* Dividers should never visually collide with copy */
+.onboardingGuide {
+  margin-top: 24px;
+  margin-bottom: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.claimTrustStep {
+  padding-top: 26px;
+  padding-bottom: 26px;
+}
+
+.partnerPublicCard {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.adminTableRow {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+/* Compact mobile rhythm without crowding */
+@media (max-width: 800px) {
+  .hero {
+    padding-top: 60px;
+    padding-bottom: 66px;
+  }
+
+  .section {
+    padding-top: 46px;
+    padding-bottom: 46px;
+  }
+
+  .pageHero,
+  .profileHero {
+    padding-top: 54px;
+    padding-bottom: 50px;
+  }
+
+  .workspacePage,
+  .onboardingPage,
+  .recordPage {
+    padding-top: 36px;
+    padding-bottom: 60px;
+  }
+
+  .onboardingTopline {
+    margin-bottom: 34px;
+  }
+
+  .choiceCard {
+    padding: 24px;
+  }
+
+  .contactVisibilityGroup {
+    display: grid;
+    gap: 10px;
+  }
+}
