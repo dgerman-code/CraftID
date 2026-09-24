@@ -77,7 +77,7 @@ export default async function NetworkPage({ searchParams }: Props) {
   return (
     <>
       <SiteHeader locale={locale} pathname="/network" />
-      <main>
+      <main className="publicInfoPage">
         <section className="pageHero">
           <div className="container">
             <div className="eyebrow">{t.eyebrow}</div>
