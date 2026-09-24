@@ -97,7 +97,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
   return (
     <>
       <SiteHeader locale={locale} pathname="/" />
-      <main>
+      <main className="publicInfoPage">
         <aside className="pilotNotice" aria-label={t.pilotLabel}>
           <div className="container pilotNoticeInner">
             <strong>{t.pilotLabel}</strong>
