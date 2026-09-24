@@ -267,7 +267,12 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
         <div className="recordTopbar">
           <div>
             <span className="recordType">{typeLabel}</span>
-            <h1>CraftID #{formatCraftId(entity.craftid_number, entity.craftid_check_digits)}</h1>
+            <h1 className="craftIdNumberHeading">
+              <span className="craftIdNumberLabel">CraftID</span>
+              <span className="craftIdNumberValue">
+                #{formatCraftId(entity.craftid_number, entity.craftid_check_digits)}
+              </span>
+            </h1>
           </div>
           <div className="dashboardStatus">
             <span>{t.status}</span>
