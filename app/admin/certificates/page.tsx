@@ -29,7 +29,7 @@ export default async function AdminCertificatesPage({ searchParams }: Props) {
         <div>
           <div className="eyebrow">Certificate governance</div>
           <h1>CraftID Certificates</h1>
-          <p>Issued identity certificates are immutable snapshots. Administrators may revoke a certificate with an auditable reason; revocation does not delete its verification record.</p>
+          <p>Issued CraftID Record Certificates are immutable snapshots. Administrators may revoke a certificate with an auditable reason; revocation does not delete its verification record.</p>
         </div>
       </div>
 
