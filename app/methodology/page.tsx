@@ -62,7 +62,7 @@ export default async function MethodologyPage({ searchParams }: Props) {
   return (
     <>
       <SiteHeader locale={locale} pathname="/methodology" />
-      <main>
+      <main className="publicInfoPage">
         <section className="pageHero">
           <div className="container">
             <div className="eyebrow">{t.eyebrow}</div>
