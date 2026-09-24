@@ -4074,3 +4074,68 @@ button {
     gap: 10px;
   }
 }
+
+
+/* Home page composition refinement */
+
+/*
+ * The home page is read as one continuous argument. Keep the large headline,
+ * but reduce the dead zones between hero, core logic and the first explanation.
+ */
+.homeHero {
+  padding-top: 62px;
+  padding-bottom: 46px;
+}
+
+.homeHero .actions {
+  margin-top: 28px;
+}
+
+.homeLogicSection {
+  padding-top: 40px;
+  padding-bottom: 38px;
+}
+
+.homeLogicSection .logic {
+  margin-top: 22px;
+}
+
+.homeLogicSection .logicItem {
+  min-height: 104px;
+  padding-top: 20px;
+  padding-bottom: 18px;
+}
+
+.homeLogicSection .logicItem strong {
+  margin-bottom: 24px;
+}
+
+.homeEditorialSection {
+  padding-top: 46px;
+}
+
+.homeEditorialSection .sectionLead {
+  margin-bottom: 28px;
+}
+
+@media (max-width: 800px) {
+  .homeHero {
+    padding-top: 48px;
+    padding-bottom: 38px;
+  }
+
+  .homeLogicSection {
+    padding-top: 34px;
+    padding-bottom: 34px;
+  }
+
+  .homeLogicSection .logic {
+    margin-top: 18px;
+  }
+
+  .homeLogicSection .logicItem {
+    min-height: 0;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+}
