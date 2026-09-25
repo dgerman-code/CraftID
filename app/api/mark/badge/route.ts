@@ -36,11 +36,11 @@ export async function GET(request: NextRequest) {
         ? await Promise.all([
             qrPromise,
             fetchBinaryAsset(
-              new URL("/templates/craftid-sticker-original-bg.jpg", siteUrl).toString(),
+              new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
               "Sticker template",
             ),
             fetchBinaryAsset(
-              new URL("/templates/cid-sans-500.woff2", siteUrl).toString(),
+              new URL("/templates/cid-sans-500.woff2", assetOrigin).toString(),
               "Sticker font",
             ),
           ])
