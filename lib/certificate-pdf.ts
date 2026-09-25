@@ -165,6 +165,190 @@ function drawFact(
   });
 }
 
+
+function svgX(value: number, pageWidth: number) {
+  return value * (pageWidth / 446.25);
+}
+
+function svgY(value: number, pageHeight: number) {
+  return pageHeight - value * (pageHeight / 631.499985);
+}
+
+async function renderApprovedProfessionalCertificatePdf(input: {
+  certificate: PublicCraftIdCertificate;
+  profileUrl: string;
+  qrPng: Uint8Array;
+  regularFontBytes: Uint8Array;
+  boldFontBytes: Uint8Array;
+  backgroundJpeg: Uint8Array;
+}) {
+  const {
+    certificate,
+    profileUrl,
+    qrPng,
+    regularFontBytes,
+    boldFontBytes,
+    backgroundJpeg,
+  } = input;
+
+  const pdf = await PDFDocument.create();
+  pdf.registerFontkit(fontkit);
+
+  const regular = await pdf.embedFont(regularFontBytes, { subset: true });
+  const bold = await pdf.embedFont(boldFontBytes, { subset: true });
+  const background = await pdf.embedJpg(backgroundJpeg);
+  const qr = await pdf.embedPng(qrPng);
+
+  const craftId = formatCraftId(
+    certificate.craftid_number,
+    certificate.craftid_check_digits,
+  );
+  const certificateNumber = formatCertificateNumber(
+    certificate.craftid_number,
+    certificate.craftid_check_digits,
+    certificate.version_no,
+  );
+
+  pdf.setTitle(certificateNumber + " - CraftID Certificate");
+  pdf.setAuthor("CraftID");
+  pdf.setSubject("CraftID professional identity record certificate");
+  pdf.setCreator("CraftID");
+  pdf.setProducer("CraftID");
+
+  const page = pdf.addPage(A4_PORTRAIT);
+  const width = page.getWidth();
+  const height = page.getHeight();
+  const sx = width / 446.25;
+  const sy = height / 631.499985;
+  const ink = rgb(30 / 255, 42 / 255, 64 / 255);
+
+  page.drawImage(background, {
+    x: 0,
+    y: 0,
+    width,
+    height,
+  });
+
+  function drawSourceText(
+    value: string,
+    x: number,
+    y: number,
+    sourceSize: number,
+    font: PDFFont,
+    maxSourceWidth: number,
+    minSourceSize = sourceSize * 0.72,
+  ) {
+    let size = sourceSize * sy;
+    const minSize = minSourceSize * sy;
+    const maxWidth = maxSourceWidth * sx;
+
+    while (size > minSize && font.widthOfTextAtSize(value, size) > maxWidth) {
+      size -= 0.25;
+    }
+
+    page.drawText(value, {
+      x: svgX(x, width),
+      y: svgY(y, height),
+      size,
+      font,
+      color: ink,
+    });
+  }
+
+  drawSourceText(
+    certificate.issued_display_name,
+    42.9,
+    210.05,
+    17.8,
+    bold,
+    350,
+    12.8,
+  );
+
+  drawSourceText("#" + craftId, 142.5, 276.1, 9.2, bold, 118, 7.8);
+  drawSourceText("Professional", 142.6, 295.4, 7.15, regular, 120, 6.2);
+  drawSourceText(
+    certificate.issued_role_label || "—",
+    142.6,
+    314.15,
+    7.15,
+    regular,
+    142,
+    5.8,
+  );
+  drawSourceText(
+    countryLabel(certificate.issued_country_code, "en"),
+    142.6,
+    332.35,
+    7.15,
+    regular,
+    142,
+    6,
+  );
+  drawSourceText(
+    dateLabel(certificate.entity_created_at, "en"),
+    142.6,
+    350.8,
+    7.15,
+    regular,
+    142,
+    6,
+  );
+  drawSourceText(certificateNumber, 142.6, 369.25, 7.15, regular, 142, 6);
+  drawSourceText(
+    dateLabel(certificate.issued_at, "en"),
+    142.6,
+    387.5,
+    7.15,
+    regular,
+    142,
+    6,
+  );
+
+  const displayProfileUrl = profileUrl
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "");
+  drawSourceText(displayProfileUrl, 309.8, 356.95, 5.85, regular, 88, 4.45);
+
+  const qrX = 314.3;
+  const qrY = 267.1;
+  const qrSize = 54.2;
+  page.drawImage(qr, {
+    x: svgX(qrX, width),
+    y: height - (qrY + qrSize) * sy,
+    width: qrSize * sx,
+    height: qrSize * sy,
+  });
+
+  if (certificate.certificate_status === "revoked") {
+    const revoked = "REVOKED";
+    const stampColor = rgb(139 / 255, 45 / 255, 45 / 255);
+    const stampWidth = 94;
+    const stampHeight = 22;
+    const stampX = width - 42 - stampWidth;
+    const stampY = 100;
+
+    page.drawRectangle({
+      x: stampX,
+      y: stampY,
+      width: stampWidth,
+      height: stampHeight,
+      borderColor: stampColor,
+      borderWidth: 1.2,
+      opacity: 0.92,
+    });
+    page.drawText(revoked, {
+      x: stampX + (stampWidth - bold.widthOfTextAtSize(revoked, 10)) / 2,
+      y: stampY + 6,
+      size: 10,
+      font: bold,
+      color: stampColor,
+    });
+  }
+
+  return pdf.save();
+}
+
 export async function renderCraftIdCertificatePdf(input: {
   certificate: PublicCraftIdCertificate;
   locale: CertificateLocale;
@@ -173,6 +357,7 @@ export async function renderCraftIdCertificatePdf(input: {
   qrPng: Uint8Array;
   regularFontBytes: Uint8Array;
   boldFontBytes: Uint8Array;
+  backgroundJpeg?: Uint8Array;
 }) {
   const {
     certificate,
@@ -182,7 +367,19 @@ export async function renderCraftIdCertificatePdf(input: {
     qrPng,
     regularFontBytes,
     boldFontBytes,
+    backgroundJpeg,
   } = input;
+
+  if (certificate.entity_type === "professional" && backgroundJpeg) {
+    return renderApprovedProfessionalCertificatePdf({
+      certificate,
+      profileUrl,
+      qrPng,
+      regularFontBytes,
+      boldFontBytes,
+      backgroundJpeg,
+    });
+  }
 
   const t = copy[locale];
   const pdf = await PDFDocument.create();
