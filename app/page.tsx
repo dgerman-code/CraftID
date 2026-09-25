@@ -104,11 +104,11 @@ export default async function HomePage({ searchParams }: HomeProps) {
             <span>{t.pilotText}</span>
           </div>
         </aside>
-        <section className="hero homeHero">
+        <section className={`hero homeHero homeHero--${locale}`}>
           <div className="container">
             <div className="eyebrow">{t.eyebrow}</div>
-            <h1>{t.title}</h1>
-            <p>{t.intro}</p>
+            <h1 className={`homeHeroTitle homeHeroTitle--${locale}`}>{t.title}</h1>
+            <p className="homeHeroIntro">{t.intro}</p>
             <div className="actions">
               <Link className="button buttonPrimary" href="/signup">{t.create}</Link>
               <Link className="button" href={`/discover${q}`}>{t.explore}</Link>
