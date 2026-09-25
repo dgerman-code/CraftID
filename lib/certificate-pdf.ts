@@ -310,6 +310,19 @@ async function renderApprovedProfessionalCertificatePdf(input: {
     .replace(/\/$/, "");
   drawSourceText(displayProfileUrl, 309.8, 356.95, 5.85, regular, 88, 4.45);
 
+  const qrFrameX = 309.8;
+  const qrFrameY = 262.6;
+  const qrFrameSize = 63.2;
+  page.drawRectangle({
+    x: svgX(qrFrameX, width),
+    y: height - (qrFrameY + qrFrameSize) * sy,
+    width: qrFrameSize * sx,
+    height: qrFrameSize * sy,
+    color: rgb(1, 1, 1),
+    borderColor: rgb(220 / 255, 202 / 255, 160 / 255),
+    borderWidth: 0.6 * sx,
+  });
+
   const qrX = 314.3;
   const qrY = 267.1;
   const qrSize = 54.2;
