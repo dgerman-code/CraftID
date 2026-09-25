@@ -1,4 +1,7 @@
+import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+
+type EntityType = "professional" | "workshop";
 
 const NAVY = "#111a33";
 const GOLD = "#b9914f";
@@ -15,11 +18,32 @@ function esc(value: string) {
   }[char] ?? char));
 }
 
-export async function fetchQrPng(target: string, size = 520) {
+export async function fetchBinaryAsset(url: string, label: string) {
+  const response = await fetch(url, {
+    headers: { "User-Agent": "CraftID Download Kit" },
+    next: { revalidate: 60 * 60 * 24 * 30 },
+  });
+
+  if (!response.ok) {
+    throw new Error(label + " unavailable");
+  }
+
+  const buffer = Buffer.from(await response.arrayBuffer());
+  return {
+    bytes: new Uint8Array(buffer),
+    dataUri:
+      "data:" +
+      (response.headers.get("content-type") || "application/octet-stream") +
+      ";base64," +
+      buffer.toString("base64"),
+  };
+}
+
+export async function fetchQrPng(target: string, size = 520, margin = 0) {
   const endpoint = new URL("https://quickchart.io/qr");
   endpoint.searchParams.set("text", target);
   endpoint.searchParams.set("size", String(size));
-  endpoint.searchParams.set("margin", "1");
+  endpoint.searchParams.set("margin", String(margin));
   endpoint.searchParams.set("ecLevel", "M");
 
   const response = await fetch(endpoint, {
@@ -38,7 +62,28 @@ export async function fetchQrPng(target: string, size = 520) {
   };
 }
 
-export function renderRoundStickerSvg(input: {
+function renderApprovedProfessionalStickerSvg(input: {
+  craftId: string;
+  qrDataUri: string;
+  backgroundDataUri: string;
+  fontDataUri: string;
+}) {
+  const craftId = esc(input.craftId);
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="2000" viewBox="0 0 1500 1500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="CraftID #${craftId}">
+    <defs>
+      <style>
+        @font-face{font-family:"CID Sans";font-weight:500;src:url("${input.fontDataUri}") format("woff2");}
+        .cid{font-family:"CID Sans",Montserrat,"Helvetica Neue",Arial,sans-serif;}
+      </style>
+    </defs>
+    <image href="${input.backgroundDataUri}" x="0" y="0" width="1500" height="1500" preserveAspectRatio="none"/>
+    <text class="cid" x="750" y="954.9" font-size="76" font-weight="500" fill="#1a2037" text-anchor="middle" xml:space="preserve">#${craftId}</text>
+    <image href="${input.qrDataUri}" x="643.6" y="1076.6" width="213" height="213" preserveAspectRatio="none" style="image-rendering:pixelated"/>
+  </svg>`;
+}
+
+function renderGenericStickerSvg(input: {
   craftId: string;
   qrDataUri: string;
 }) {
@@ -57,28 +102,43 @@ export function renderRoundStickerSvg(input: {
     <circle cx="500" cy="500" r="449" fill="none" stroke="${NAVY}" stroke-width="5"/>
     <circle cx="500" cy="500" r="437" fill="none" stroke="${GOLD}" stroke-width="2"/>
     <circle cx="500" cy="500" r="423" fill="url(#fineLines)" stroke="${GOLD}" stroke-width="1.5"/>
-    <circle cx="500" cy="500" r="350" fill="none" stroke="${GOLD}" stroke-width="1.5" opacity=".32"/>
-    <circle cx="465" cy="500" r="250" fill="none" stroke="${GOLD}" stroke-width="1.2" opacity=".16"/>
-    <circle cx="535" cy="500" r="250" fill="none" stroke="${GOLD}" stroke-width="1.2" opacity=".16"/>
-    <circle cx="500" cy="465" r="250" fill="none" stroke="${GOLD}" stroke-width="1.2" opacity=".16"/>
-    <circle cx="500" cy="535" r="250" fill="none" stroke="${GOLD}" stroke-width="1.2" opacity=".16"/>
-
     <text font-family="Arial, Helvetica, sans-serif" font-size="32" letter-spacing="9" fill="${GREY}">
       <textPath href="#topArc" startOffset="50%" text-anchor="middle">CREATIVITY · TECHNOLOGY · INNOVATION · IDENTITY</textPath>
     </text>
     <text font-family="Arial, Helvetica, sans-serif" font-size="30" letter-spacing="8" fill="${GREY}">
       <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">INVENTION · ENGINEERING · HERITAGE</textPath>
     </text>
-
     <text x="500" y="388" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="118" font-weight="700" fill="${NAVY}">Craft<tspan fill="${GOLD}">ID</tspan></text>
     <line x1="370" y1="438" x2="630" y2="438" stroke="${GOLD}" stroke-width="2"/>
     <text x="500" y="500" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="31" letter-spacing="5" fill="${NAVY}">CRAFTID</text>
     <text x="500" y="555" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="47" font-weight="700" fill="${NAVY}">#${craftId}</text>
-
     <rect x="394" y="610" width="212" height="212" rx="8" fill="#ffffff" stroke="${GOLD}" stroke-width="2"/>
     <image href="${qr}" x="407" y="623" width="186" height="186"/>
     <text x="500" y="856" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="26" letter-spacing="4" fill="${NAVY}">CRAFTID.EU</text>
   </svg>`;
+}
+
+export function renderRoundStickerSvg(input: {
+  craftId: string;
+  qrDataUri: string;
+  entityType: EntityType;
+  backgroundDataUri?: string;
+  fontDataUri?: string;
+}) {
+  if (
+    input.entityType === "professional" &&
+    input.backgroundDataUri &&
+    input.fontDataUri
+  ) {
+    return renderApprovedProfessionalStickerSvg({
+      craftId: input.craftId,
+      qrDataUri: input.qrDataUri,
+      backgroundDataUri: input.backgroundDataUri,
+      fontDataUri: input.fontDataUri,
+    });
+  }
+
+  return renderGenericStickerSvg(input);
 }
 
 export function renderQrLabelSvg(input: {
@@ -101,11 +161,66 @@ export function renderQrLabelSvg(input: {
   </svg>`;
 }
 
-function centeredX(text: string, size: number, font: { widthOfTextAtSize: (value: string, size: number) => number }, cx: number) {
+function centeredX(
+  text: string,
+  size: number,
+  font: { widthOfTextAtSize: (value: string, size: number) => number },
+  cx: number,
+) {
   return cx - font.widthOfTextAtSize(text, size) / 2;
 }
 
-export async function renderPrintSheetPdf(input: {
+async function renderApprovedPrintSheetPdf(input: {
+  craftId: string;
+  qrPng: Uint8Array;
+  backgroundJpeg: Uint8Array;
+  mediumFontBytes: Uint8Array;
+}) {
+  const pdf = await PDFDocument.create();
+  pdf.registerFontkit(fontkit);
+  const page = pdf.addPage([595.28, 841.89]);
+  const background = await pdf.embedJpg(input.backgroundJpeg);
+  const medium = await pdf.embedFont(input.mediumFontBytes, { subset: true });
+  const qr = await pdf.embedPng(input.qrPng);
+  const ink = rgb(26 / 255, 32 / 255, 55 / 255);
+
+  const diameter = 154;
+  const cols = 3;
+  const rows = 4;
+  const gapX = (page.getWidth() - cols * diameter) / (cols + 1);
+  const gapY = (page.getHeight() - rows * diameter) / (rows + 1);
+  const id = "#" + input.craftId;
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      const x = gapX + col * (diameter + gapX);
+      const y = page.getHeight() - gapY - diameter - row * (diameter + gapY);
+
+      page.drawImage(background, { x, y, width: diameter, height: diameter });
+
+      const idSize = diameter * (76 / 1500);
+      page.drawText(id, {
+        x: x + diameter / 2 - medium.widthOfTextAtSize(id, idSize) / 2,
+        y: y + diameter * (1 - 954.9 / 1500),
+        size: idSize,
+        font: medium,
+        color: ink,
+      });
+
+      const qrSize = diameter * (213 / 1500);
+      page.drawImage(qr, {
+        x: x + diameter * (643.6 / 1500),
+        y: y + diameter * (1 - (1076.6 + 213) / 1500),
+        width: qrSize,
+        height: qrSize,
+      });
+    }
+  }
+
+  return pdf.save();
+}
+
+async function renderGenericPrintSheetPdf(input: {
   craftId: string;
   qrPng: Uint8Array;
 }) {
@@ -133,7 +248,6 @@ export async function renderPrintSheetPdf(input: {
 
       page.drawCircle({ x: cx, y: cy, size: radius, color: paper, borderColor: gold, borderWidth: 3 });
       page.drawCircle({ x: cx, y: cy, size: radius - 7, borderColor: navy, borderWidth: 1.2 });
-      page.drawCircle({ x: cx, y: cy, size: radius - 12, borderColor: gold, borderWidth: 0.7 });
 
       const logo = "CraftID";
       page.drawText(logo, {
@@ -172,4 +286,27 @@ export async function renderPrintSheetPdf(input: {
   }
 
   return pdf.save();
+}
+
+export async function renderPrintSheetPdf(input: {
+  craftId: string;
+  qrPng: Uint8Array;
+  entityType: EntityType;
+  backgroundJpeg?: Uint8Array;
+  mediumFontBytes?: Uint8Array;
+}) {
+  if (
+    input.entityType === "professional" &&
+    input.backgroundJpeg &&
+    input.mediumFontBytes
+  ) {
+    return renderApprovedPrintSheetPdf({
+      craftId: input.craftId,
+      qrPng: input.qrPng,
+      backgroundJpeg: input.backgroundJpeg,
+      mediumFontBytes: input.mediumFontBytes,
+    });
+  }
+
+  return renderGenericPrintSheetPdf(input);
 }
