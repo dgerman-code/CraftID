@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const siteUrl = getSiteUrl();
+    const assetOrigin = request.nextUrl.origin;
     const qrPromise = fetchQrPng(result.entity.profileUrl, 620, 0);
 
     const [qr, background, font] =
@@ -27,11 +28,11 @@ export async function GET(request: NextRequest) {
         ? await Promise.all([
             qrPromise,
             fetchBinaryAsset(
-              new URL("/templates/craftid-sticker-original-bg.jpg", siteUrl).toString(),
+              new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
               "Sticker template",
             ),
             fetchBinaryAsset(
-              new URL("/templates/cid-sans-500.woff2", siteUrl).toString(),
+              new URL("/templates/cid-sans-500.woff2", assetOrigin).toString(),
               "Sticker font",
             ),
           ])
