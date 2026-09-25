@@ -27,6 +27,10 @@ const copy = {
     stickerText:
       "For packaging, workshop doors, product presentation and printed materials.",
     downloadSticker: "Download Round Sticker (SVG)",
+    qrCode: "Standalone QR Code",
+    qrCodeText:
+      "A clean QR code for layouts where the Round Sticker / Seal is not suitable. It opens this CraftID's unique public profile.",
+    downloadQrCode: "Download QR Code (PNG)",
     printSheet: "Print Sheet",
     printSheetText:
       "A4 sheet with multiple Round Sticker / Seal marks ready for printing.",
@@ -60,6 +64,10 @@ const copy = {
     stickerText:
       "Для пакування, дверей майстерні, презентації виробів і друкованих матеріалів.",
     downloadSticker: "Завантажити Round Sticker (SVG)",
+    qrCode: "Окремий QR-код",
+    qrCodeText:
+      "Чистий QR-код для макетів, де Round Sticker / Seal не підходить. Він відкриває унікальний публічний профіль цього CraftID.",
+    downloadQrCode: "Завантажити QR-код (PNG)",
     printSheet: "Print Sheet",
     printSheetText:
       "Аркуш A4 з кількома Round Sticker / Seal для друку.",
@@ -95,6 +103,8 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
 
   const stickerPreview = `/api/kit/sticker?entity=${encodeURIComponent(entity.id)}`;
   const stickerDownload = stickerPreview + "&download=1";
+  const qrCodePreview = `/api/kit/qr?entity=${encodeURIComponent(entity.id)}`;
+  const qrCodeDownload = qrCodePreview + "&download=1";
   const printSheetDownload = `/api/kit/print-sheet?entity=${encodeURIComponent(entity.id)}`;
 
   const publicBadgeUrl = new URL(
@@ -147,6 +157,19 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
             />
             <a className="button markAssetButton" href={stickerDownload}>
               {t.downloadSticker}
+            </a>
+          </article>
+
+          <article className="markPanel">
+            <div className="eyebrow">{t.qrCode}</div>
+            <p>{t.qrCodeText}</p>
+            <img
+              className="craftIdBadgePreview"
+              src={qrCodePreview}
+              alt={`CraftID #${craftId} QR code`}
+            />
+            <a className="button markAssetButton" href={qrCodeDownload}>
+              {t.downloadQrCode}
             </a>
           </article>
 
