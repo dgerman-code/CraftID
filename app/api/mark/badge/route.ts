@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
   const record = publicProfile as { entity_type?: "professional" | "workshop" };
   const entityType = record.entity_type === "workshop" ? "workshop" : "professional";
   const siteUrl = getSiteUrl();
+  const assetOrigin = request.nextUrl.origin;
   const profileUrl = new URL("id/" + parsed.formatted, siteUrl).toString();
 
   try {
