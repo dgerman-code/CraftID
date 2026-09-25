@@ -71,7 +71,7 @@ const copy = {
     copyHint: "Скопіюйте цей HTML-код на свій вебсайт.",
     certificate: "Certificate",
     certificateText:
-      "Сертифікати є версійними документами. Certificate No. вказується тільки на сертифікаті. В approved Professional certificate QR веде на відповідний публічний профіль CraftID.",
+      "Сертифікати є версійними документами. Certificate No. вказується тільки на сертифікаті. У затвердженому сертифікаті Professional QR веде на відповідний публічний профіль CraftID.",
     manageCertificate: "Відкрити розділ Certificate",
     domainWarning:
       "Фінальна QR-адреса — craftid.eu. Не запускайте масовий друк постійних матеріалів із preview deployment.",
