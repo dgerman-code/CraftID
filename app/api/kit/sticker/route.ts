@@ -5,7 +5,6 @@ import {
   fetchQrPng,
   renderRoundStickerSvg,
 } from "@/lib/mark-render";
-import { getSiteUrl } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -19,7 +18,6 @@ export async function GET(request: NextRequest) {
   if (result.status !== 200 || !result.entity) return new NextResponse("CraftID entity not found", { status: 404 });
 
   try {
-    const siteUrl = getSiteUrl();
     const assetOrigin = request.nextUrl.origin;
     const qrPromise = fetchQrPng(result.entity.profileUrl, 620, 0);
 
