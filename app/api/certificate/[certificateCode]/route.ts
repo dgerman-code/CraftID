@@ -12,11 +12,6 @@ import { renderCraftIdCertificatePdf } from "@/lib/certificate-pdf";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const REGULAR_FONT_URL =
-  "https://raw.githubusercontent.com/notofonts/noto-fonts/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf";
-const BOLD_FONT_URL =
-  "https://raw.githubusercontent.com/notofonts/noto-fonts/main/hinted/ttf/NotoSans/NotoSans-Bold.ttf";
-
 async function fetchBinary(url: string, label: string) {
   const response = await fetch(url, {
     headers: { "User-Agent": "CraftID certificate generator" },
@@ -60,6 +55,7 @@ export async function GET(
   }
 
   const siteUrl = getSiteUrl();
+  const assetOrigin = request.nextUrl.origin;
   const verificationUrl = new URL(
     "certificate/" + encodeURIComponent(certificate.certificate_code),
     siteUrl,
@@ -71,18 +67,47 @@ export async function GET(
   );
   const profileUrl = new URL("id/" + craftId, siteUrl).toString();
 
+  const qrTarget =
+    certificate.entity_type === "professional" ? profileUrl : verificationUrl;
   const qrEndpoint = new URL("https://quickchart.io/qr");
-  qrEndpoint.searchParams.set("text", verificationUrl);
-  qrEndpoint.searchParams.set("size", "520");
-  qrEndpoint.searchParams.set("margin", "1");
+  qrEndpoint.searchParams.set("text", qrTarget);
+  qrEndpoint.searchParams.set("size", "620");
+  qrEndpoint.searchParams.set("margin", "0");
   qrEndpoint.searchParams.set("ecLevel", "M");
 
   try {
-    const [regularFontBytes, boldFontBytes, qrPng] = await Promise.all([
-      fetchBinary(REGULAR_FONT_URL, "Certificate font"),
-      fetchBinary(BOLD_FONT_URL, "Certificate font"),
-      fetchBinary(qrEndpoint.toString(), "Certificate QR"),
-    ]);
+    const [regularFontBytes, boldFontBytes, qrPng, backgroundJpeg] =
+      certificate.entity_type === "professional"
+        ? await Promise.all([
+            fetchBinary(
+              new URL("/templates/cid-sans-400.ttf", assetOrigin).toString(),
+              "Certificate font",
+            ),
+            fetchBinary(
+              new URL("/templates/cid-sans-600.ttf", assetOrigin).toString(),
+              "Certificate font",
+            ),
+            fetchBinary(qrEndpoint.toString(), "Certificate QR"),
+            fetchBinary(
+              new URL(
+                "/templates/craftid-certificate-original-bg.jpg",
+                assetOrigin,
+              ).toString(),
+              "Certificate template",
+            ),
+          ])
+        : await Promise.all([
+            fetchBinary(
+              new URL("/templates/cid-sans-400.ttf", assetOrigin).toString(),
+              "Certificate font",
+            ),
+            fetchBinary(
+              new URL("/templates/cid-sans-600.ttf", assetOrigin).toString(),
+              "Certificate font",
+            ),
+            fetchBinary(qrEndpoint.toString(), "Certificate QR"),
+            Promise.resolve(undefined),
+          ]);
 
     const pdf = await renderCraftIdCertificatePdf({
       certificate,
@@ -92,6 +117,7 @@ export async function GET(
       qrPng,
       regularFontBytes,
       boldFontBytes,
+      backgroundJpeg,
     });
 
     const download = request.nextUrl.searchParams.get("download") === "1";

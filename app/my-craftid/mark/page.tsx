@@ -27,10 +27,6 @@ const copy = {
     stickerText:
       "For packaging, workshop doors, product presentation and printed materials.",
     downloadSticker: "Download Round Sticker (SVG)",
-    qrLabel: "QR Label",
-    qrLabelText:
-      "A compact label built around the permanent CraftID number and QR code.",
-    downloadQrLabel: "Download QR Label (SVG)",
     printSheet: "Print Sheet",
     printSheetText:
       "A4 sheet with multiple Round Sticker / Seal marks ready for printing.",
@@ -42,7 +38,7 @@ const copy = {
     copyHint: "Copy this HTML into your website.",
     certificate: "Certificate",
     certificateText:
-      "Certificates are versioned documents. Certificate No. appears only on the certificate, and the certificate QR opens its verification page.",
+      "Certificates are versioned documents. Certificate No. appears only on the certificate. On the approved Professional certificate, the QR opens the corresponding public CraftID profile.",
     manageCertificate: "Open Certificate area",
     domainWarning:
       "The final QR target is craftid.eu. Do not mass-print permanent materials from a preview deployment.",
@@ -64,10 +60,6 @@ const copy = {
     stickerText:
       "Для пакування, дверей майстерні, презентації виробів і друкованих матеріалів.",
     downloadSticker: "Завантажити Round Sticker (SVG)",
-    qrLabel: "QR Label",
-    qrLabelText:
-      "Компактний лейбл навколо постійного номера CraftID та QR-коду.",
-    downloadQrLabel: "Завантажити QR Label (SVG)",
     printSheet: "Print Sheet",
     printSheetText:
       "Аркуш A4 з кількома Round Sticker / Seal для друку.",
@@ -79,7 +71,7 @@ const copy = {
     copyHint: "Скопіюйте цей HTML-код на свій вебсайт.",
     certificate: "Certificate",
     certificateText:
-      "Сертифікати є версійними документами. Certificate No. вказується тільки на сертифікаті, а QR сертифіката відкриває сторінку його перевірки.",
+      "Сертифікати є версійними документами. Certificate No. вказується тільки на сертифікаті. У затвердженому сертифікаті Professional QR веде на відповідний публічний профіль CraftID.",
     manageCertificate: "Відкрити розділ Certificate",
     domainWarning:
       "Фінальна QR-адреса — craftid.eu. Не запускайте масовий друк постійних матеріалів із preview deployment.",
@@ -103,8 +95,6 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
 
   const stickerPreview = `/api/kit/sticker?entity=${encodeURIComponent(entity.id)}`;
   const stickerDownload = stickerPreview + "&download=1";
-  const qrLabelPreview = `/api/kit/qr-label?entity=${encodeURIComponent(entity.id)}`;
-  const qrLabelDownload = qrLabelPreview + "&download=1";
   const printSheetDownload = `/api/kit/print-sheet?entity=${encodeURIComponent(entity.id)}`;
 
   const publicBadgeUrl = new URL(
@@ -157,19 +147,6 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
             />
             <a className="button markAssetButton" href={stickerDownload}>
               {t.downloadSticker}
-            </a>
-          </article>
-
-          <article className="markPanel">
-            <div className="eyebrow">{t.qrLabel}</div>
-            <p>{t.qrLabelText}</p>
-            <img
-              className="craftIdBadgePreview"
-              src={qrLabelPreview}
-              alt={`CraftID #${craftId} QR label`}
-            />
-            <a className="button markAssetButton" href={qrLabelDownload}>
-              {t.downloadQrLabel}
             </a>
           </article>
 

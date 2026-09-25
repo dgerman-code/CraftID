@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOwnedDownloadKitEntity } from "@/lib/download-kit";
-import { fetchQrPng, renderPrintSheetPdf } from "@/lib/mark-render";
+import {
+  fetchBinaryAsset,
+  fetchQrPng,
+  renderPrintSheetPdf,
+} from "@/lib/mark-render";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -14,10 +18,30 @@ export async function GET(request: NextRequest) {
   if (result.status !== 200 || !result.entity) return new NextResponse("CraftID entity not found", { status: 404 });
 
   try {
-    const qr = await fetchQrPng(result.entity.profileUrl, 520);
+    const assetOrigin = request.nextUrl.origin;
+    const qrPromise = fetchQrPng(result.entity.profileUrl, 620, 0);
+
+    const [qr, background, font] =
+      result.entity.entityType === "professional"
+        ? await Promise.all([
+            qrPromise,
+            fetchBinaryAsset(
+              new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
+              "Sticker template",
+            ),
+            fetchBinaryAsset(
+              new URL("/templates/cid-sans-500.ttf", assetOrigin).toString(),
+              "Sticker font",
+            ),
+          ])
+        : [await qrPromise, null, null];
+
     const pdf = await renderPrintSheetPdf({
       craftId: result.entity.craftId,
       qrPng: qr.bytes,
+      entityType: result.entity.entityType,
+      backgroundJpeg: background?.bytes,
+      mediumFontBytes: font?.bytes,
     });
 
     return new NextResponse(Buffer.from(pdf), {
