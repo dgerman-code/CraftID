@@ -6,6 +6,7 @@ import {
   normalizeCertificateCode,
   type PublicCraftIdCertificate,
 } from "@/lib/certificate";
+import { formatCraftId } from "@/lib/craftid-format";
 import { renderCraftIdCertificatePdf } from "@/lib/certificate-pdf";
 
 export const dynamic = "force-dynamic";
@@ -58,10 +59,17 @@ export async function GET(
     return new NextResponse("Certificate not found", { status: 404 });
   }
 
+  const siteUrl = getSiteUrl();
   const verificationUrl = new URL(
     "certificate/" + encodeURIComponent(certificate.certificate_code),
-    getSiteUrl(),
+    siteUrl,
   ).toString();
+
+  const craftId = formatCraftId(
+    certificate.craftid_number,
+    certificate.craftid_check_digits,
+  );
+  const profileUrl = new URL("id/" + craftId, siteUrl).toString();
 
   const qrEndpoint = new URL("https://quickchart.io/qr");
   qrEndpoint.searchParams.set("text", verificationUrl);
@@ -80,6 +88,7 @@ export async function GET(
       certificate,
       locale,
       verificationUrl,
+      profileUrl,
       qrPng,
       regularFontBytes,
       boldFontBytes,

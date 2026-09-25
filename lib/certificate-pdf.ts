@@ -1,55 +1,77 @@
 import fontkit from "@pdf-lib/fontkit";
-import { PDFDocument, rgb, type PDFFont } from "pdf-lib";
+import { PDFDocument, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import type { PublicCraftIdCertificate } from "@/lib/certificate";
 import { formatCraftId } from "@/lib/certificate";
 import { formatCertificateNumber } from "@/lib/craftid-format";
 
 type CertificateLocale = "en" | "uk";
 
-const A4_LANDSCAPE: [number, number] = [841.89, 595.28];
+const A4_PORTRAIT: [number, number] = [595.28, 841.89];
 
 const copy = {
   en: {
-    professionalTitle: "CRAFTID PROFESSIONAL RECORD CERTIFICATE",
-    workshopTitle: "CRAFTID WORKSHOP RECORD CERTIFICATE",
-    confirms: "This certificate records a versioned snapshot of the published CraftID record shown below under the stated permanent identifier.",
+    certificate: "CERTIFICATE",
+    professionalSubtitle: "PROFESSIONAL IDENTITY",
+    workshopSubtitle: "WORKSHOP IDENTITY",
+    certifies: "This certifies that",
+    professionalStatement:
+      "This certificate confirms the existence of a CraftID professional identity record. It provides a persistent reference to the public CraftID profile, including information about the maker, their craft and professional background.",
+    workshopStatement:
+      "This certificate confirms the existence of a CraftID workshop identity record. It provides a persistent reference to the public CraftID profile, including information about the workshop, its craft and professional background.",
     craftId: "CraftID",
-    certificateId: "Certificate No.",
-    recordType: "Record type",
+    type: "Type",
     professional: "Professional",
     workshop: "Workshop",
-    country: "Profile country at issue",
-    firstRegistered: "CraftID first registered",
-    issued: "Certificate issued",
-    verify: "Scan to verify this certificate and view the current CraftID status.",
-    disclaimer: "This certificate records a CraftID record snapshot. It does not by itself verify legal identity, professional competence, a qualification, statutory licence, accreditation, quality, or EU institutional endorsement.",
+    craft: "Craft / Specialisation",
+    country: "Country (profile)",
+    registered: "Initial registration",
+    certificateNo: "Certificate No.",
+    issued: "Date of issue",
+    scan: "SCAN TO VERIFY CERTIFICATE",
+    profile: "PUBLIC CRAFTID PROFILE",
+    disclaimer:
+      "This certificate confirms a CraftID record and a versioned issue of that record. It is not a qualification, statutory licence, accreditation, quality certification or EU institutional endorsement.",
     revoked: "REVOKED",
-    instrument: "CraftID - professional identity, skills and evidence infrastructure",
+    footer: "CRAFTID · A MORE VISIBLE CRAFT WORLD",
+    side: ["A GLOBAL", "IDENTITY", "FOR CRAFT", "AND MAKERS"],
   },
   uk: {
-    professionalTitle: "СЕРТИФІКАТ ЗАПИСУ PROFESSIONAL CRAFTID",
-    workshopTitle: "СЕРТИФІКАТ ЗАПИСУ WORKSHOP CRAFTID",
-    confirms: "Цей сертифікат фіксує версію опублікованого запису CraftID, наведеного нижче, під зазначеним постійним ідентифікатором.",
+    certificate: "СЕРТИФІКАТ",
+    professionalSubtitle: "PROFESSIONAL IDENTITY",
+    workshopSubtitle: "WORKSHOP IDENTITY",
+    certifies: "Цим підтверджується, що",
+    professionalStatement:
+      "Цей сертифікат підтверджує існування запису професійної ідентичності CraftID та надає постійне посилання на публічний профіль CraftID з інформацією про майстра, його ремесло та професійний досвід.",
+    workshopStatement:
+      "Цей сертифікат підтверджує існування запису майстерні CraftID та надає постійне посилання на публічний профіль CraftID з інформацією про майстерню, її ремесло та професійний контекст.",
     craftId: "CraftID",
-    certificateId: "Certificate No.",
-    recordType: "Тип запису",
-    professional: "Професіонал",
-    workshop: "Майстерня",
-    country: "Країна профілю на момент випуску",
-    firstRegistered: "Перша реєстрація CraftID",
-    issued: "Дата випуску сертифіката",
-    verify: "Скануйте QR-код, щоб перевірити сертифікат і поточний статус CraftID.",
-    disclaimer: "Цей сертифікат фіксує версію запису CraftID. Він сам по собі не підтверджує юридичну особу, професійну компетентність, кваліфікацію, законодавчу ліцензію, акредитацію, якість чи інституційне схвалення ЄС.",
+    type: "Тип",
+    professional: "Professional",
+    workshop: "Workshop",
+    craft: "Ремесло / Спеціалізація",
+    country: "Країна (профіль)",
+    registered: "Початкова реєстрація",
+    certificateNo: "Certificate No.",
+    issued: "Дата випуску",
+    scan: "СКАНУЙТЕ ДЛЯ ПЕРЕВІРКИ",
+    profile: "ПУБЛІЧНИЙ ПРОФІЛЬ CRAFTID",
+    disclaimer:
+      "Сертифікат підтверджує запис CraftID та його версійний випуск. Він не є кваліфікацією, законодавчою ліцензією, акредитацією, сертифікацією якості чи інституційним схваленням ЄС.",
     revoked: "ВІДКЛИКАНО",
-    instrument: "CraftID - інфраструктура професійної ідентичності, навичок і доказів",
+    footer: "CRAFTID · A MORE VISIBLE CRAFT WORLD",
+    side: ["A GLOBAL", "IDENTITY", "FOR CRAFT", "AND MAKERS"],
   },
 } as const;
 
-function fitTextSize(font: PDFFont, text: string, maxWidth: number, startSize: number, minSize: number) {
+function fitTextSize(
+  font: PDFFont,
+  text: string,
+  maxWidth: number,
+  startSize: number,
+  minSize: number,
+) {
   let size = startSize;
-  while (size > minSize && font.widthOfTextAtSize(text, size) > maxWidth) {
-    size -= 0.5;
-  }
+  while (size > minSize && font.widthOfTextAtSize(text, size) > maxWidth) size -= 0.5;
   return size;
 }
 
@@ -59,15 +81,14 @@ function wrapText(font: PDFFont, text: string, size: number, maxWidth: number) {
   let current = "";
 
   for (const word of words) {
-    const candidate = current ? current + " " + word : word;
-    if (font.widthOfTextAtSize(candidate, size) <= maxWidth) {
-      current = candidate;
+    const next = current ? current + " " + word : word;
+    if (font.widthOfTextAtSize(next, size) <= maxWidth) {
+      current = next;
     } else {
       if (current) lines.push(current);
       current = word;
     }
   }
-
   if (current) lines.push(current);
   return lines;
 }
@@ -81,15 +102,88 @@ function dateLabel(value: string, locale: CertificateLocale) {
   }).format(new Date(value));
 }
 
+function countryLabel(code: string | null, locale: CertificateLocale) {
+  if (!code) return "—";
+  try {
+    return new Intl.DisplayNames([locale === "uk" ? "uk" : "en"], {
+      type: "region",
+    }).of(code) ?? code;
+  } catch {
+    return code;
+  }
+}
+
+function drawGuilloche(page: PDFPage) {
+  const gold = rgb(185 / 255, 145 / 255, 79 / 255);
+  const cx = 280;
+  const cy = 365;
+
+  for (let i = 0; i < 15; i += 1) {
+    const offset = (i - 7) * 10;
+    page.drawCircle({
+      x: cx + offset,
+      y: cy,
+      size: 112,
+      borderColor: gold,
+      borderWidth: 0.35,
+      opacity: 0.13,
+    });
+    page.drawCircle({
+      x: cx,
+      y: cy + offset,
+      size: 112,
+      borderColor: gold,
+      borderWidth: 0.35,
+      opacity: 0.11,
+    });
+  }
+}
+
+function drawFact(
+  page: PDFPage,
+  regular: PDFFont,
+  bold: PDFFont,
+  label: string,
+  value: string,
+  x: number,
+  y: number,
+  width: number,
+) {
+  const muted = rgb(89 / 255, 97 / 255, 92 / 255);
+  const ink = rgb(17 / 255, 26 / 255, 51 / 255);
+  const gold = rgb(185 / 255, 145 / 255, 79 / 255);
+
+  page.drawText(label, { x, y, size: 7.4, font: regular, color: muted });
+  const size = fitTextSize(bold, value, width, 9.5, 7.2);
+  page.drawText(value, { x, y: y - 14, size, font: bold, color: ink });
+  page.drawLine({
+    start: { x, y: y - 20 },
+    end: { x: x + width, y: y - 20 },
+    color: gold,
+    thickness: 0.45,
+    opacity: 0.65,
+  });
+}
+
 export async function renderCraftIdCertificatePdf(input: {
   certificate: PublicCraftIdCertificate;
   locale: CertificateLocale;
   verificationUrl: string;
+  profileUrl: string;
   qrPng: Uint8Array;
   regularFontBytes: Uint8Array;
   boldFontBytes: Uint8Array;
 }) {
-  const { certificate, locale, verificationUrl, qrPng, regularFontBytes, boldFontBytes } = input;
+  const {
+    certificate,
+    locale,
+    verificationUrl,
+    profileUrl,
+    qrPng,
+    regularFontBytes,
+    boldFontBytes,
+  } = input;
+
   const t = copy[locale];
   const pdf = await PDFDocument.create();
   pdf.registerFontkit(fontkit);
@@ -98,157 +192,251 @@ export async function renderCraftIdCertificatePdf(input: {
   const bold = await pdf.embedFont(boldFontBytes, { subset: true });
   const qr = await pdf.embedPng(qrPng);
 
+  const craftId = formatCraftId(
+    certificate.craftid_number,
+    certificate.craftid_check_digits,
+  );
   const certificateNumber = formatCertificateNumber(
     certificate.craftid_number,
     certificate.craftid_check_digits,
     certificate.version_no,
   );
 
-  pdf.setTitle(certificateNumber + " - CraftID Record Certificate");
+  pdf.setTitle(certificateNumber + " - CraftID Certificate");
   pdf.setAuthor("CraftID");
-  pdf.setSubject("Versioned CraftID record certificate");
+  pdf.setSubject("CraftID identity record certificate");
   pdf.setCreator("CraftID");
   pdf.setProducer("CraftID");
 
-  const page = pdf.addPage(A4_LANDSCAPE);
+  const page = pdf.addPage(A4_PORTRAIT);
   const width = page.getWidth();
   const height = page.getHeight();
-  const navy = rgb(30 / 255, 58 / 255, 95 / 255);
-  const ink = rgb(17 / 255, 20 / 255, 18 / 255);
-  const muted = rgb(89 / 255, 97 / 255, 92 / 255);
-  const line = rgb(207 / 255, 213 / 255, 208 / 255);
-  const soft = rgb(247 / 255, 249 / 255, 247 / 255);
 
-  page.drawRectangle({ x: 18, y: 18, width: width - 36, height: height - 36, borderColor: line, borderWidth: 1 });
-  page.drawRectangle({ x: 18, y: height - 26, width: width - 36, height: 8, color: navy });
+  const navy = rgb(17 / 255, 26 / 255, 51 / 255);
+  const gold = rgb(185 / 255, 145 / 255, 79 / 255);
+  const muted = rgb(91 / 255, 94 / 255, 104 / 255);
+  const paper = rgb(1, 253 / 255, 248 / 255);
 
-  page.drawText("CraftID", { x: 52, y: height - 74, size: 24, font: bold, color: ink });
+  page.drawRectangle({ x: 0, y: 0, width, height, color: paper });
+  page.drawRectangle({
+    x: 17,
+    y: 17,
+    width: width - 34,
+    height: height - 34,
+    borderColor: gold,
+    borderWidth: 3.2,
+  });
+  page.drawRectangle({
+    x: 24,
+    y: 24,
+    width: width - 48,
+    height: height - 48,
+    borderColor: navy,
+    borderWidth: 0.8,
+  });
+  page.drawRectangle({
+    x: 30,
+    y: 30,
+    width: width - 60,
+    height: height - 60,
+    borderColor: gold,
+    borderWidth: 0.45,
+  });
+
+  drawGuilloche(page);
+
+  page.drawText("Craft", { x: 55, y: 760, size: 31, font: bold, color: navy });
+  page.drawText("ID", {
+    x: 129,
+    y: 760,
+    size: 31,
+    font: bold,
+    color: gold,
+  });
+  page.drawText(
+    "CREATIVITY · TECHNOLOGY · INNOVATION · IDENTITY · INVENTION · ENGINEERING · HERITAGE",
+    { x: 55, y: 742, size: 5.2, font: regular, color: navy },
+  );
+
+  t.side.forEach((line, index) => {
+    page.drawText(line, {
+      x: 470,
+      y: 778 - index * 10,
+      size: 6.2,
+      font: regular,
+      color: navy,
+    });
+  });
+  page.drawLine({
+    start: { x: 470, y: 732 },
+    end: { x: 505, y: 732 },
+    color: gold,
+    thickness: 1.5,
+  });
 
   if (certificate.certificate_status === "revoked") {
     page.drawRectangle({
-      x: width - 190,
-      y: height - 92,
-      width: 138,
+      x: 407,
+      y: 690,
+      width: 122,
       height: 28,
       borderColor: rgb(139 / 255, 45 / 255, 45 / 255),
-      borderWidth: 1,
+      borderWidth: 1.2,
     });
-    const revokedWidth = bold.widthOfTextAtSize(t.revoked, 11);
-    page.drawText(t.revoked, {
-      x: width - 121 - revokedWidth / 2,
-      y: height - 82,
-      size: 11,
+    const stamp = t.revoked;
+    const stampWidth = bold.widthOfTextAtSize(stamp, 10);
+    page.drawText(stamp, {
+      x: 468 - stampWidth / 2,
+      y: 699,
+      size: 10,
       font: bold,
       color: rgb(139 / 255, 45 / 255, 45 / 255),
     });
   }
-  page.drawText("Certificate No. " + certificateNumber, {
-    x: 52,
-    y: height - 98,
-    size: 9.5,
+
+  page.drawText(t.certificate, {
+    x: 55,
+    y: 675,
+    size: locale === "uk" ? 28 : 34,
     font: regular,
-    color: muted,
+    color: navy,
+  });
+  page.drawText(
+    certificate.entity_type === "professional"
+      ? t.professionalSubtitle
+      : t.workshopSubtitle,
+    { x: 56, y: 645, size: 10, font: bold, color: navy },
+  );
+
+  page.drawText(t.certifies, { x: 55, y: 600, size: 9, font: regular, color: muted });
+  const nameSize = fitTextSize(bold, certificate.issued_display_name, 430, 23, 15);
+  page.drawText(certificate.issued_display_name, {
+    x: 55,
+    y: 570,
+    size: nameSize,
+    font: bold,
+    color: navy,
   });
 
-  const title = certificate.entity_type === "professional" ? t.professionalTitle : t.workshopTitle;
-  const titleSize = fitTextSize(bold, title, 520, 19, 14);
-  page.drawText(title, { x: 52, y: height - 145, size: titleSize, font: bold, color: navy });
-
-  const introLines = wrapText(regular, t.confirms, 10.5, 505);
-  introLines.forEach((lineText, index) => {
-    page.drawText(lineText, {
-      x: 52,
-      y: height - 171 - index * 14,
-      size: 10.5,
-      font: regular,
-      color: muted,
-    });
-  });
-
-  const name = certificate.issued_display_name;
-  const nameSize = fitTextSize(bold, name, 520, 31, 19);
-  page.drawText(name, { x: 52, y: height - 245, size: nameSize, font: bold, color: ink });
-
-  if (certificate.issued_role_label) {
-    const roleSize = fitTextSize(regular, certificate.issued_role_label, 520, 13, 10);
-    page.drawText(certificate.issued_role_label, {
-      x: 52,
-      y: height - 270,
-      size: roleSize,
-      font: regular,
-      color: muted,
-    });
-  }
-
-  const craftId = "#" + formatCraftId(certificate.craftid_number, certificate.craftid_check_digits);
-  page.drawRectangle({ x: 52, y: 192, width: 518, height: 98, color: soft, borderColor: line, borderWidth: 0.7 });
-
-  const facts = [
-    [t.craftId, craftId],
-    [t.certificateId, certificateNumber],
-    [t.recordType, certificate.entity_type === "professional" ? t.professional : t.workshop],
-    [t.country, certificate.issued_country_code ?? "-"],
-    [t.firstRegistered, dateLabel(certificate.entity_created_at, locale)],
-    [t.issued, dateLabel(certificate.issued_at, locale)],
-  ];
-
-  const colX = [70, 320];
-  facts.forEach(([label, value], index) => {
-    const col = index % 2;
-    const row = Math.floor(index / 2);
-    const y = 258 - row * 31;
-    page.drawText(label, { x: colX[col], y, size: 7.8, font: bold, color: muted });
-    page.drawText(value, { x: colX[col], y: y - 13, size: 10.5, font: regular, color: ink });
-  });
-
-  const qrSize = 150;
-  page.drawImage(qr, { x: 635, y: 304, width: qrSize, height: qrSize });
-  const verifyLines = wrapText(regular, t.verify, 8.5, 155);
-  verifyLines.forEach((lineText, index) => {
-    page.drawText(lineText, {
-      x: 632,
-      y: 286 - index * 11,
-      size: 8.5,
-      font: regular,
-      color: muted,
-    });
-  });
-
-  const urlLines = wrapText(regular, verificationUrl, 6.8, 165);
-  urlLines.slice(0, 3).forEach((lineText, index) => {
-    page.drawText(lineText, {
-      x: 632,
-      y: 245 - index * 9,
-      size: 6.8,
+  const statement =
+    certificate.entity_type === "professional"
+      ? t.professionalStatement
+      : t.workshopStatement;
+  const statementLines = wrapText(regular, statement, 8.4, 455);
+  statementLines.slice(0, 4).forEach((line, index) => {
+    page.drawText(line, {
+      x: 55,
+      y: 545 - index * 11,
+      size: 8.4,
       font: regular,
       color: navy,
     });
   });
 
-  page.drawLine({ start: { x: 52, y: 148 }, end: { x: width - 52, y: 148 }, color: line, thickness: 0.7 });
+  page.drawLine({
+    start: { x: 55, y: 492 },
+    end: { x: 380, y: 492 },
+    color: gold,
+    thickness: 1.1,
+  });
 
-  const disclaimerLines = wrapText(regular, t.disclaimer, 7.8, width - 104);
-  disclaimerLines.forEach((lineText, index) => {
-    page.drawText(lineText, {
-      x: 52,
-      y: 126 - index * 10,
-      size: 7.8,
+  const facts: Array<[string, string]> = [
+    [t.craftId, "#" + craftId],
+    [t.type, certificate.entity_type === "professional" ? t.professional : t.workshop],
+    [t.craft, certificate.issued_role_label || "—"],
+    [t.country, countryLabel(certificate.issued_country_code, locale)],
+    [t.registered, dateLabel(certificate.entity_created_at, locale)],
+    [t.certificateNo, certificateNumber],
+    [t.issued, dateLabel(certificate.issued_at, locale)],
+  ];
+
+  let factY = 472;
+  for (const [label, value] of facts) {
+    drawFact(page, regular, bold, label, value, 55, factY, 320);
+    factY -= 41;
+  }
+
+  page.drawLine({
+    start: { x: 397, y: 492 },
+    end: { x: 397, y: 260 },
+    color: gold,
+    thickness: 1,
+  });
+
+  page.drawImage(qr, { x: 425, y: 350, width: 105, height: 105 });
+  page.drawText(t.scan, {
+    x: 425,
+    y: 335,
+    size: 5.5,
+    font: bold,
+    color: navy,
+  });
+
+  const verifyLines = wrapText(regular, verificationUrl, 5.1, 112);
+  verifyLines.slice(0, 3).forEach((line, index) => {
+    page.drawText(line, {
+      x: 425,
+      y: 321 - index * 7,
+      size: 5.1,
       font: regular,
       color: muted,
     });
   });
 
-  page.drawText(t.instrument, {
-    x: 52,
-    y: 52,
-    size: 7.5,
-    font: regular,
-    color: muted,
+  page.drawText(t.profile, {
+    x: 425,
+    y: 284,
+    size: 5.5,
+    font: bold,
+    color: navy,
   });
-  page.drawText("craftid", {
-    x: width - 108,
-    y: 52,
-    size: 8,
+  const profileLines = wrapText(regular, profileUrl, 5.1, 112);
+  profileLines.slice(0, 3).forEach((line, index) => {
+    page.drawText(line, {
+      x: 425,
+      y: 270 - index * 7,
+      size: 5.1,
+      font: regular,
+      color: muted,
+    });
+  });
+
+  page.drawLine({
+    start: { x: 55, y: 175 },
+    end: { x: 540, y: 175 },
+    color: gold,
+    thickness: 0.8,
+  });
+
+  const disclaimerLines = wrapText(regular, t.disclaimer, 6.7, 480);
+  disclaimerLines.slice(0, 4).forEach((line, index) => {
+    page.drawText(line, {
+      x: 55,
+      y: 156 - index * 9,
+      size: 6.7,
+      font: regular,
+      color: muted,
+    });
+  });
+
+  page.drawText("CraftID Platform", {
+    x: 55,
+    y: 91,
+    size: 8.5,
+    font: bold,
+    color: navy,
+  });
+  page.drawText(t.footer, {
+    x: 55,
+    y: 66,
+    size: 5.8,
+    font: regular,
+    color: navy,
+  });
+  page.drawText("CRAFTID.EU", {
+    x: 470,
+    y: 66,
+    size: 5.8,
     font: bold,
     color: navy,
   });
