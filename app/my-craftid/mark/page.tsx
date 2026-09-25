@@ -7,68 +7,82 @@ import { getSiteUrl } from "@/lib/site-url";
 import { formatCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
-type Props = { searchParams: Promise<{ lang?: string; entity?: string; origin?: string }> };
+type Props = { searchParams: Promise<{ lang?: string; entity?: string }> };
 
 const copy = {
   en: {
-    eyebrow: "CraftID Mark",
-    title: "Use your CraftID beyond the platform.",
-    intro: "Add your CraftID to your website, product cards, workshop signage or printed material. The mark links to your professional identity record; it is not a quality certification.",
+    eyebrow: "CraftID Download Kit",
+    title: "Download the materials for this CraftID.",
+    intro:
+      "Every file is generated for the selected Professional or Workshop record. The QR code in ordinary CraftID assets points to that record's unique public profile.",
     back: "Back to My CraftID",
-    qr: "QR for your CraftID",
-    qrText: "Use this QR on product cards, packaging, workshop signage and exhibition material.",
-    website: "Website badge",
-    websiteText: "Embed a compact CraftID badge on your own website.",
-    embed: "Embed code",
-    print: "Print-ready maker label",
-    printText: "Use this layout as a neutral maker identity label. Do not present it as an EU certification or quality seal.",
-    canonical: "Canonical profile URL",
-    publicWarning: "Your profile is not published yet. The mark can be prepared now, but the public profile will not resolve until publication criteria are met.",
-    publicReady: "Your public CraftID profile is available.",
+    publicWarning:
+      "This CraftID is not published yet. You can prepare owner-only files, but the public profile and website badge will not resolve until the record is published.",
+    publicReady: "The public CraftID profile is available.",
+    profile: "Public profile",
     openProfile: "Open public profile",
+    rule:
+      "Ordinary CraftID assets contain the CraftID identifier and QR only. Certificate No. is used only on an issued certificate.",
+    sticker: "Round Sticker / Seal",
+    stickerText:
+      "For packaging, workshop doors, product presentation and printed materials.",
+    downloadSticker: "Download Round Sticker (SVG)",
+    qrLabel: "QR Label",
+    qrLabelText:
+      "A compact label built around the permanent CraftID number and QR code.",
+    downloadQrLabel: "Download QR Label (SVG)",
+    printSheet: "Print Sheet",
+    printSheetText:
+      "A4 sheet with multiple Round Sticker / Seal marks ready for printing.",
+    downloadPrintSheet: "Download Print Sheet (PDF)",
+    website: "Website Embed Badge",
+    websiteText:
+      "The website badge uses the same Round Sticker / Seal design and links to the public profile.",
+    embed: "Embed code",
     copyHint: "Copy this HTML into your website.",
-    physical: "Suggested physical wording",
-    downloadQr: "Download QR (PNG)",
-    downloadBadge: "Download badge (SVG)",
-    downloadLabel: "Download maker label (SVG)",
-    origin: "Crafted in country label",
-    originText: "Add a country-of-production statement to a CraftID label. This does not create a separate product record.",
-    originCountry: "Country wording",
-    originPlaceholder: "Belgium",
-    originGenerate: "Generate label",
-    originDownload: "Download Crafted in label (SVG)",
-    originNote: "The country wording is added to the label separately from the CraftID identity. It is not shown as Verified or certified by CraftID.",
-    domainWarning: "Important: this is still running on a temporary technical domain. Do not print permanent QR labels at scale until the final CraftID production domain is connected.",
+    certificate: "Certificate",
+    certificateText:
+      "Certificates are versioned documents. Certificate No. appears only on the certificate, and the certificate QR opens its verification page.",
+    manageCertificate: "Open Certificate area",
+    domainWarning:
+      "The final QR target is craftid.eu. Do not mass-print permanent materials from a preview deployment.",
   },
   uk: {
-    eyebrow: "CraftID Mark",
-    title: "Використовуйте свій CraftID поза платформою.",
-    intro: "Додавайте CraftID на свій вебсайт, картки виробів, вивіску майстерні або друковані матеріали. Позначка веде до запису професійної ідентичності й не є сертифікацією якості.",
+    eyebrow: "CraftID Download Kit",
+    title: "Завантажте матеріали для цього CraftID.",
+    intro:
+      "Кожен файл генерується для вибраного запису Professional або Workshop. QR-код у звичайних матеріалах CraftID веде на унікальний публічний профіль саме цього запису.",
     back: "Назад до Мій CraftID",
-    qr: "QR вашого CraftID",
-    qrText: "Використовуйте цей QR на картках виробів, пакуванні, вивісці майстерні та матеріалах виставок.",
-    website: "Позначка для вебсайту",
-    websiteText: "Додайте компактну позначку CraftID на власний вебсайт.",
-    embed: "Код для вставки",
-    print: "Макет для друку",
-    printText: "Використовуйте цей макет як нейтральну позначку професійної ідентичності. Не подавайте її як сертифікацію ЄС або знак якості.",
-    canonical: "Канонічна адреса профілю",
-    publicWarning: "Ваш профіль ще не опублікований. Позначку можна підготувати вже зараз, але публічний профіль відкриється лише після виконання критеріїв публікації.",
-    publicReady: "Ваш публічний профіль CraftID доступний.",
+    publicWarning:
+      "Цей CraftID ще не опубліковано. Власник може підготувати файли, але публічний профіль і website badge запрацюють лише після публікації запису.",
+    publicReady: "Публічний профіль CraftID доступний.",
+    profile: "Публічний профіль",
     openProfile: "Відкрити публічний профіль",
-    copyHint: "Скопіюйте цей HTML у свій вебсайт.",
-    physical: "Рекомендований текст на виробі",
-    downloadQr: "Завантажити QR (PNG)",
-    downloadBadge: "Завантажити badge (SVG)",
-    downloadLabel: "Завантажити макет (SVG)",
-    origin: "Лейбл Crafted in [Country]",
-    originText: "Додайте до CraftID-лейбла зазначення країни виготовлення. Це не створює окремий запис виробу.",
-    originCountry: "Назва країни",
-    originPlaceholder: "Belgium",
-    originGenerate: "Створити лейбл",
-    originDownload: "Завантажити Crafted in лейбл (SVG)",
-    originNote: "Назва країни додається до лейбла окремо від професійної ідентичності CraftID. Вона не позначається як Verified або сертифікована CraftID.",
-    domainWarning: "Важливо: зараз CraftID ще працює на тимчасовому технічному домені. Не друкуйте постійні QR-етикетки масово, доки не буде підключено фінальний production-домен CraftID.",
+    rule:
+      "Звичайні матеріали CraftID містять тільки ідентифікатор CraftID і QR. Certificate No. використовується лише на випущеному сертифікаті.",
+    sticker: "Round Sticker / Seal",
+    stickerText:
+      "Для пакування, дверей майстерні, презентації виробів і друкованих матеріалів.",
+    downloadSticker: "Завантажити Round Sticker (SVG)",
+    qrLabel: "QR Label",
+    qrLabelText:
+      "Компактний лейбл навколо постійного номера CraftID та QR-коду.",
+    downloadQrLabel: "Завантажити QR Label (SVG)",
+    printSheet: "Print Sheet",
+    printSheetText:
+      "Аркуш A4 з кількома Round Sticker / Seal для друку.",
+    downloadPrintSheet: "Завантажити Print Sheet (PDF)",
+    website: "Website Embed Badge",
+    websiteText:
+      "Website badge використовує той самий дизайн Round Sticker / Seal і веде на публічний профіль.",
+    embed: "Код для вставки",
+    copyHint: "Скопіюйте цей HTML-код на свій вебсайт.",
+    certificate: "Certificate",
+    certificateText:
+      "Сертифікати є версійними документами. Certificate No. вказується тільки на сертифікаті, а QR сертифіката відкриває сторінку його перевірки.",
+    manageCertificate: "Відкрити розділ Certificate",
+    domainWarning:
+      "Фінальна QR-адреса — craftid.eu. Не запускайте масовий друк постійних матеріалів із preview deployment.",
   },
 } as const;
 
@@ -76,40 +90,37 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
   const t = copy[locale];
-  const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
-  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
+  const { userId, entity } = await getOwnedCraftId(sp.entity);
+
   if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
   if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
   if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
 
-  const profile = entity.entity_type === "professional"
-    ? await supabase.from("professional_profiles").select("display_name, country_code").eq("entity_id", entity.id).single()
-    : await supabase.from("workshop_profiles").select("display_name, country_code").eq("entity_id", entity.id).single();
-
+  const q = ownerWorkspaceQuery(locale, entity.id);
   const craftId = formatCraftId(entity.craftid_number, entity.craftid_check_digits);
   const siteUrl = getSiteUrl();
-  const profileUrl = new URL(`id/${craftId}`, siteUrl).toString();
-  const badgeUrl = new URL(`api/mark/badge?craftId=${encodeURIComponent(craftId)}`, siteUrl).toString();
-  const qrUrl = `/api/mark/qr?craftId=${encodeURIComponent(craftId)}`;
-  const qrDownloadUrl = `${qrUrl}&download=1`;
-  const badgeDownloadUrl = `/api/mark/badge?craftId=${encodeURIComponent(craftId)}&download=1`;
-  const labelDownloadUrl = `/api/mark/label?craftId=${encodeURIComponent(craftId)}`;
-  const isTemporaryDomain = siteUrl.includes("vercel.app") || siteUrl.includes("localhost");
-  const embed = `<a href="${profileUrl}" rel="me noopener" target="_blank"><img src="${badgeUrl}" alt="CraftID #${craftId}" width="560" height="120"></a>`;
-  const displayName = profile.data?.display_name ?? "CraftID";
-  const displayNames = new Intl.DisplayNames([locale === "uk" ? "uk" : "en"], { type: "region" });
-  const defaultOrigin = profile.data?.country_code
-    ? displayNames.of(profile.data.country_code) ?? profile.data.country_code
-    : "";
-  const origin = (sp.origin ?? "").trim().replace(/\s+/g, " ").slice(0, 64);
-  const originLabelUrl = origin
-    ? `/api/mark/origin-label?craftId=${encodeURIComponent(craftId)}&origin=${encodeURIComponent(origin)}`
-    : "";
+  const profileUrl = new URL("id/" + craftId, siteUrl).toString();
+
+  const stickerPreview = `/api/kit/sticker?entity=${encodeURIComponent(entity.id)}`;
+  const stickerDownload = stickerPreview + "&download=1";
+  const qrLabelPreview = `/api/kit/qr-label?entity=${encodeURIComponent(entity.id)}`;
+  const qrLabelDownload = qrLabelPreview + "&download=1";
+  const printSheetDownload = `/api/kit/print-sheet?entity=${encodeURIComponent(entity.id)}`;
+
+  const publicBadgeUrl = new URL(
+    "api/mark/badge?craftId=" + encodeURIComponent(craftId),
+    siteUrl,
+  ).toString();
+
+  const embed = `<a href="${profileUrl}" rel="me noopener" target="_blank"><img src="${publicBadgeUrl}" alt="CraftID #${craftId}" width="180" height="180"></a>`;
+
+  const isTemporaryDomain =
+    siteUrl.includes("vercel.app") || siteUrl.includes("localhost");
 
   return (
     <main className="workspacePage markWorkspace">
       <div className="container workspaceNarrow">
-        <Link className="backLink" href={`/my-craftid${q}`}>← {t.back}</Link>
+        <Link className="backLink" href={"/my-craftid" + q}>← {t.back}</Link>
         <div className="eyebrow">{t.eyebrow}</div>
         <h1>{t.title}</h1>
         <p className="workspaceIntro">{t.intro}</p>
@@ -117,93 +128,85 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
         <p className={entity.public_status === "published" ? "formMessage" : "privacyNote"}>
           {entity.public_status === "published" ? t.publicReady : t.publicWarning}
         </p>
+        <p className="privacyNote">{t.rule}</p>
         {isTemporaryDomain ? <p className="privacyNote markDomainWarning">{t.domainWarning}</p> : null}
+
+        <section className="markCodeSection">
+          <div className="eyebrow">{t.profile}</div>
+          <code>{profileUrl}</code>
+          {entity.public_status === "published" ? (
+            <div className="markButtonRow">
+              <Link
+                className="button"
+                href={`/id/${craftId}${locale === "uk" ? "?lang=uk" : ""}`}
+              >
+                {t.openProfile}
+              </Link>
+            </div>
+          ) : null}
+        </section>
 
         <section className="markGrid">
           <article className="markPanel">
-            <div className="eyebrow">{t.qr}</div>
-            <p>{t.qrText}</p>
-            <div className="qrFrame">
-              <img src={qrUrl} alt={`QR for CraftID #${craftId}`} width="220" height="220" />
-            </div>
-            <div className="recordId">CraftID #{craftId}</div>
-            <a className="button markAssetButton" href={qrDownloadUrl}>{t.downloadQr}</a>
+            <div className="eyebrow">{t.sticker}</div>
+            <p>{t.stickerText}</p>
+            <img
+              className="craftIdBadgePreview"
+              src={stickerPreview}
+              alt={`CraftID #${craftId} round sticker`}
+            />
+            <a className="button markAssetButton" href={stickerDownload}>
+              {t.downloadSticker}
+            </a>
           </article>
 
           <article className="markPanel">
-            <div className="eyebrow">{t.website}</div>
-            <p>{t.websiteText}</p>
-            <img className="craftIdBadgePreview" src={badgeUrl} alt={`CraftID #${craftId}`} />
-            <div className="markUrlBlock">
-              <strong>{t.canonical}</strong>
-              <code>{profileUrl}</code>
-            </div>
-            <div className="markButtonRow">
-              <a className="button" href={badgeDownloadUrl}>{t.downloadBadge}</a>
-              {entity.public_status === "published" ? <Link className="button" href={`/id/${craftId}${locale === "uk" ? "?lang=uk" : ""}`}>{t.openProfile}</Link> : null}
-            </div>
+            <div className="eyebrow">{t.qrLabel}</div>
+            <p>{t.qrLabelText}</p>
+            <img
+              className="craftIdBadgePreview"
+              src={qrLabelPreview}
+              alt={`CraftID #${craftId} QR label`}
+            />
+            <a className="button markAssetButton" href={qrLabelDownload}>
+              {t.downloadQrLabel}
+            </a>
+          </article>
+
+          <article className="markPanel">
+            <div className="eyebrow">{t.printSheet}</div>
+            <p>{t.printSheetText}</p>
+            <a className="button markAssetButton" href={printSheetDownload}>
+              {t.downloadPrintSheet}
+            </a>
+          </article>
+
+          <article className="markPanel">
+            <div className="eyebrow">{t.certificate}</div>
+            <p>{t.certificateText}</p>
+            <Link className="button markAssetButton" href={"/my-craftid/certificate" + q}>
+              {t.manageCertificate}
+            </Link>
           </article>
         </section>
 
         <section className="markCodeSection">
-          <div className="eyebrow">{t.embed}</div>
-          <p className="fieldHelp">{t.copyHint}</p>
-          <textarea className="embedCode" readOnly rows={5} value={embed} />
-        </section>
-
-        <section className="printLabelSection">
-          <div className="eyebrow">{t.print}</div>
-          <p className="fieldHelp">{t.printText}</p>
-          <div className="printLabel">
-            <div>
-              <strong>CraftID</strong>
-              <span>#{craftId}</span>
-              <small>{displayName}</small>
-            </div>
-            <img src={qrUrl} alt="" width="128" height="128" />
-          </div>
-          <div className="markPhysicalText">
-            <div className="eyebrow">{t.physical}</div>
-            <code>{entity.entity_type === "professional" ? "Professional" : "Workshop"} identity: CraftID #{craftId}</code>
-          </div>
-          <a className="button markAssetButton" href={labelDownloadUrl}>{t.downloadLabel}</a>
-        </section>
-
-        <section className="originLabelSection">
-          <div className="eyebrow">{t.origin}</div>
-          <h2>{t.origin}</h2>
-          <p className="fieldHelp">{t.originText}</p>
-
-          <form className="originLabelForm" action="/my-craftid/mark" method="get">
-            {locale === "uk" ? <input type="hidden" name="lang" value="uk" /> : null}
-            <input type="hidden" name="entity" value={entity.id} />
-            <label>
-              {t.originCountry}
-              <input
-                name="origin"
-                defaultValue={origin || defaultOrigin}
-                placeholder={t.originPlaceholder}
-                maxLength={64}
-                required
-              />
-            </label>
-            <button className="button buttonPrimary" type="submit">{t.originGenerate}</button>
-          </form>
-
-          <p className="privacyNote">{t.originNote}</p>
-
-          {origin ? (
-            <div className="originLabelResult">
+          <div className="eyebrow">{t.website}</div>
+          <p className="fieldHelp">{t.websiteText}</p>
+          {entity.public_status === "published" ? (
+            <>
               <img
-                className="originLabelPreview"
-                src={originLabelUrl}
-                alt={`CraftID Crafted in ${origin} label`}
+                className="craftIdBadgePreview"
+                src={publicBadgeUrl}
+                alt={`CraftID #${craftId}`}
               />
-              <a className="button markAssetButton" href={originLabelUrl + "&download=1"}>
-                {t.originDownload}
-              </a>
-            </div>
-          ) : null}
+              <div className="eyebrow">{t.embed}</div>
+              <p className="fieldHelp">{t.copyHint}</p>
+              <textarea className="embedCode" readOnly rows={5} value={embed} />
+            </>
+          ) : (
+            <p className="privacyNote">{t.publicWarning}</p>
+          )}
         </section>
       </div>
     </main>
