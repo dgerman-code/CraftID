@@ -6,7 +6,7 @@ import { formatCraftId } from "@/lib/certificate";
 import { formatCertificateNumber } from "@/lib/craftid-format";
 import { getSiteUrl } from "@/lib/site-url";
 import { issueCertificate } from "./actions";
-import { localeQuery } from "@/lib/i18n";
+import { localeMeta, localeQuery } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -134,9 +134,7 @@ export default async function CertificateWorkspacePage({ searchParams }: Props) 
   const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
   const q = entity
     ? ownerWorkspaceQuery(locale, entity.id)
-    : locale === "uk"
-      ? "?lang=uk"
-      : "";
+    : localeQuery(locale);
 
   if (!userId) redirect(`/login${localeQuery(locale)}`);
   if (sp.entity && !entity) {
@@ -241,7 +239,7 @@ export default async function CertificateWorkspacePage({ searchParams }: Props) 
                       <span>{t.issuedOn}</span>
                       <strong>
                         {new Date(certificate.issued_at).toLocaleDateString(
-                          locale === "uk" ? "uk-UA" : "en-GB",
+                          localeMeta[locale].intl,
                         )}
                       </strong>
                     </div>
@@ -257,9 +255,11 @@ export default async function CertificateWorkspacePage({ searchParams }: Props) 
                       <a className="button" href={pdfEn}>
                         {t.downloadEn}
                       </a>
-                      <a className="button" href={pdfUk}>
-                        {t.downloadUk}
-                      </a>
+                      {locale === "uk" ? (
+                        <a className="button" href={pdfUk}>
+                          {t.downloadUk}
+                        </a>
+                      ) : null}
                       <Link className="button" href={verifyHref}>
                         {t.verify}
                       </Link>
