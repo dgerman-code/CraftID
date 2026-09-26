@@ -4,6 +4,7 @@ import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { addClaim, addSkillClaims } from "./actions";
 import { localeQuery } from "@/lib/i18n";
+import { workspaceLabel } from "@/lib/workspace-labels";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
@@ -196,12 +197,12 @@ export default async function ClaimsPage({ searchParams }: Props) {
             <div className="eyebrow">{t.list}</div>
             {!claims?.length ? <p className="emptyState">{t.empty}</p> : claims.map((claim) => (
               <article className="claimItem" key={claim.id}>
-                <span className="recordId">{claim.claim_type.replaceAll("_", " ")}</span>
+                <span className="recordId">{workspaceLabel.claimType(locale, claim.claim_type)}</span>
                 <h3>{claim.title}</h3>
                 {claim.description ? <p>{claim.description}</p> : null}
                 <div className="claimMeta">
-                  <span>{t.status}: {claim.status.replaceAll("_", " ")}</span>
-                  <span>{claim.visibility}</span>
+                  <span>{t.status}: {workspaceLabel.claimStatus(locale, claim.status)}</span>
+                  <span>{workspaceLabel.visibility(locale, claim.visibility)}</span>
                 </div>
                 {claim.claim_type === "skill" ? (
                   <Link className="claimAction" href={`/my-craftid/claims/${claim.id}${q}`}>
