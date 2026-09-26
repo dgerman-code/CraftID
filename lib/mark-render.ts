@@ -62,6 +62,125 @@ export async function fetchQrPng(target: string, size = 520, margin = 0) {
   };
 }
 
+const CRAFTED_IN_TEMPLATE_PARTS = 13;
+
+export async function fetchCraftedInTemplateSvg(assetOrigin: string) {
+  const parts = await Promise.all(
+    Array.from({ length: CRAFTED_IN_TEMPLATE_PARTS }, async (_, index) => {
+      const part = String(index).padStart(2, "0");
+      const url = new URL(
+        `/templates/crafted-in-template/part-${part}.txt`,
+        assetOrigin,
+      );
+      const response = await fetch(url, {
+        headers: { "User-Agent": "CraftID Download Kit" },
+        next: { revalidate: 60 * 60 * 24 * 30 },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Crafted in template part ${part} unavailable`);
+      }
+
+      return response.text();
+    }),
+  );
+
+  const template = parts.join("");
+  if (!template.startsWith("<svg") || !template.endsWith("</svg>")) {
+    throw new Error("Crafted in template is invalid");
+  }
+
+  return template;
+}
+
+export function countryNameFromCode(countryCode: string) {
+  const code = countryCode.trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(code)) return null;
+
+  try {
+    const name = new Intl.DisplayNames(["en"], { type: "region" }).of(code);
+    return name && name !== code ? name : null;
+  } catch {
+    return null;
+  }
+}
+
+function craftedInCountryFontSize(country: string) {
+  const length = Array.from(country).length;
+  if (length <= 8) return 160;
+  if (length <= 11) return 140;
+  if (length <= 14) return 120;
+  if (length <= 18) return 102;
+  return 88;
+}
+
+export function renderCraftedInMarkSvg(input: {
+  templateSvg: string;
+  country: string;
+  craftId: string;
+  qrDataUri: string;
+  mediumFontDataUri: string;
+  regularFontDataUri: string;
+}) {
+  const country = esc(input.country.toUpperCase());
+  const craftId = esc(input.craftId);
+  const countryFontSize = craftedInCountryFontSize(input.country);
+
+  const overlay = `
+    <defs>
+      <style>
+        @font-face{font-family:"CID Sans Crafted Medium";font-weight:500;src:url("${input.mediumFontDataUri}") format("woff2");}
+        @font-face{font-family:"CID Sans Crafted Regular";font-weight:400;src:url("${input.regularFontDataUri}") format("woff2");}
+      </style>
+    </defs>
+    <g id="craftid-crafted-in-dynamic">
+      <text
+        x="750"
+        y="746"
+        font-family='"CID Sans Crafted Medium",Montserrat,"Helvetica Neue",Arial,sans-serif'
+        font-size="${countryFontSize}"
+        font-weight="500"
+        fill="#b28e51"
+        text-anchor="middle"
+      >${country}</text>
+      <text
+        x="750"
+        y="956"
+        font-family='"CID Sans Crafted Regular",Montserrat,"Helvetica Neue",Arial,sans-serif'
+        font-size="76"
+        font-weight="400"
+        fill="#1a2037"
+        text-anchor="middle"
+        xml:space="preserve"
+      >#${craftId}</text>
+      <image
+        href="${input.qrDataUri}"
+        x="643.6"
+        y="1076.6"
+        width="213"
+        height="213"
+        preserveAspectRatio="none"
+        style="image-rendering:pixelated"
+      />
+    </g>
+  `;
+
+  const closeIndex = input.templateSvg.lastIndexOf("</svg>");
+  if (closeIndex < 0) throw new Error("Crafted in template closing tag missing");
+
+  return (
+    input.templateSvg.slice(0, closeIndex) +
+    overlay +
+    input.templateSvg.slice(closeIndex)
+  );
+}
+
+export async function renderSvgToPng(svg: string) {
+  const sharp = (await import("sharp")).default;
+  const png = await sharp(Buffer.from(svg)).png().toBuffer();
+  return new Uint8Array(png);
+}
+
 function renderApprovedProfessionalStickerSvg(input: {
   craftId: string;
   qrDataUri: string;
