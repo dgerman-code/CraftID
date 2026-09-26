@@ -85,7 +85,7 @@ const copy = {
 export default async function CertificateWorkspacePage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
   const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
   const q = entity
     ? ownerWorkspaceQuery(locale, entity.id)
