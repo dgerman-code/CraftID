@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
 import { submitReview } from "./actions";
+import { contentLocale, localeQuery } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; error?: string; message?: string }> };
@@ -41,8 +42,8 @@ const copy = {
 export default async function ReviewPage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
-  const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
+  const t = copy[contentLocale(locale)];
+  const q = localeQuery(locale);
 
   const supabase = await createClient();
   const { data: auth } = await supabase.auth.getClaims();
