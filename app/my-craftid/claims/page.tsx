@@ -91,6 +91,17 @@ const copy = {
   },
 } as const;
 
+const claimTypeOptions = {
+  en: { experience: "Experience", qualification: "Qualification", workshop_affiliation: "Workshop affiliation", external_recognition: "External recognition", origin: "Origin", craft_tradition: "Craft tradition" },
+  fr: { experience: "Expérience", qualification: "Qualification", workshop_affiliation: "Affiliation à un atelier", external_recognition: "Reconnaissance externe", origin: "Origine", craft_tradition: "Tradition artisanale" },
+  de: { experience: "Erfahrung", qualification: "Qualifikation", workshop_affiliation: "Werkstattzugehörigkeit", external_recognition: "Externe Anerkennung", origin: "Herkunft", craft_tradition: "Handwerkstradition" },
+  nl: { experience: "Ervaring", qualification: "Kwalificatie", workshop_affiliation: "Werkplaatsrelatie", external_recognition: "Externe erkenning", origin: "Herkomst", craft_tradition: "Ambachtelijke traditie" },
+  pl: { experience: "Doświadczenie", qualification: "Kwalifikacja", workshop_affiliation: "Powiązanie z pracownią", external_recognition: "Uznanie zewnętrzne", origin: "Pochodzenie", craft_tradition: "Tradycja rzemieślnicza" },
+  it: { experience: "Esperienza", qualification: "Qualifica", workshop_affiliation: "Affiliazione al laboratorio", external_recognition: "Riconoscimento esterno", origin: "Origine", craft_tradition: "Tradizione artigianale" },
+  es: { experience: "Experiencia", qualification: "Cualificación", workshop_affiliation: "Vinculación con taller", external_recognition: "Reconocimiento externo", origin: "Origen", craft_tradition: "Tradición artesanal" },
+  uk: { experience: "Досвід", qualification: "Кваліфікація", workshop_affiliation: "Зв’язок із майстернею", external_recognition: "Зовнішнє визнання", origin: "Походження", craft_tradition: "Реміснича традиція" },
+} as const;
+
 export default async function ClaimsPage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
@@ -161,12 +172,12 @@ export default async function ClaimsPage({ searchParams }: Props) {
               <label>{t.type}
                 <select name="claimType" required defaultValue="skill">
                   <option value="skill">{t.customSkill}</option>
-                  <option value="experience">{locale === "uk" ? "Досвід" : "Experience"}</option>
-                  <option value="qualification">{locale === "uk" ? "Кваліфікація" : "Qualification"}</option>
-                  <option value="workshop_affiliation">{locale === "uk" ? "Зв’язок із майстернею" : "Workshop affiliation"}</option>
-                  <option value="external_recognition">{locale === "uk" ? "Зовнішнє визнання" : "External recognition"}</option>
-                  <option value="origin">{locale === "uk" ? "Походження" : "Origin"}</option>
-                  <option value="craft_tradition">{locale === "uk" ? "Реміснича традиція" : "Craft tradition"}</option>
+                  <option value="experience">{claimTypeOptions[locale].experience}</option>
+                  <option value="qualification">{claimTypeOptions[locale].qualification}</option>
+                  <option value="workshop_affiliation">{claimTypeOptions[locale].workshop_affiliation}</option>
+                  <option value="external_recognition">{claimTypeOptions[locale].external_recognition}</option>
+                  <option value="origin">{claimTypeOptions[locale].origin}</option>
+                  <option value="craft_tradition">{claimTypeOptions[locale].craft_tradition}</option>
                 </select>
               </label>
               <label>{t.titleLabel}<input name="title" required /></label>
