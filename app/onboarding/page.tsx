@@ -25,6 +25,8 @@ const copy = {
     workshopHint: "Use this for the workshop itself — not as a replacement for the craftsperson's personal record.",
     workshopCta: "Create workshop CraftID",
     note: "Each CraftID is a permanent identifier for one entity. It is never replaced, reassigned or transferred to another entity. If you previously closed your account and return with the same confirmed email, CraftID restores the same archived record as a draft instead of issuing a new number. A person and a workshop may have separate CraftIDs and be linked through a declared relationship. Numbers 00000001–00000100 are reserved for explicit administrative assignment.",
+    languageTitle: "Language of your public record",
+    languageText: "CraftID is multilingual, but English is the recommended common cross-border language for your professional title and profile description. This helps organisations, buyers and partners across Europe understand your record consistently.",
   },
   fr: {
     eyebrow: "Configuration de CraftID", title: "Que représentera ce CraftID ?",
@@ -40,6 +42,8 @@ const copy = {
     workshopHint: "À utiliser pour l’atelier lui-même — pas à la place du dossier personnel de l’artisan.",
     workshopCta: "Créer un CraftID Workshop",
     note: "Chaque CraftID est l’identifiant permanent d’une seule entité. Il n’est jamais remplacé, réattribué ou transféré. Si vous revenez après avoir fermé votre compte avec le même e-mail confirmé, CraftID restaure le même dossier archivé comme brouillon au lieu d’émettre un nouveau numéro. Une personne et un atelier peuvent avoir des CraftID séparés et être reliés par une relation déclarée. Les numéros 00000001–00000100 sont réservés à une attribution administrative explicite.",
+    languageTitle: "Langue de votre dossier public",
+    languageText: "CraftID est multilingue, mais l’anglais est la langue commune recommandée pour votre titre professionnel et la description de votre profil. Cela aide les organisations, acheteurs et partenaires partout en Europe à comprendre votre dossier de manière cohérente.",
   },
   de: {
     eyebrow: "CraftID-Einrichtung", title: "Wofür steht diese CraftID?",
@@ -55,6 +59,8 @@ const copy = {
     workshopHint: "Für die Werkstatt selbst verwenden — nicht als Ersatz für den persönlichen Datensatz der handwerklich tätigen Person.",
     workshopCta: "Workshop CraftID erstellen",
     note: "Jede CraftID ist eine dauerhafte Kennung für genau eine Entität. Sie wird nie ersetzt, neu zugewiesen oder auf eine andere Entität übertragen. Wenn Sie nach Kontoschließung mit derselben bestätigten E-Mail zurückkehren, stellt CraftID denselben archivierten Datensatz als Entwurf wieder her, statt eine neue Nummer zu vergeben. Person und Werkstatt können getrennte CraftIDs haben und über eine deklarierte Beziehung verknüpft werden. Die Nummern 00000001–00000100 sind für explizite administrative Zuweisung reserviert.",
+    languageTitle: "Sprache Ihres öffentlichen Datensatzes",
+    languageText: "CraftID ist mehrsprachig, Englisch wird jedoch als gemeinsame grenzüberschreitende Sprache für Berufsbezeichnung und Profilbeschreibung empfohlen. So können Organisationen, Käufer und Partner in ganz Europa Ihren Datensatz einheitlich verstehen.",
   },
   nl: {
     eyebrow: "CraftID instellen", title: "Wat vertegenwoordigt deze CraftID?",
@@ -70,6 +76,8 @@ const copy = {
     workshopHint: "Gebruik dit voor de werkplaats zelf — niet als vervanging voor het persoonlijke dossier van de ambachtsprofessional.",
     workshopCta: "Workshop CraftID aanmaken",
     note: "Elke CraftID is een permanente identifier voor één entiteit. Deze wordt nooit vervangen, opnieuw toegewezen of aan een andere entiteit overgedragen. Als u na sluiting van uw account terugkeert met hetzelfde bevestigde e-mailadres, herstelt CraftID hetzelfde gearchiveerde dossier als concept in plaats van een nieuw nummer uit te geven. Een persoon en een werkplaats kunnen aparte CraftIDs hebben en via een verklaarde relatie worden gekoppeld. Nummers 00000001–00000100 zijn gereserveerd voor expliciete administratieve toewijzing.",
+    languageTitle: "Taal van uw openbare dossier",
+    languageText: "CraftID is meertalig, maar Engels wordt aanbevolen als gemeenschappelijke grensoverschrijdende taal voor uw professionele titel en profielbeschrijving. Zo kunnen organisaties, kopers en partners in heel Europa uw dossier consistent begrijpen.",
   },
   pl: {
     eyebrow: "Konfiguracja CraftID", title: "Co będzie reprezentować ten CraftID?",
@@ -85,6 +93,8 @@ const copy = {
     workshopHint: "Użyj dla samej pracowni — nie zamiast osobistego zapisu rzemieślnika.",
     workshopCta: "Utwórz Workshop CraftID",
     note: "Każdy CraftID jest stałym identyfikatorem jednej jednostki. Nigdy nie jest zastępowany, ponownie przydzielany ani przenoszony na inną jednostkę. Jeśli po zamknięciu konta wrócisz z tym samym potwierdzonym adresem e-mail, CraftID przywróci ten sam zarchiwizowany zapis jako wersję roboczą zamiast wydawać nowy numer. Osoba i pracownia mogą mieć oddzielne CraftID i być połączone zadeklarowaną relacją. Numery 00000001–00000100 są zarezerwowane do wyraźnego przydziału administracyjnego.",
+    languageTitle: "Język publicznego profilu",
+    languageText: "CraftID jest wielojęzyczny, jednak angielski jest zalecanym wspólnym językiem transgranicznym dla tytułu zawodowego i opisu profilu. Dzięki temu organizacje, kupujący i partnerzy w całej Europie mogą spójnie zrozumieć Twój zapis.",
   },
   it: {
     eyebrow: "Configurazione CraftID", title: "Che cosa rappresenterà questo CraftID?",
@@ -100,6 +110,8 @@ const copy = {
     workshopHint: "Usalo per il laboratorio stesso — non come sostituto del record personale dell’artigiano.",
     workshopCta: "Crea Workshop CraftID",
     note: "Ogni CraftID è un identificativo permanente per una sola entità. Non viene mai sostituito, riassegnato o trasferito a un’altra entità. Se torni dopo aver chiuso l’account usando la stessa e-mail confermata, CraftID ripristina lo stesso record archiviato come bozza anziché emettere un nuovo numero. Una persona e un laboratorio possono avere CraftID separati e essere collegati tramite una relazione dichiarata. I numeri 00000001–00000100 sono riservati ad assegnazione amministrativa esplicita.",
+    languageTitle: "Lingua del record pubblico",
+    languageText: "CraftID è multilingue, ma l’inglese è la lingua comune transfrontaliera consigliata per il titolo professionale e la descrizione del profilo. Questo aiuta organizzazioni, acquirenti e partner in tutta Europa a comprendere il record in modo coerente.",
   },
   es: {
     eyebrow: "Configuración de CraftID", title: "¿Qué representará este CraftID?",
@@ -115,6 +127,8 @@ const copy = {
     workshopHint: "Úsalo para el propio taller — no como sustituto del registro personal del artesano.",
     workshopCta: "Crear Workshop CraftID",
     note: "Cada CraftID es un identificador permanente de una sola entidad. Nunca se sustituye, reasigna ni transfiere a otra entidad. Si vuelves tras cerrar tu cuenta con el mismo correo confirmado, CraftID restaura el mismo registro archivado como borrador en lugar de emitir un nuevo número. Una persona y un taller pueden tener CraftID separados y vincularse mediante una relación declarada. Los números 00000001–00000100 están reservados para asignación administrativa explícita.",
+    languageTitle: "Idioma de tu registro público",
+    languageText: "CraftID es multilingüe, pero se recomienda el inglés como lengua común transfronteriza para el título profesional y la descripción del perfil. Esto ayuda a organizaciones, compradores y socios de toda Europa a comprender tu registro de forma coherente.",
   },
   uk: {
     eyebrow: "Налаштування CraftID",
@@ -131,6 +145,8 @@ const copy = {
     workshopHint: "Використовуйте для самої майстерні — не замість персонального запису майстра.",
     workshopCta: "Створити CraftID майстерні",
     note: "Кожен CraftID є постійним ідентифікатором однієї сутності. Він ніколи не замінюється, не видається повторно і не переноситься на іншу сутність. Якщо ви раніше закрили обліковий запис і повертаєтесь із тією самою підтвердженою email-адресою, CraftID відновить той самий архівний запис як чернетку замість видачі нового номера. Людина і майстерня можуть мати окремі CraftID та бути пов’язаними між собою. Номери 00000001–00000100 зарезервовані для окремого призначення адміністратором.",
+    languageTitle: "Мова публічного запису",
+    languageText: "CraftID є багатомовним, однак англійська рекомендована як спільна транскордонна мова для професійної назви та опису профілю. Це допомагає організаціям, покупцям і партнерам по всій Європі однаково розуміти ваш запис.",
   },
 } as const;
 
@@ -176,6 +192,11 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
         <section className="onboardingGuide">
           <div className="eyebrow">{t.guideTitle}</div>
           <p>{t.guideText}</p>
+        </section>
+
+        <section className="onboardingGuide">
+          <div className="eyebrow">{t.languageTitle}</div>
+          <p>{t.languageText}</p>
         </section>
 
         <div className="choiceGrid">
