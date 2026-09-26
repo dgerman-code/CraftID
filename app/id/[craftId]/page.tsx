@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { localeFrom } from "@/components/site-shell";
+import { LanguageMenu, localeFrom } from "@/components/site-shell";
+import { localeMeta } from "@/lib/i18n";
 import { formatCraftId, parseCraftId } from "@/lib/craftid-format";
 
 export const dynamic = "force-dynamic";
@@ -34,6 +35,66 @@ const copy = {
     historicalCountry: "Country at archive",
     historicalNotice: "This archived record is retained for provenance and record-integrity purposes. It does not indicate current activity, certification or quality approval.",
   },
+  fr: {
+    identity: "Dossier d’identité professionnelle", about: "À propos", skills: "Compétences", location: "Localisation", exactAddress: "Adresse de l’atelier",
+    links: "Présence externe", contact: "Contacter via CraftID",
+    notice: "CraftID est une infrastructure indépendante d’identité professionnelle et de preuves. Ce profil n’est ni une certification de qualité ni une reconnaissance de l’UE.",
+    unavailable: "Non disponible", website: "Site web", linkedin: "LinkedIn", portfolio: "Portfolio",
+    archivedIdentity: "Dossier CraftID archivé", archivedTitle: "CraftID historique",
+    archivedText: "Ce CraftID n’est plus actif. Un dossier historique minimal reste disponible afin que les produits et documents portant déjà cet identifiant puissent toujours être rattachés au professionnel ou à l’atelier enregistré.",
+    archivedStatus: "Archivé", archivedSince: "Archivé le", historicalCountry: "Pays lors de l’archivage",
+    historicalNotice: "Ce dossier archivé est conservé à des fins de provenance et d’intégrité du registre. Il n’indique aucune activité actuelle, certification ou approbation de qualité.",
+  },
+  de: {
+    identity: "Datensatz zur beruflichen Identität", about: "Über die Praxis", skills: "Kompetenzen", location: "Standort", exactAddress: "Werkstattadresse",
+    links: "Externe Präsenz", contact: "Über CraftID kontaktieren",
+    notice: "CraftID ist eine unabhängige Infrastruktur für berufliche Identität und Nachweise. Dieses Profil ist weder Qualitätszertifizierung noch EU-Anerkennung.",
+    unavailable: "Nicht verfügbar", website: "Website", linkedin: "LinkedIn", portfolio: "Portfolio",
+    archivedIdentity: "Archivierter CraftID-Datensatz", archivedTitle: "Historische CraftID",
+    archivedText: "Diese CraftID ist nicht mehr aktiv. Ein minimaler historischer Datensatz bleibt verfügbar, damit Produkte und Dokumente mit dieser Kennung weiterhin der registrierten Person oder Werkstatt zugeordnet werden können.",
+    archivedStatus: "Archiviert", archivedSince: "Archiviert", historicalCountry: "Land bei Archivierung",
+    historicalNotice: "Dieser archivierte Datensatz wird für Provenienz und Registerintegrität aufbewahrt. Er weist nicht auf aktuelle Tätigkeit, Zertifizierung oder Qualitätsfreigabe hin.",
+  },
+  nl: {
+    identity: "Dossier professionele identiteit", about: "Over", skills: "Vaardigheden", location: "Locatie", exactAddress: "Werkplaatsadres",
+    links: "Externe aanwezigheid", contact: "Contact via CraftID",
+    notice: "CraftID is een onafhankelijke infrastructuur voor professionele identiteit en bewijs. Dit profiel is geen kwaliteitscertificering of EU-erkenning.",
+    unavailable: "Niet beschikbaar", website: "Website", linkedin: "LinkedIn", portfolio: "Portfolio",
+    archivedIdentity: "Gearchiveerd CraftID-dossier", archivedTitle: "Historische CraftID",
+    archivedText: "Deze CraftID is niet langer actief. Een minimaal historisch dossier blijft beschikbaar zodat producten en documenten die deze identifier al dragen nog aan de geregistreerde professional of werkplaats kunnen worden gekoppeld.",
+    archivedStatus: "Gearchiveerd", archivedSince: "Gearchiveerd", historicalCountry: "Land bij archivering",
+    historicalNotice: "Dit gearchiveerde dossier wordt bewaard voor provenance en registerintegriteit. Het duidt niet op huidige activiteit, certificering of kwaliteitsgoedkeuring.",
+  },
+  pl: {
+    identity: "Zapis tożsamości zawodowej", about: "O praktyce", skills: "Umiejętności", location: "Lokalizacja", exactAddress: "Adres pracowni",
+    links: "Obecność zewnętrzna", contact: "Kontakt przez CraftID",
+    notice: "CraftID jest niezależną infrastrukturą tożsamości zawodowej i dowodów. Ten profil nie jest certyfikatem jakości ani uznaniem UE.",
+    unavailable: "Brak danych", website: "Strona internetowa", linkedin: "LinkedIn", portfolio: "Portfolio",
+    archivedIdentity: "Zarchiwizowany zapis CraftID", archivedTitle: "Historyczny CraftID",
+    archivedText: "Ten CraftID nie jest już aktywny. Minimalny zapis historyczny pozostaje dostępny, aby produkty i dokumenty zawierające ten identyfikator nadal można było powiązać z zarejestrowanym profesjonalistą lub pracownią.",
+    archivedStatus: "Zarchiwizowany", archivedSince: "Zarchiwizowano", historicalCountry: "Kraj w chwili archiwizacji",
+    historicalNotice: "Ten zarchiwizowany zapis jest przechowywany dla celów pochodzenia i integralności rejestru. Nie oznacza bieżącej działalności, certyfikacji ani zatwierdzenia jakości.",
+  },
+  it: {
+    identity: "Record di identità professionale", about: "Informazioni", skills: "Competenze", location: "Località", exactAddress: "Indirizzo del laboratorio",
+    links: "Presenza esterna", contact: "Contatta tramite CraftID",
+    notice: "CraftID è un’infrastruttura indipendente per identità professionale ed evidenze. Questo profilo non è una certificazione di qualità né un riconoscimento dell’UE.",
+    unavailable: "Non disponibile", website: "Sito web", linkedin: "LinkedIn", portfolio: "Portfolio",
+    archivedIdentity: "Record CraftID archiviato", archivedTitle: "CraftID storico",
+    archivedText: "Questo CraftID non è più attivo. Un record storico minimo resta disponibile affinché prodotti e documenti che riportano già questo identificativo possano ancora essere ricondotti al professionista o laboratorio registrato.",
+    archivedStatus: "Archiviato", archivedSince: "Archiviato", historicalCountry: "Paese al momento dell’archiviazione",
+    historicalNotice: "Questo record archiviato è conservato per finalità di provenienza e integrità del registro. Non indica attività attuale, certificazione o approvazione della qualità.",
+  },
+  es: {
+    identity: "Registro de identidad profesional", about: "Acerca de", skills: "Competencias", location: "Ubicación", exactAddress: "Dirección del taller",
+    links: "Presencia externa", contact: "Contactar a través de CraftID",
+    notice: "CraftID es una infraestructura independiente de identidad profesional y evidencias. Este perfil no es una certificación de calidad ni un reconocimiento de la UE.",
+    unavailable: "No disponible", website: "Sitio web", linkedin: "LinkedIn", portfolio: "Portfolio",
+    archivedIdentity: "Registro CraftID archivado", archivedTitle: "CraftID histórico",
+    archivedText: "Este CraftID ya no está activo. Se mantiene un registro histórico mínimo para que los productos y documentos que ya llevan este identificador puedan seguir vinculándose al profesional o taller registrado.",
+    archivedStatus: "Archivado", archivedSince: "Archivado", historicalCountry: "País al archivar",
+    historicalNotice: "Este registro archivado se conserva por motivos de procedencia e integridad del registro. No indica actividad actual, certificación ni aprobación de calidad.",
+  },
   uk: {
     identity: "Запис професійної ідентичності",
     about: "Про практику",
@@ -60,7 +121,7 @@ const copy = {
 export default async function PublicCraftIdPage({ params, searchParams }: Props) {
   const { craftId } = await params;
   const locale = localeFrom((await searchParams).lang);
-  const t = copy[locale as keyof typeof copy] ?? copy.en;
+  const t = copy[locale];
   const q = locale === "en" ? "" : `?lang=${locale}`;
 
   const parsed = parseCraftId(craftId);
@@ -123,7 +184,10 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
         <div className="container">
           <header className="publicIdentityHeader">
             <Link className="brand" href={`/${q}`}>CraftID</Link>
-            <div className="recordId">{t.archivedIdentity}</div>
+            <div className="publicIdentityHeaderActions">
+              <div className="recordId">{t.archivedIdentity}</div>
+              <LanguageMenu locale={locale} pathname={`/id/${parsed.formatted}`} />
+            </div>
           </header>
 
           <section className="publicIdentityHero archivedIdentityHero">
@@ -154,7 +218,7 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
               {historical.archived_at ? (
                 <div>
                   <dt>{t.archivedSince}</dt>
-                  <dd>{new Date(historical.archived_at).toLocaleDateString(locale === "uk" ? "uk-UA" : "en-GB")}</dd>
+                  <dd>{new Date(historical.archived_at).toLocaleDateString(localeMeta[locale].intl)}</dd>
                 </div>
               ) : null}
             </dl>
@@ -189,7 +253,10 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
       <div className="container">
         <header className="publicIdentityHeader">
           <Link className="brand" href={`/${q}`}>CraftID</Link>
-          <div className="recordId">{t.identity}</div>
+          <div className="publicIdentityHeaderActions">
+            <div className="recordId">{t.identity}</div>
+            <LanguageMenu locale={locale} pathname={`/id/${routeId}`} />
+          </div>
         </header>
 
         <section className="publicIdentityHero">
