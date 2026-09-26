@@ -138,7 +138,7 @@ const copy = {
 export default async function MyCraftIdPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
 
   const { supabase, userId, entity, entities } = await getOwnedCraftId(sp.entity);
   if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
