@@ -35,7 +35,7 @@ const copy = {
 export default async function CertificateLookupPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
 
   if (sp.code) {
     const code = normalizeCertificateCode(sp.code);
