@@ -185,7 +185,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
   const qrCodeDownload = qrCodePreview + "&download=1";
   const printSheetDownload = `/api/kit/print-sheet?entity=${encodeURIComponent(entity.id)}`;
   const craftedInBase = `/api/kit/crafted-in?entity=${encodeURIComponent(entity.id)}`;
-  const craftedInPreview = craftedInBase + "&format=png";
+  const craftedInPreview = craftedInBase + "&format=svg";
   const craftedInSvgDownload = craftedInBase + "&format=svg&download=1";
   const craftedInPngDownload = craftedInBase + "&format=png&download=1";
 
