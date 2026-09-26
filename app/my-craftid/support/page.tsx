@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { localeFrom } from "@/components/site-shell";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { saveSupportProfile } from "./actions";
-import { localeQuery, contentLocale } from "@/lib/i18n";
+import { localeQuery } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -13,53 +13,91 @@ type Props = {
 
 const copy = {
   en: {
-    eyebrow: "Opportunities & Support",
-    title: "Tell us what would help your professional practice.",
-    intro:
-      "Select the areas that interest you now. This is a self-declared support profile, not an application and not an eligibility assessment. You can change it at any time.",
-    privateNote:
-      "These selections are not shown on your public CraftID profile. CraftID uses them for internal needs analysis and, where you explicitly allow it, to contact you about relevant support.",
-    level: "Current interest",
-    notInterested: "Not currently interested",
-    interested: "Interested",
-    active: "Actively looking",
-    note: "Optional details",
-    notePlaceholder: "Briefly describe what you are looking for, if useful.",
-    contact:
-      "CraftID or the authorised national operator may contact me about support relevant to the interests I selected.",
-    contactHelp:
-      "This does not share your data with external partners. Any future partner-facing matching or data-sharing flow will require its own rules and controls.",
-    save: "Save support profile",
-    saved: "Support profile saved.",
-    back: "Back to My CraftID",
+    eyebrow: "Opportunities & Support", title: "Tell us what would help your professional practice.",
+    intro: "Select the areas that interest you now. This is a self-declared support profile, not an application and not an eligibility assessment. You can change it at any time.",
+    privateNote: "These selections are not shown on your public CraftID profile. CraftID uses them for internal needs analysis and, where you explicitly allow it, to contact you about relevant support.",
+    level: "Current interest", notInterested: "Not currently interested", interested: "Interested", active: "Actively looking",
+    note: "Optional details", notePlaceholder: "Briefly describe what you are looking for, if useful.",
+    contact: "CraftID or the authorised national operator may contact me about support relevant to the interests I selected.",
+    contactHelp: "This does not share your data with external partners. Any future partner-facing matching or data-sharing flow will require its own rules and controls.",
+    save: "Save support profile", saved: "Support profile saved.", back: "Back to My CraftID",
+  },
+  fr: {
+    eyebrow: "Opportunités et soutien", title: "Indiquez-nous ce qui pourrait aider votre pratique professionnelle.",
+    intro: "Sélectionnez les domaines qui vous intéressent actuellement. Il s’agit d’un profil de besoins autodéclaré, pas d’une candidature ni d’une évaluation d’éligibilité. Vous pouvez le modifier à tout moment.",
+    privateNote: "Ces choix ne sont pas affichés sur votre profil public CraftID. CraftID les utilise pour l’analyse interne des besoins et, si vous l’autorisez explicitement, pour vous contacter au sujet d’un soutien pertinent.",
+    level: "Intérêt actuel", notInterested: "Pas intéressé actuellement", interested: "Intéressé", active: "Recherche active",
+    note: "Précisions facultatives", notePlaceholder: "Décrivez brièvement ce que vous recherchez, si utile.",
+    contact: "CraftID ou l’opérateur national autorisé peut me contacter au sujet d’un soutien pertinent pour les intérêts sélectionnés.",
+    contactHelp: "Cela ne partage pas vos données avec des partenaires externes. Tout futur processus de mise en relation ou partage de données avec des partenaires aura ses propres règles et contrôles.",
+    save: "Enregistrer le profil de soutien", saved: "Profil de soutien enregistré.", back: "Retour à Mon CraftID",
+  },
+  de: {
+    eyebrow: "Möglichkeiten & Unterstützung", title: "Teilen Sie uns mit, was Ihre berufliche Tätigkeit unterstützen würde.",
+    intro: "Wählen Sie die Bereiche aus, die Sie derzeit interessieren. Dies ist ein selbst erklärtes Unterstützungsprofil, kein Antrag und keine Förderfähigkeitsprüfung. Sie können es jederzeit ändern.",
+    privateNote: "Diese Auswahl wird nicht in Ihrem öffentlichen CraftID-Profil angezeigt. CraftID nutzt sie für interne Bedarfsanalysen und – wenn Sie ausdrücklich zustimmen – um Sie zu passender Unterstützung zu kontaktieren.",
+    level: "Aktuelles Interesse", notInterested: "Derzeit nicht interessiert", interested: "Interessiert", active: "Aktiv auf der Suche",
+    note: "Optionale Details", notePlaceholder: "Beschreiben Sie kurz, wonach Sie suchen, wenn hilfreich.",
+    contact: "CraftID oder der autorisierte nationale Betreiber darf mich zu Unterstützung kontaktieren, die zu meinen ausgewählten Interessen passt.",
+    contactHelp: "Dadurch werden Ihre Daten nicht mit externen Partnern geteilt. Künftige Matching- oder Datenfreigabeprozesse gegenüber Partnern benötigen eigene Regeln und Kontrollen.",
+    save: "Unterstützungsprofil speichern", saved: "Unterstützungsprofil gespeichert.", back: "Zurück zu Meine CraftID",
+  },
+  nl: {
+    eyebrow: "Kansen & ondersteuning", title: "Vertel ons wat uw professionele praktijk zou helpen.",
+    intro: "Selecteer de gebieden die u nu interesseren. Dit is een zelfverklaard ondersteuningsprofiel, geen aanvraag en geen beoordeling van geschiktheid. U kunt het altijd aanpassen.",
+    privateNote: "Deze keuzes worden niet op uw openbare CraftID-profiel getoond. CraftID gebruikt ze voor interne behoefteanalyse en, waar u dit uitdrukkelijk toestaat, om contact op te nemen over relevante ondersteuning.",
+    level: "Huidige interesse", notInterested: "Momenteel niet geïnteresseerd", interested: "Geïnteresseerd", active: "Actief op zoek",
+    note: "Optionele details", notePlaceholder: "Beschrijf kort wat u zoekt, indien nuttig.",
+    contact: "CraftID of de bevoegde nationale operator mag contact met mij opnemen over ondersteuning die relevant is voor mijn geselecteerde interesses.",
+    contactHelp: "Dit deelt uw gegevens niet met externe partners. Elke toekomstige matching- of gegevensdelingsstroom richting partners krijgt eigen regels en controles.",
+    save: "Ondersteuningsprofiel opslaan", saved: "Ondersteuningsprofiel opgeslagen.", back: "Terug naar Mijn CraftID",
+  },
+  pl: {
+    eyebrow: "Możliwości i wsparcie", title: "Powiedz nam, co mogłoby pomóc w Twojej praktyce zawodowej.",
+    intro: "Wybierz obszary, które interesują Cię teraz. To samodzielnie deklarowany profil potrzeb, a nie wniosek ani ocena kwalifikowalności. Możesz go zmienić w dowolnym momencie.",
+    privateNote: "Te wybory nie są wyświetlane w publicznym profilu CraftID. CraftID wykorzystuje je do wewnętrznej analizy potrzeb oraz – jeśli wyraźnie na to pozwolisz – do kontaktowania się w sprawie odpowiedniego wsparcia.",
+    level: "Aktualne zainteresowanie", notInterested: "Obecnie mnie nie interesuje", interested: "Interesuje mnie", active: "Aktywnie szukam",
+    note: "Opcjonalne szczegóły", notePlaceholder: "Krótko opisz, czego szukasz, jeśli to pomocne.",
+    contact: "CraftID lub upoważniony operator krajowy może kontaktować się ze mną w sprawie wsparcia związanego z wybranymi zainteresowaniami.",
+    contactHelp: "Nie oznacza to udostępniania danych partnerom zewnętrznym. Każdy przyszły proces dopasowywania lub udostępniania danych partnerom będzie miał odrębne zasady i kontrole.",
+    save: "Zapisz profil wsparcia", saved: "Profil wsparcia zapisany.", back: "Wróć do Mój CraftID",
+  },
+  it: {
+    eyebrow: "Opportunità e supporto", title: "Dicci cosa potrebbe aiutare la tua pratica professionale.",
+    intro: "Seleziona le aree che ti interessano ora. È un profilo di supporto autodichiarato, non una candidatura né una valutazione di ammissibilità. Puoi modificarlo in qualsiasi momento.",
+    privateNote: "Queste selezioni non sono mostrate nel profilo pubblico CraftID. CraftID le usa per l’analisi interna dei bisogni e, se lo autorizzi esplicitamente, per contattarti in merito a supporto pertinente.",
+    level: "Interesse attuale", notInterested: "Non interessato al momento", interested: "Interessato", active: "Ricerca attiva",
+    note: "Dettagli facoltativi", notePlaceholder: "Descrivi brevemente cosa stai cercando, se utile.",
+    contact: "CraftID o l’operatore nazionale autorizzato può contattarmi per supporto pertinente agli interessi selezionati.",
+    contactHelp: "Questo non condivide i tuoi dati con partner esterni. Ogni futuro processo di matching o condivisione dati con partner avrà regole e controlli propri.",
+    save: "Salva profilo di supporto", saved: "Profilo di supporto salvato.", back: "Torna a Il mio CraftID",
+  },
+  es: {
+    eyebrow: "Oportunidades y apoyo", title: "Cuéntanos qué ayudaría a tu práctica profesional.",
+    intro: "Selecciona las áreas que te interesan ahora. Este es un perfil de apoyo autodeclarado, no una solicitud ni una evaluación de elegibilidad. Puedes cambiarlo en cualquier momento.",
+    privateNote: "Estas selecciones no se muestran en tu perfil público CraftID. CraftID las utiliza para análisis interno de necesidades y, cuando lo autorizas expresamente, para contactarte sobre apoyo relevante.",
+    level: "Interés actual", notInterested: "No me interesa actualmente", interested: "Me interesa", active: "Buscando activamente",
+    note: "Detalles opcionales", notePlaceholder: "Describe brevemente qué estás buscando, si resulta útil.",
+    contact: "CraftID o el operador nacional autorizado puede contactarme sobre apoyo relevante para los intereses seleccionados.",
+    contactHelp: "Esto no comparte tus datos con socios externos. Cualquier futuro proceso de matching o intercambio de datos con socios tendrá sus propias reglas y controles.",
+    save: "Guardar perfil de apoyo", saved: "Perfil de apoyo guardado.", back: "Volver a Mi CraftID",
   },
   uk: {
-    eyebrow: "Можливості та підтримка",
-    title: "Розкажіть, що може допомогти вашій професійній діяльності.",
-    intro:
-      "Оберіть напрями, які вас цікавлять зараз. Це самодекларований профіль потреб, а не заявка і не оцінка відповідності програмі. Ви можете змінити його будь-коли.",
-    privateNote:
-      "Ці дані не показуються у вашому публічному профілі CraftID. CraftID використовує їх для внутрішнього аналізу потреб і, лише за вашою окремою згодою, для зв’язку щодо релевантної підтримки.",
-    level: "Поточний інтерес",
-    notInterested: "Зараз не цікавить",
-    interested: "Цікавить",
-    active: "Активно шукаю",
-    note: "Додаткове пояснення",
-    notePlaceholder: "Коротко опишіть, що саме ви шукаєте, якщо це корисно.",
-    contact:
-      "CraftID або уповноважений національний оператор може зв’язуватися зі мною щодо підтримки, релевантної обраним інтересам.",
-    contactHelp:
-      "Це не означає передачу ваших даних зовнішнім партнерам. Майбутній matching або передача даних партнерам матимуть окремі правила та контроль.",
-    save: "Зберегти профіль підтримки",
-    saved: "Профіль підтримки збережено.",
-    back: "Назад до Мій CraftID",
+    eyebrow: "Можливості та підтримка", title: "Розкажіть, що може допомогти вашій професійній діяльності.",
+    intro: "Оберіть напрями, які вас цікавлять зараз. Це самодекларований профіль потреб, а не заявка і не оцінка відповідності програмі. Ви можете змінити його будь-коли.",
+    privateNote: "Ці дані не показуються у вашому публічному профілі CraftID. CraftID використовує їх для внутрішнього аналізу потреб і, лише за вашою окремою згодою, для зв’язку щодо релевантної підтримки.",
+    level: "Поточний інтерес", notInterested: "Зараз не цікавить", interested: "Цікавить", active: "Активно шукаю",
+    note: "Додаткове пояснення", notePlaceholder: "Коротко опишіть, що саме ви шукаєте, якщо це корисно.",
+    contact: "CraftID або уповноважений національний оператор може зв’язуватися зі мною щодо підтримки, релевантної обраним інтересам.",
+    contactHelp: "Це не означає передачу ваших даних зовнішнім партнерам. Майбутній matching або передача даних партнерам матимуть окремі правила та контроль.",
+    save: "Зберегти профіль підтримки", saved: "Профіль підтримки збережено.", back: "Назад до Мій CraftID",
   },
 } as const;
 
 export default async function SupportPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[contentLocale(locale)];
+  const t = copy[locale];
 
   const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
   if (!userId) redirect(`/login${localeQuery(locale)}`);
