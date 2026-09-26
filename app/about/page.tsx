@@ -5,6 +5,10 @@ type Props = { searchParams: Promise<{ lang?: string }> };
 const copy = {
   en: {
     eyebrow: "About CraftID",
+    boundariesLabel: "Boundaries",
+    ecosystemLabel: "Ecosystem",
+    europeLabel: "Europe",
+    governanceLabel: "Governance",
     title: "Infrastructure for professional visibility and trust.",
     intro: "CraftID is an EUFUA digital instrument designed to make craft competences more visible, portable, evidence-based and understandable across professional, regional and institutional contexts.",
     purposeTitle: "Purpose",
@@ -30,6 +34,10 @@ const copy = {
   },
   fr: {
     eyebrow: "À propos de CraftID",
+    boundariesLabel: "Limites",
+    ecosystemLabel: "Écosystème",
+    europeLabel: "Europe",
+    governanceLabel: "Gouvernance",
     title: "Une infrastructure pour la visibilité professionnelle et la confiance.",
     intro: "CraftID est un instrument numérique d’EUFUA conçu pour rendre les compétences artisanales plus visibles, portables, fondées sur des preuves et compréhensibles dans des contextes professionnels, régionaux et institutionnels.",
     purposeTitle: "Objectif",
@@ -49,6 +57,10 @@ const copy = {
   },
   de: {
     eyebrow: "Über CraftID",
+    boundariesLabel: "Grenzen",
+    ecosystemLabel: "Ökosystem",
+    europeLabel: "Europa",
+    governanceLabel: "Governance",
     title: "Infrastruktur für berufliche Sichtbarkeit und Vertrauen.",
     intro: "CraftID ist ein digitales Instrument von EUFUA, das handwerkliche Kompetenzen sichtbarer, portabler, nachweisbasiert und in beruflichen, regionalen und institutionellen Kontexten verständlicher machen soll.",
     purposeTitle: "Zweck",
@@ -68,6 +80,10 @@ const copy = {
   },
   nl: {
     eyebrow: "Over CraftID",
+    boundariesLabel: "Grenzen",
+    ecosystemLabel: "Ecosysteem",
+    europeLabel: "Europa",
+    governanceLabel: "Governance",
     title: "Infrastructuur voor professionele zichtbaarheid en vertrouwen.",
     intro: "CraftID is een digitaal instrument van EUFUA dat ambachtelijke competenties zichtbaarder, overdraagbaar, onderbouwd met bewijs en begrijpelijk wil maken in professionele, regionale en institutionele contexten.",
     purposeTitle: "Doel",
@@ -77,16 +93,20 @@ const copy = {
     usersTitle: "Voor wie het bedoeld is",
     usersText: "De infrastructuur is ontworpen voor individuele ambachtsprofessionals, werkplaatsen en ambachtelijke micro-ondernemingen, met toekomstige institutionele interfaces voor kamers, opleidingsaanbieders, beroepsorganisaties, gemeenten en andere ecosysteemactoren.",
     ecosystemTitle: "Institutionele waarde",
-    ecosystemText: "Geaggregeerde, privacybewuste gegevens kunnen skills intelligence, regionale ontwikkeling, beroepsonderwijs, continuïteit van ambachtelijk erfgoed, mkb-ondersteuning en grensoverschrijdende samenwerking ondersteunen. Zulke toepassingen moeten alleen worden ontwikkeld met duidelijke governance, rechtmatig datagebruik en transparante methodologie.",
+    ecosystemText: "Geaggregeerde, privacybewuste gegevens kunnen inzicht in vaardigheden, regionale ontwikkeling, beroepsonderwijs, continuïteit van ambachtelijk erfgoed, mkb-ondersteuning en grensoverschrijdende samenwerking ondersteunen. Zulke toepassingen moeten alleen worden ontwikkeld met duidelijke governance, rechtmatig datagebruik en transparante methodologie.",
     euTitle: "Europese oriëntatie",
-    euText: "CraftID is ontworpen voor interoperabiliteit met bredere Europese benaderingen van vaardigheden, credentials, digitale identiteit, provenance en regionale ontwikkeling. Afstemming betekent geen goedkeuring, accreditatie of officiële EU-status.",
+    euText: "CraftID is ontworpen voor interoperabiliteit met bredere Europese benaderingen van vaardigheden, kwalificaties en bewijsstukken, digitale identiteit, herkomst en regionale ontwikkeling. Afstemming betekent geen goedkeuring, accreditatie of officiële EU-status.",
     governanceTitle: "Governanceprincipe",
-    governanceText: "Vertrouwen moet bewijsgericht, proportioneel en transparant zijn. Het platform moet alleen noodzakelijke gegevens verzamelen, publieke en private informatie scheiden, beoordelingsbesluiten controleerbaar houden en claims vermijden die verder gaan dan het beschikbare bewijs.",
+    governanceText: "Vertrouwen moet bewijsgericht, proportioneel en transparant zijn. Het platform moet alleen noodzakelijke gegevens verzamelen, publieke en private informatie scheiden, beoordelingsbesluiten controleerbaar houden en verklaringen vermijden die verder gaan dan het beschikbare bewijs.",
     initiativeTitle: "Een digitaal instrument van EUFUA",
     initiativeText: "EUFUA ontwikkelt CraftID als professionele en ecosysteeminfrastructuur: om informatie te structureren, zichtbaarheid te verbeteren en professioneel bewijs te verbinden met toekomstige kansen en institutionele samenwerking.",
   },
   pl: {
     eyebrow: "O CraftID",
+    boundariesLabel: "Granice",
+    ecosystemLabel: "Ekosystem",
+    europeLabel: "Europa",
+    governanceLabel: "Zarządzanie",
     title: "Infrastruktura widoczności zawodowej i zaufania.",
     intro: "CraftID to cyfrowe narzędzie EUFUA stworzone po to, aby kompetencje rzemieślnicze były bardziej widoczne, przenośne, oparte na dowodach i zrozumiałe w kontekście zawodowym, regionalnym i instytucjonalnym.",
     purposeTitle: "Cel",
@@ -106,6 +126,10 @@ const copy = {
   },
   it: {
     eyebrow: "Informazioni su CraftID",
+    boundariesLabel: "Limiti",
+    ecosystemLabel: "Ecosistema",
+    europeLabel: "Europa",
+    governanceLabel: "Governance",
     title: "Infrastruttura per visibilità professionale e fiducia.",
     intro: "CraftID è uno strumento digitale di EUFUA progettato per rendere le competenze artigianali più visibili, portabili, basate su evidenze e comprensibili in contesti professionali, regionali e istituzionali.",
     purposeTitle: "Finalità",
@@ -125,6 +149,10 @@ const copy = {
   },
   es: {
     eyebrow: "Acerca de CraftID",
+    boundariesLabel: "Límites",
+    ecosystemLabel: "Ecosistema",
+    europeLabel: "Europa",
+    governanceLabel: "Gobernanza",
     title: "Infraestructura para la visibilidad profesional y la confianza.",
     intro: "CraftID es un instrumento digital de EUFUA diseñado para hacer que las competencias artesanales sean más visibles, portátiles, basadas en evidencias y comprensibles en contextos profesionales, regionales e institucionales.",
     purposeTitle: "Finalidad",
@@ -144,6 +172,10 @@ const copy = {
   },
   uk: {
     eyebrow: "Про CraftID",
+    boundariesLabel: "Межі",
+    ecosystemLabel: "Екосистема",
+    europeLabel: "Європа",
+    governanceLabel: "Управління",
     title: "Інфраструктура професійної видимості та довіри.",
     intro: "CraftID — цифровий інструмент EUFUA, створений для того, щоб зробити ремісничі компетенції видимішими, переносимими, доказовими та зрозумілими у професійному, регіональному й інституційному контекстах.",
     purposeTitle: "Мета",
@@ -203,7 +235,7 @@ export default async function AboutPage({ searchParams }: Props) {
         <section className="section editorialSection">
           <div className="container">
             <div className="sectionLead">
-              <div className="eyebrow">Boundaries</div>
+              <div className="eyebrow">{t.boundariesLabel}</div>
               <h2>{t.notTitle}</h2>
             </div>
             <div className="boundaryList">
@@ -220,17 +252,17 @@ export default async function AboutPage({ searchParams }: Props) {
         <section className="section editorialSection">
           <div className="container informationGrid">
             <article className="informationCard">
-              <div className="eyebrow">Ecosystem</div>
+              <div className="eyebrow">{t.ecosystemLabel}</div>
               <h3>{t.ecosystemTitle}</h3>
               <p>{t.ecosystemText}</p>
             </article>
             <article className="informationCard">
-              <div className="eyebrow">Europe</div>
+              <div className="eyebrow">{t.europeLabel}</div>
               <h3>{t.euTitle}</h3>
               <p>{t.euText}</p>
             </article>
             <article className="informationCard">
-              <div className="eyebrow">Governance</div>
+              <div className="eyebrow">{t.governanceLabel}</div>
               <h3>{t.governanceTitle}</h3>
               <p>{t.governanceText}</p>
             </article>
