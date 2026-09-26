@@ -1,4 +1,4 @@
-import { localeQuery, contentLocale, withLocale } from "@/lib/i18n";
+import { localeQuery, contentLocale } from "@/lib/i18n";
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
