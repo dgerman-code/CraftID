@@ -1827,18 +1827,33 @@ button {
   line-height: 1.6;
 }
 
+/* Download Kit: keep primary downloadable marks visually balanced. */
 .markGrid {
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
-  gap: 24px;
-  margin-top: 36px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+  margin-top: 28px;
 }
 
 .markPanel {
+  min-width: 0;
   padding: 26px;
   border-top: 2px solid var(--accent);
   border-bottom: 1px solid var(--line);
   background: var(--surface);
+}
+
+.markPrimaryGrid .markPanel {
+  height: 100%;
+}
+
+.markUtilityGrid {
+  margin-top: 20px;
+}
+
+.markPanelCompact {
+  align-self: start;
 }
 
 .markPanel > p {
@@ -1866,6 +1881,17 @@ button {
   margin: 22px 0;
   border: 1px solid var(--line);
   background: #fff;
+}
+
+.markAssetPreview {
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.markCompactPreview {
+  width: min(220px, 100%);
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
 }
 
 .markUrlBlock,
@@ -1979,6 +2005,10 @@ button {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 18px;
+}
+
+.markButtonRow .markAssetButton {
+  margin-top: 0;
 }
 
 
