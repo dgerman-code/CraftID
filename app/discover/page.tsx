@@ -99,6 +99,12 @@ const statusCopy = {
     external_source_confirmed: "External source confirmed",
     identity_reviewed: "Identity reviewed",
   },
+  fr: { self_declared: "Autodéclaré", evidence_submitted: "Preuves soumises", document_reviewed: "Document examiné", evidence_reviewed: "Preuves examinées", external_source_confirmed: "Source externe confirmée", identity_reviewed: "Identité examinée" },
+  de: { self_declared: "Selbst angegeben", evidence_submitted: "Nachweise eingereicht", document_reviewed: "Dokument geprüft", evidence_reviewed: "Nachweise geprüft", external_source_confirmed: "Externe Quelle bestätigt", identity_reviewed: "Identität geprüft" },
+  nl: { self_declared: "Zelfverklaard", evidence_submitted: "Bewijs ingediend", document_reviewed: "Document beoordeeld", evidence_reviewed: "Bewijs beoordeeld", external_source_confirmed: "Externe bron bevestigd", identity_reviewed: "Identiteit beoordeeld" },
+  pl: { self_declared: "Zadeklarowane samodzielnie", evidence_submitted: "Dowody złożone", document_reviewed: "Dokument przejrzany", evidence_reviewed: "Dowody przejrzane", external_source_confirmed: "Źródło zewnętrzne potwierdzone", identity_reviewed: "Tożsamość przejrzana" },
+  it: { self_declared: "Autodichiarato", evidence_submitted: "Evidenze presentate", document_reviewed: "Documento revisionato", evidence_reviewed: "Evidenze revisionate", external_source_confirmed: "Fonte esterna confermata", identity_reviewed: "Identità revisionata" },
+  es: { self_declared: "Autodeclarado", evidence_submitted: "Evidencias presentadas", document_reviewed: "Documento revisado", evidence_reviewed: "Evidencias revisadas", external_source_confirmed: "Fuente externa confirmada", identity_reviewed: "Identidad revisada" },
   uk: {
     self_declared: "Самодекларовано",
     evidence_submitted: "Докази подано",
@@ -149,6 +155,114 @@ const copy = {
     mapped: "map groups",
     mapPrivacy: "Map positions are approximate aggregates. The configured minimum disclosure threshold is enforced server-side.",
   },
+  fr: {
+    eyebrow: "Registre public", title: "Découvrez les pratiques artisanales professionnelles.",
+    intro: "Trouvez directement un dossier CraftID précis ou explorez les professionnels et ateliers publiés par métier, compétence et localisation.",
+    idEyebrow: "Recherche directe CraftID", idTitle: "Trouver un dossier CraftID",
+    idText: "Utilisez le numéro CraftID permanent pour ouvrir directement un dossier Professional ou Workshop publié.",
+    idLabel: "Numéro CraftID", idPlaceholder: "#0000-0101-86", idButton: "Ouvrir le dossier",
+    idHint: "Saisissez le numéro CraftID complet, y compris les deux chiffres de contrôle.",
+    idInvalid: "Saisissez un CraftID valide au format #0000-0101-86.", idMissing: "Aucun dossier CraftID publié n’a été trouvé pour ce numéro.",
+    browseEyebrow: "Explorer le registre", browseTitle: "Explorer par contexte professionnel",
+    note: "La localisation publique n’est affichée qu’au niveau choisi par le titulaire du profil. Pour les professionnels individuels, la visibilité est généralement limitée à la ville ou à la région.",
+    search: "Rechercher dans le registre", placeholder: "Nom, métier ou compétence", craft: "Métier / compétence", country: "Pays", type: "Type de profil", all: "Tous",
+    professional: "Professional", workshop: "Workshop", results: "Dossiers publiés", oneResult: "dossier publié", manyResults: "dossiers publiés",
+    empty: "Aucun dossier publié ne correspond à ces filtres.", clear: "Effacer les filtres", open: "Ouvrir le dossier",
+    claimStatus: "Statut le plus élevé d’une déclaration visible", noClaimStatus: "Aucune déclaration publique examinée",
+    mapTitle: "Carte des compétences artisanales", mapText: "Explorez des agrégats géographiques respectueux de la confidentialité à partir des dossiers CraftID publiés. Les adresses exactes ne sont jamais affichées et les petits groupes sont supprimés avant que les données n’atteignent le client cartographique.",
+    listView: "Liste", mapView: "Carte", mapped: "groupes cartographiques",
+    mapPrivacy: "Les positions sont des agrégats approximatifs. Le seuil minimal de divulgation configuré est appliqué côté serveur.",
+  },
+  de: {
+    eyebrow: "Öffentliches Register", title: "Entdecken Sie professionelle Handwerkspraxis.",
+    intro: "Finden Sie einen bestimmten CraftID-Datensatz direkt oder durchsuchen Sie veröffentlichte Professionals und Werkstätten nach Handwerk, Kompetenz und Standort.",
+    idEyebrow: "Direkte CraftID-Suche", idTitle: "CraftID-Datensatz finden",
+    idText: "Verwenden Sie die dauerhafte CraftID-Nummer, um einen veröffentlichten Professional- oder Workshop-Datensatz direkt zu öffnen.",
+    idLabel: "CraftID-Nummer", idPlaceholder: "#0000-0101-86", idButton: "Datensatz öffnen",
+    idHint: "Geben Sie die vollständige CraftID-Nummer einschließlich der beiden Prüfziffern ein.",
+    idInvalid: "Geben Sie eine gültige CraftID im Format #0000-0101-86 ein.", idMissing: "Für diese Nummer wurde kein veröffentlichter CraftID-Datensatz gefunden.",
+    browseEyebrow: "Register durchsuchen", browseTitle: "Nach beruflichem Kontext erkunden",
+    note: "Der öffentliche Standort wird nur mit der vom Profilinhaber gewählten Genauigkeit angezeigt. Bei einzelnen Professionals ist standardmäßig Stadt- oder Regionsebene vorgesehen.",
+    search: "Register durchsuchen", placeholder: "Name, Handwerk oder Kompetenz", craft: "Handwerk / Kompetenz", country: "Land", type: "Profiltyp", all: "Alle",
+    professional: "Professional", workshop: "Workshop", results: "Veröffentlichte Datensätze", oneResult: "veröffentlichter Datensatz", manyResults: "veröffentlichte Datensätze",
+    empty: "Keine veröffentlichten Datensätze entsprechen diesen Filtern.", clear: "Filter löschen", open: "Datensatz öffnen",
+    claimStatus: "Höchster sichtbarer Status einer Angabe", noClaimStatus: "Keine geprüfte öffentliche Angabe",
+    mapTitle: "Karte der Handwerkskompetenzen", mapText: "Erkunden Sie datenschutzgerechte geografische Aggregate veröffentlichter CraftID-Datensätze. Genaue Adressen werden nie angezeigt; kleine Gruppen werden unterdrückt, bevor Daten den Kartenclient erreichen.",
+    listView: "Liste", mapView: "Karte", mapped: "Kartengruppen",
+    mapPrivacy: "Kartenpositionen sind ungefähre Aggregate. Der konfigurierte Mindestschwellenwert für Offenlegung wird serverseitig durchgesetzt.",
+  },
+  nl: {
+    eyebrow: "Openbaar register", title: "Ontdek professionele ambachtelijke praktijk.",
+    intro: "Vind een specifiek CraftID-dossier rechtstreeks of verken gepubliceerde professionals en werkplaatsen op ambacht, vaardigheid en locatie.",
+    idEyebrow: "Direct CraftID zoeken", idTitle: "Vind een CraftID-dossier",
+    idText: "Gebruik het permanente CraftID-nummer om rechtstreeks een gepubliceerd Professional- of Workshop-dossier te openen.",
+    idLabel: "CraftID-nummer", idPlaceholder: "#0000-0101-86", idButton: "Dossier openen",
+    idHint: "Voer het volledige CraftID-nummer in, inclusief de twee controlecijfers.",
+    idInvalid: "Voer een geldige CraftID in volgens formaat #0000-0101-86.", idMissing: "Voor dit nummer is geen gepubliceerd CraftID-dossier gevonden.",
+    browseEyebrow: "Register bekijken", browseTitle: "Verkennen op professionele context",
+    note: "De openbare locatie wordt alleen getoond op het niveau dat de profieleigenaar kiest. Voor individuele professionals is standaard zichtbaarheid op stads- of regioniveau bedoeld.",
+    search: "Register doorzoeken", placeholder: "Naam, ambacht of vaardigheid", craft: "Ambacht / vaardigheid", country: "Land", type: "Profieltype", all: "Alle",
+    professional: "Professional", workshop: "Workshop", results: "Gepubliceerde dossiers", oneResult: "gepubliceerd dossier", manyResults: "gepubliceerde dossiers",
+    empty: "Geen gepubliceerde dossiers voldoen aan deze filters.", clear: "Filters wissen", open: "Dossier openen",
+    claimStatus: "Hoogste zichtbare claimstatus", noClaimStatus: "Geen beoordeelde openbare claim",
+    mapTitle: "Kaart van ambachtelijke vaardigheden", mapText: "Verken privacyveilige geografische aggregaten van gepubliceerde CraftID-dossiers. Exacte adressen worden nooit getoond en kleine groepen worden onderdrukt voordat gegevens de kaartclient bereiken.",
+    listView: "Lijst", mapView: "Kaart", mapped: "kaartgroepen",
+    mapPrivacy: "Kaartposities zijn benaderde aggregaten. De ingestelde minimale openbaarmakingsdrempel wordt server-side afgedwongen.",
+  },
+  pl: {
+    eyebrow: "Rejestr publiczny", title: "Odkrywaj profesjonalne praktyki rzemieślnicze.",
+    intro: "Znajdź konkretny zapis CraftID bezpośrednio albo przeglądaj opublikowane profile profesjonalistów i pracowni według rzemiosła, umiejętności i lokalizacji.",
+    idEyebrow: "Bezpośrednie wyszukiwanie CraftID", idTitle: "Znajdź zapis CraftID",
+    idText: "Użyj stałego numeru CraftID, aby bezpośrednio otworzyć opublikowany zapis Professional lub Workshop.",
+    idLabel: "Numer CraftID", idPlaceholder: "#0000-0101-86", idButton: "Otwórz zapis",
+    idHint: "Wprowadź pełny numer CraftID wraz z dwiema cyframi kontrolnymi.",
+    idInvalid: "Wprowadź prawidłowy CraftID w formacie #0000-0101-86.", idMissing: "Nie znaleziono opublikowanego zapisu CraftID o tym numerze.",
+    browseEyebrow: "Przeglądaj rejestr", browseTitle: "Odkrywaj według kontekstu zawodowego",
+    note: "Publiczna lokalizacja jest pokazywana tylko z dokładnością wybraną przez właściciela profilu. Dla indywidualnych profesjonalistów domyślny jest poziom miasta lub regionu.",
+    search: "Szukaj w rejestrze", placeholder: "Imię, rzemiosło lub umiejętność", craft: "Rzemiosło / umiejętność", country: "Kraj", type: "Typ profilu", all: "Wszystkie",
+    professional: "Professional", workshop: "Workshop", results: "Opublikowane zapisy", oneResult: "opublikowany zapis", manyResults: "opublikowane zapisy",
+    empty: "Brak opublikowanych zapisów pasujących do tych filtrów.", clear: "Wyczyść filtry", open: "Otwórz zapis",
+    claimStatus: "Najwyższy widoczny status deklaracji", noClaimStatus: "Brak przejrzanej publicznej deklaracji",
+    mapTitle: "Mapa umiejętności rzemieślniczych", mapText: "Przeglądaj bezpieczne dla prywatności agregaty geograficzne opublikowanych zapisów CraftID. Dokładne adresy nigdy nie są pokazywane, a małe grupy są ukrywane zanim dane trafią do klienta mapy.",
+    listView: "Lista", mapView: "Mapa", mapped: "grupy na mapie",
+    mapPrivacy: "Pozycje na mapie są przybliżonymi agregatami. Skonfigurowany minimalny próg ujawnienia jest egzekwowany po stronie serwera.",
+  },
+  it: {
+    eyebrow: "Registro pubblico", title: "Scopri la pratica artigianale professionale.",
+    intro: "Trova direttamente uno specifico record CraftID oppure esplora professionisti e laboratori pubblicati per mestiere, competenza e località.",
+    idEyebrow: "Ricerca diretta CraftID", idTitle: "Trova un record CraftID",
+    idText: "Usa il numero CraftID permanente per aprire direttamente un record Professional o Workshop pubblicato.",
+    idLabel: "Numero CraftID", idPlaceholder: "#0000-0101-86", idButton: "Apri record",
+    idHint: "Inserisci il numero CraftID completo, comprese le due cifre di controllo.",
+    idInvalid: "Inserisci un CraftID valido nel formato #0000-0101-86.", idMissing: "Non è stato trovato alcun record CraftID pubblicato per questo numero.",
+    browseEyebrow: "Esplora il registro", browseTitle: "Esplora per contesto professionale",
+    note: "La località pubblica viene mostrata solo al livello scelto dal titolare del profilo. Per i professionisti individuali la visibilità predefinita è a livello di città o regione.",
+    search: "Cerca nel registro", placeholder: "Nome, mestiere o competenza", craft: "Mestiere / competenza", country: "Paese", type: "Tipo di profilo", all: "Tutti",
+    professional: "Professional", workshop: "Workshop", results: "Record pubblicati", oneResult: "record pubblicato", manyResults: "record pubblicati",
+    empty: "Nessun record pubblicato corrisponde a questi filtri.", clear: "Azzera filtri", open: "Apri record",
+    claimStatus: "Stato più alto della dichiarazione visibile", noClaimStatus: "Nessuna dichiarazione pubblica revisionata",
+    mapTitle: "Mappa delle competenze artigianali", mapText: "Esplora aggregati geografici rispettosi della privacy dei record CraftID pubblicati. Gli indirizzi esatti non vengono mai mostrati e i piccoli gruppi vengono soppressi prima che i dati raggiungano il client della mappa.",
+    listView: "Elenco", mapView: "Mappa", mapped: "gruppi sulla mappa",
+    mapPrivacy: "Le posizioni sono aggregati approssimativi. La soglia minima di divulgazione configurata viene applicata lato server.",
+  },
+  es: {
+    eyebrow: "Registro público", title: "Descubre la práctica artesanal profesional.",
+    intro: "Encuentra directamente un registro CraftID concreto o explora profesionales y talleres publicados por oficio, competencia y ubicación.",
+    idEyebrow: "Búsqueda directa de CraftID", idTitle: "Encontrar un registro CraftID",
+    idText: "Utiliza el número CraftID permanente para abrir directamente un registro Professional o Workshop publicado.",
+    idLabel: "Número CraftID", idPlaceholder: "#0000-0101-86", idButton: "Abrir registro",
+    idHint: "Introduce el número CraftID completo, incluidos los dos dígitos de control.",
+    idInvalid: "Introduce un CraftID válido con el formato #0000-0101-86.", idMissing: "No se encontró ningún registro CraftID publicado para ese número.",
+    browseEyebrow: "Explorar registro", browseTitle: "Explorar por contexto profesional",
+    note: "La ubicación pública solo se muestra con el nivel elegido por el titular del perfil. Para profesionales individuales se utiliza por defecto visibilidad a nivel de ciudad o región.",
+    search: "Buscar en el registro", placeholder: "Nombre, oficio o competencia", craft: "Oficio / competencia", country: "País", type: "Tipo de perfil", all: "Todos",
+    professional: "Professional", workshop: "Workshop", results: "Registros publicados", oneResult: "registro publicado", manyResults: "registros publicados",
+    empty: "Ningún registro publicado coincide con estos filtros.", clear: "Borrar filtros", open: "Abrir registro",
+    claimStatus: "Estado más alto de una declaración visible", noClaimStatus: "No hay declaración pública revisada",
+    mapTitle: "Mapa de competencias artesanales", mapText: "Explora agregados geográficos respetuosos con la privacidad de los registros CraftID publicados. Las direcciones exactas nunca se muestran y los grupos pequeños se suprimen antes de que los datos lleguen al cliente del mapa.",
+    listView: "Lista", mapView: "Mapa", mapped: "grupos en el mapa",
+    mapPrivacy: "Las posiciones del mapa son agregados aproximados. El umbral mínimo de divulgación configurado se aplica en el servidor.",
+  },
   uk: {
     eyebrow: "Публічний реєстр",
     title: "Відкривайте професійну ремісничу практику.",
@@ -194,7 +308,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
   const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
+  const q = locale === "en" ? "" : `?lang=${locale}`;
   const supabase = await createClient();
   let lookupError: string | null = null;
 
@@ -339,7 +453,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
   );
 
   const filterQuery = new URLSearchParams();
-  if (locale === "uk") filterQuery.set("lang", "uk");
+  if (locale !== "en") filterQuery.set("lang", locale);
   if (params.q) filterQuery.set("q", params.q);
   if (params.craft) filterQuery.set("craft", params.craft);
   if (params.country) filterQuery.set("country", params.country);
@@ -351,7 +465,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
   mapQuery.set("view", "map");
 
   const clearQuery = new URLSearchParams();
-  if (locale === "uk") clearQuery.set("lang", "uk");
+  if (locale !== "en") clearQuery.set("lang", locale);
 
   return (
     <>
@@ -373,7 +487,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
               <p>{t.idText}</p>
             </div>
             <form className="craftIdLookupForm" method="get" action="/discover">
-              {locale === "uk" ? <input type="hidden" name="lang" value="uk" /> : null}
+              {locale !== "en" ? <input type="hidden" name="lang" value={locale} /> : null}
               <label htmlFor="craftid-lookup">{t.idLabel}</label>
               <div className="craftIdLookupControl">
                 <input
@@ -402,7 +516,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
             </div>
 
             <form className="registryToolbar" method="get" action="/discover">
-              {locale === "uk" ? <input type="hidden" name="lang" value="uk" /> : null}
+              {locale !== "en" ? <input type="hidden" name="lang" value={locale} /> : null}
               <label className="searchField">
                 <span>{t.search}</span>
                 <input name="q" placeholder={t.placeholder} defaultValue={params.q ?? ""} />
@@ -429,7 +543,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
                   <option value="workshop">{t.workshop}</option>
                 </select>
               </label>
-              <button className="button" type="submit">{locale === "uk" ? "Застосувати" : "Apply"}</button>
+              <button className="button" type="submit">{{ en: "Apply", fr: "Appliquer", de: "Anwenden", nl: "Toepassen", pl: "Zastosuj", it: "Applica", es: "Aplicar", uk: "Застосувати" }[locale]}</button>
             </form>
 
             <div className="registrySummary">
@@ -454,7 +568,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
                 <div className="eyebrow">{view === "map" ? t.mapTitle : t.results}</div>
                 {view === "map" ? <p>{t.mapText}</p> : null}
               </div>
-              <nav className="registryViewSwitch" aria-label={locale === "uk" ? "Режим реєстру" : "Registry view"}>
+              <nav className="registryViewSwitch" aria-label={{ en: "Registry view", fr: "Vue du registre", de: "Registeransicht", nl: "Registerweergave", pl: "Widok rejestru", it: "Vista registro", es: "Vista del registro", uk: "Режим реєстру" }[locale]}>
                 <Link className={view === "list" ? "active" : ""} href={`/discover${listQuery.size ? `?${listQuery.toString()}` : ""}`}>{t.listView}</Link>
                 <Link className={view === "map" ? "active" : ""} href={`/discover?${mapQuery.toString()}`}>{t.mapView}</Link>
               </nav>
