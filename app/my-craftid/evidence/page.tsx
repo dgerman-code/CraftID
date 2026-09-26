@@ -4,6 +4,7 @@ import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { uploadEvidence } from "./actions";
 import { localeQuery } from "@/lib/i18n";
+import { workspaceLabel } from "@/lib/workspace-labels";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
@@ -142,7 +143,7 @@ export default async function EvidencePage({ searchParams }: Props) {
                   <option value="">{t.noClaim}</option>
                   {claims?.map((claim) => (
                     <option value={claim.id} key={claim.id}>
-                      {claim.title} · {claim.claim_type.replaceAll("_", " ")}
+                      {claim.title} · {workspaceLabel.claimType(locale, claim.claim_type)}
                     </option>
                   ))}
                 </select>
@@ -157,10 +158,10 @@ export default async function EvidencePage({ searchParams }: Props) {
             <div className="eyebrow">{t.list}</div>
             {!evidence?.length ? <p className="emptyState">{t.empty}</p> : evidence.map((item) => (
               <article className="claimItem" key={item.id}>
-                <span className="recordId">{item.evidence_type.replaceAll("_", " ")}</span>
+                <span className="recordId">{workspaceLabel.evidenceType(locale, item.evidence_type)}</span>
                 <h3>{item.title}</h3>
                 {item.issuer ? <p>{item.issuer}</p> : null}
-                <div className="claimMeta"><span>{item.review_status.replaceAll("_", " ")}</span></div>
+                <div className="claimMeta"><span>{workspaceLabel.evidenceStatus(locale, item.review_status)}</span></div>
               </article>
             ))}
           </aside>

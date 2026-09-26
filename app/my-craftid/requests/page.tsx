@@ -4,6 +4,7 @@ import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { updateContactRequestStatus } from "./actions";
 import { localeMeta, localeQuery } from "@/lib/i18n";
+import { workspaceLabel } from "@/lib/workspace-labels";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
@@ -95,13 +96,13 @@ export default async function ContactRequestsPage({ searchParams }: Props) {
                   <h2>{request.requester_name}</h2>
                   <a href={`mailto:${request.requester_email}`}>{request.requester_email}</a>
                 </div>
-                <span className="provenanceBadge">{t.status}: {request.status}</span>
+                <span className="provenanceBadge">{t.status}: {workspaceLabel.requestStatus(locale, request.status)}</span>
               </div>
 
               <div className="requestMeta">
                 {request.requester_organisation ? <span>{t.organisation}: {request.requester_organisation}</span> : null}
                 {request.requester_role ? <span>{t.role}: {request.requester_role}</span> : null}
-                <span>{t.purpose}: {request.purpose.replaceAll("_", " ")}</span>
+                <span>{t.purpose}: {workspaceLabel.requestPurpose(locale, request.purpose)}</span>
                 <span>{t.submitted}: {new Date(request.submitted_at).toLocaleDateString(localeMeta[locale].intl)}</span>
               </div>
 
