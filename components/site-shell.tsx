@@ -141,6 +141,38 @@ const labels: Record<
   },
 };
 
+export function LanguageMenu({
+  locale,
+  pathname,
+}: {
+  locale: PublicLocale;
+  pathname: string;
+}) {
+  const languageLabel = labels[locale].language;
+
+  return (
+    <details className="languageMenu">
+      <summary aria-label={languageLabel}>
+        <span>{localeMeta[locale].label}</span>
+        <span className="languageMenuChevron" aria-hidden="true">⌄</span>
+      </summary>
+      <div className="languageMenuPanel">
+        {supportedLocales.map((language) => (
+          <Link
+            key={language}
+            className={locale === language ? "active" : ""}
+            href={withLocale(pathname, language)}
+            hrefLang={language}
+          >
+            <span>{localeMeta[language].label}</span>
+            <small>{localeMeta[language].short}</small>
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
+
 export function SiteHeader({
   locale,
   pathname,
@@ -166,25 +198,7 @@ export function SiteHeader({
             <Link className={isActive("/network") ? "active" : ""} href={withLocale("/network", locale)}>{t.network}</Link>
             <Link className={isActive("/about") ? "active" : ""} href={withLocale("/about", locale)}>{t.about}</Link>
           </nav>
-          <details className="languageMenu">
-            <summary aria-label={t.language}>
-              <span>{localeMeta[locale].label}</span>
-              <span className="languageMenuChevron" aria-hidden="true">⌄</span>
-            </summary>
-            <div className="languageMenuPanel">
-              {supportedLocales.map((language) => (
-                <Link
-                  key={language}
-                  className={locale === language ? "active" : ""}
-                  href={withLocale(pathname, language)}
-                  hrefLang={language}
-                >
-                  <span>{localeMeta[language].label}</span>
-                  <small>{localeMeta[language].short}</small>
-                </Link>
-              ))}
-            </div>
-          </details>
+          <LanguageMenu locale={locale} pathname={pathname} />
           <Link className="textLink" href={withLocale("/login", locale)}>
             {t.signIn}
           </Link>
