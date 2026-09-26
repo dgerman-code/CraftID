@@ -45,13 +45,14 @@ const copy = {
     trustTitle: "Trust should be explicit, not implied.",
     trustText: "CraftID does not certify a whole person. Review applies to specific claims and the evidence linked to them. Public status language is designed to show exactly what has — and has not — been reviewed.",
     methodology: "Read the methodology",
+    trustEyebrow: "Trust model",
   },
   fr: {
     pilotLabel: "Plateforme pilote",
     pilotText: "CraftID est actuellement en phase active de développement et de test. Les fonctionnalités, les structures de données et les flux de travail peuvent évoluer avant le lancement public.",
     eyebrow: "Infrastructure d’identité professionnelle",
     title: "Une identité professionnelle fondée sur des preuves.",
-    intro: "CraftID est une infrastructure à vocation européenne pour l’identité professionnelle, les compétences et les preuves, destinée aux artisans, ateliers et microentreprises de métiers d’art et d’artisanat.",
+    intro: "CraftID est une infrastructure à vocation européenne pour l’identité professionnelle, les compétences et les preuves, destinée aux artisans, ateliers et micro-entreprises artisanales.",
     create: "Créer un CraftID",
     explore: "Explorer le registre",
     logicLabel: "Logique centrale",
@@ -71,7 +72,7 @@ const copy = {
       ["CraftID permanent", "Un identifiant professionnel unique utilisable sur les produits, emballages, cartes de visite, sites web, CV, catalogues et candidatures. Le CraftID reste lié au même professionnel ou atelier dans le temps."],
       ["Profil professionnel public", "Un acheteur, organisateur de salon, partenaire ou institution peut suivre le CraftID ou le QR code pour voir qui est le créateur et quelle pratique professionnelle il présente publiquement."],
       ["Historique des compétences étayé par des preuves", "Les compétences, l’expérience, la formation, les qualifications et d’autres déclarations peuvent progressivement être reliées à des preuves et attestations, tout en gardant les pièces justificatives privées sauf divulgation explicitement prévue."],
-      ["Certificat du dossier CraftID", "Émettez et téléchargez un certificat versionné du dossier CraftID avec son propre numéro de certificat. Il enregistre un instantané publié du CraftID ; il ne certifie ni l’identité ni la compétence professionnelle."],
+      ["Certificat du dossier CraftID", "Émettez et téléchargez un certificat versionné du dossier CraftID avec son propre numéro de certificat et une vérification par QR code. Il enregistre un instantané publié du CraftID ; il ne certifie ni l’identité ni la compétence professionnelle."],
       ["Traçabilité des produits", "Lorsqu’un CraftID figure sur un produit ou un document, l’identifiant peut rester résolvable dans le temps afin que le créateur ou l’atelier enregistré puisse encore être identifié même après la fermeture du compte actif."],
       ["Contrôle de la confidentialité", "Le titulaire du CraftID choisit ce qui est public : pays, région ou ville, informations du profil, contacts et photo. Les ateliers peuvent aussi décider explicitement de publier ou non leur adresse professionnelle exacte."],
       ["Lien Professional ↔ Workshop", "Un CraftID Professional peut être relié à un CraftID Workshop sans fusionner les deux identités, de sorte qu’une personne conserve son propre dossier professionnel lorsque son atelier, son employeur ou son lieu de pratique change."],
@@ -86,6 +87,7 @@ const copy = {
     trustTitle: "La confiance doit être explicite, pas implicite.",
     trustText: "CraftID ne certifie pas une personne dans son ensemble. L’examen porte sur des déclarations précises et les preuves qui leur sont liées. Le langage des statuts publics indique clairement ce qui a — et n’a pas — été examiné.",
     methodology: "Lire la méthodologie",
+    trustEyebrow: "Modèle de confiance",
   },
   de: {
     pilotLabel: "Pilotplattform",
@@ -112,7 +114,7 @@ const copy = {
       ["Dauerhafte CraftID", "Eine berufliche Kennung für Produkte, Verpackungen, Visitenkarten, Websites, Lebensläufe, Kataloge und Bewerbungen. Die CraftID bleibt langfristig derselben Person oder Werkstatt zugeordnet."],
       ["Öffentliches Berufsprofil", "Käufer, Messeveranstalter, Partner oder Institutionen können über CraftID oder QR-Code sehen, wer die Person ist und welche berufliche Praxis öffentlich dargestellt wird."],
       ["Nachweisgestützte Kompetenzhistorie", "Kompetenzen, Erfahrung, Ausbildung, Qualifikationen und weitere Angaben können schrittweise mit Nachweisen und Bestätigungen verknüpft werden; Nachweise bleiben privat, sofern ihre Offenlegung nicht ausdrücklich vorgesehen ist."],
-      ["CraftID Record Certificate", "Erstellen und laden Sie ein versioniertes Zertifikat des CraftID-Datensatzes mit eigener Zertifikatsnummer herunter. Es dokumentiert den veröffentlichten Stand des CraftID-Datensatzes; es zertifiziert weder Identität noch berufliche Kompetenz."],
+      ["CraftID Record Certificate", "Erstellen und laden Sie ein versioniertes Zertifikat des CraftID-Eintrags mit eigener Zertifikatsnummer und QR-Prüfung herunter. Es dokumentiert den veröffentlichten Stand des CraftID-Eintrags; es zertifiziert weder Identität noch berufliche Kompetenz."],
       ["Produktrückverfolgbarkeit", "Wird eine CraftID auf einem Produkt oder Dokument angebracht, kann die Kennung langfristig auflösbar bleiben, sodass die registrierte Person oder Werkstatt auch nach Schließung des aktiven Kontos identifiziert werden kann."],
       ["Datenschutzkontrolle", "Der CraftID-Inhaber entscheidet, was öffentlich ist: Land, Region oder Stadt, Profildaten, Kontakte und Foto. Werkstätten können außerdem ausdrücklich festlegen, ob eine genaue Geschäftsadresse veröffentlicht wird."],
       ["Professional ↔ Workshop-Verknüpfung", "Eine Professional CraftID kann mit einer Workshop CraftID verknüpft werden, ohne die beiden Identitäten zusammenzuführen. So behält eine Person ihren eigenen beruflichen Datensatz, wenn sich Werkstatt, Arbeitgeber oder Praxisort ändern."],
@@ -120,13 +122,14 @@ const copy = {
       ["Zugang über das Partnernetzwerk", "Mit dem Ausbau des Netzwerks kann CraftID von nationalen und sektoralen Partnern, Handwerksorganisationen, Messen, Bildungsanbietern und Förderprogrammen als strukturierte berufliche Referenz genutzt werden."],
     ],
     audience: "Für wen CraftID gedacht ist",
-    profTitle: "Für Fachkräfte und Werkstätten",
+    profTitle: "Für Handwerkerinnen, Handwerker und Werkstätten",
     profText: "Erstellen Sie einen portablen beruflichen Datensatz, unabhängig von Marktplatz, Arbeitgeber oder Einzelprojekt. Stellen Sie Kompetenzen, Praxis und Nachweise dar, ohne das Profil in ein Verkaufsangebot zu verwandeln.",
     instTitle: "Für Institutionen und Ökosysteme",
     instText: "Erkennen Sie, wo handwerkliche Kompetenzen ausgeübt werden, identifizieren Sie regionale Fähigkeiten und unterstützen Sie Kompetenzanalysen, Berufsbildungswege, den Erhalt handwerklichen Erbes und grenzüberschreitende Zusammenarbeit.",
     trustTitle: "Vertrauen sollte ausdrücklich sein, nicht nur vermutet.",
     trustText: "CraftID zertifiziert nicht eine Person als Ganzes. Die Prüfung bezieht sich auf konkrete Angaben und die dazugehörigen Nachweise. Öffentliche Statusangaben zeigen genau, was geprüft wurde — und was nicht.",
     methodology: "Methodik lesen",
+    trustEyebrow: "Vertrauensmodell",
   },
   nl: {
     pilotLabel: "Pilotplatform",
@@ -144,7 +147,7 @@ const copy = {
       ["Identiteit", "Een blijvende CraftID-referentie voor een professional of werkplaats. De identifier codeert geen land, beroep, jaar of juridische status."],
       ["Vaardigheden en praktijk", "Beschrijf vaardigheden die in de professionele praktijk worden gebruikt en koppel ze aan ervaring, kwalificaties, portfolio en affiliaties."],
       ["Bewijs", "Koppel afzonderlijke professionele claims aan ondersteunend materiaal. Bewijs is standaard privé en wordt niet automatisch openbaar gemaakt."],
-      ["Vertrouwen", "Openbare dossiers maken duidelijk onderscheid tussen zelfverklaarde informatie, ingediend bewijs en claims die zijn beoordeeld."],
+      ["Vertrouwen", "Openbare dossiers maken duidelijk onderscheid tussen zelf opgegeven informatie, ingediend bewijs en claims die zijn beoordeeld."],
     ],
     valueEyebrow: "Voor ambachtsprofessionals",
     valueTitle: "Eén identiteit. Praktische waarde door de tijd heen.",
@@ -153,7 +156,7 @@ const copy = {
       ["Permanente CraftID", "Eén professionele identifier voor producten, verpakkingen, visitekaartjes, websites, cv’s, catalogi en aanvragen. De CraftID blijft door de tijd heen gekoppeld aan dezelfde professional of werkplaats."],
       ["Openbaar professioneel profiel", "Een koper, beursorganisator, partner of instelling kan via de CraftID of QR-code zien wie de maker is en welke professionele praktijk openbaar wordt gepresenteerd."],
       ["Met bewijs onderbouwde vaardighedengeschiedenis", "Vaardigheden, ervaring, opleiding, kwalificaties en andere claims kunnen geleidelijk aan bewijs en attestaties worden gekoppeld, terwijl bewijs privé blijft tenzij openbaarmaking uitdrukkelijk is bedoeld."],
-      ["CraftID Record Certificate", "Geef een versiegebonden certificaat van het CraftID-dossier uit en download het met een eigen certificaatnummer. Het legt de gepubliceerde CraftID-snapshot vast; het certificeert geen identiteit of professionele bekwaamheid."],
+      ["CraftID Record Certificate", "Geef een certificaat met versienummer van het CraftID-dossier uit en download het met een eigen certificaatnummer en QR-verificatie. Het legt de gepubliceerde momentopname van het CraftID-dossier vast; het certificeert geen identiteit of professionele bekwaamheid."],
       ["Producttraceerbaarheid", "Wanneer een CraftID op een product of document staat, kan de identifier blijvend opvraagbaar zijn zodat de geregistreerde maker of werkplaats ook na sluiting van het actieve account nog kan worden geïdentificeerd."],
       ["Privacycontrole", "De CraftID-eigenaar bepaalt wat openbaar is: land, regio of stad, profielgegevens, contactgegevens en foto. Werkplaatsen kunnen ook expliciet kiezen of een exact bedrijfsadres openbaar wordt gemaakt."],
       ["Professional ↔ Workshop-koppeling", "Een Professional CraftID kan aan een Workshop CraftID worden gekoppeld zonder de twee identiteiten samen te voegen, zodat iemand het eigen professionele dossier behoudt wanneer werkplaats, werkgever of praktijklocatie verandert."],
@@ -168,6 +171,7 @@ const copy = {
     trustTitle: "Vertrouwen moet expliciet zijn, niet impliciet.",
     trustText: "CraftID certificeert geen persoon als geheel. Beoordeling geldt voor specifieke claims en het daaraan gekoppelde bewijs. Publieke statustaal maakt precies duidelijk wat wel — en niet — is beoordeeld.",
     methodology: "Lees de methodologie",
+    trustEyebrow: "Vertrouwensmodel",
   },
   pl: {
     pilotLabel: "Platforma pilotażowa",
@@ -194,11 +198,11 @@ const copy = {
       ["Stały CraftID", "Jeden identyfikator zawodowy do użycia na produktach, opakowaniach, wizytówkach, stronach internetowych, CV, katalogach i wnioskach. CraftID pozostaje przypisany do tej samej osoby lub pracowni w czasie."],
       ["Publiczny profil zawodowy", "Kupujący, organizator targów, partner lub instytucja może przejść przez CraftID lub kod QR i zobaczyć, kim jest twórca oraz jaką praktykę zawodową przedstawia publicznie."],
       ["Historia umiejętności oparta na dowodach", "Umiejętności, doświadczenie, szkolenia, kwalifikacje i inne deklaracje mogą być stopniowo łączone z dowodami i poświadczeniami, przy zachowaniu prywatności dowodów, chyba że ich ujawnienie jest wyraźnie zamierzone."],
-      ["CraftID Record Certificate", "Wydawaj i pobieraj wersjonowany certyfikat zapisu CraftID z własnym numerem certyfikatu. Utrwala on opublikowany stan zapisu CraftID; nie certyfikuje tożsamości ani kompetencji zawodowych."],
+      ["CraftID Record Certificate", "Wydawaj i pobieraj wersjonowany certyfikat wpisu CraftID z własnym numerem certyfikatu i weryfikacją kodem QR. Utrwala on opublikowany stan wpisu CraftID; nie certyfikuje tożsamości ani kompetencji zawodowych."],
       ["Identyfikowalność produktów", "Gdy CraftID zostanie umieszczony na produkcie lub dokumencie, identyfikator może pozostać dostępny w czasie, aby zarejestrowany twórca lub pracownia mogli być zidentyfikowani także po zamknięciu aktywnego konta."],
       ["Kontrola prywatności", "Właściciel CraftID decyduje, co jest publiczne: kraj, region lub miasto, dane profilu, kontakty i zdjęcie. Właściciel pracowni może też wyraźnie zdecydować, czy publikować dokładny adres działalności."],
       ["Połączenie Professional ↔ Workshop", "Professional CraftID może być połączony z Workshop CraftID bez łączenia obu tożsamości, dzięki czemu osoba zachowuje własny zapis zawodowy, gdy zmienia się pracownia, pracodawca lub miejsce praktyki."],
-      ["Przejrzyste zaufanie", "CraftID nie twierdzi, że twórca jest „dobry” ani ogólnie certyfikowany. Pokazuje uporządkowane informacje zawodowe i rozróżnia dane zadeklarowane samodzielnie, dowody oraz zweryfikowane deklaracje."],
+      ["Przejrzyste zaufanie", "CraftID nie twierdzi, że twórca jest „dobry” ani ogólnie certyfikowany. Pokazuje uporządkowane informacje zawodowe i rozróżnia dane zadeklarowane samodzielnie, dowody oraz deklaracje poddane ocenie."],
       ["Dostęp przez sieć partnerów", "Wraz z rozwojem sieci CraftID może być wykorzystywany przez partnerów krajowych i sektorowych, organizacje rzemieślnicze, targi, instytucje edukacyjne i programy wsparcia jako uporządkowany punkt odniesienia zawodowego."],
     ],
     audience: "Dla kogo jest CraftID",
@@ -209,6 +213,7 @@ const copy = {
     trustTitle: "Zaufanie powinno być wyraźne, a nie domyślne.",
     trustText: "CraftID nie certyfikuje całej osoby. Przegląd dotyczy konkretnych deklaracji i powiązanych z nimi dowodów. Publiczne statusy mają jasno pokazywać, co zostało — a co nie zostało — sprawdzone.",
     methodology: "Przeczytaj metodologię",
+    trustEyebrow: "Model zaufania",
   },
   it: {
     pilotLabel: "Piattaforma pilota",
@@ -235,11 +240,11 @@ const copy = {
       ["CraftID permanente", "Un unico identificativo professionale utilizzabile su prodotti, imballaggi, biglietti da visita, siti web, CV, cataloghi e candidature. Il CraftID resta associato nel tempo allo stesso professionista o laboratorio."],
       ["Profilo professionale pubblico", "Un acquirente, organizzatore di fiera, partner o istituzione può seguire il CraftID o il codice QR per vedere chi è il maker e quale pratica professionale presenta pubblicamente."],
       ["Storia delle competenze supportata da evidenze", "Competenze, esperienza, formazione, qualifiche e altre dichiarazioni possono essere progressivamente collegate a evidenze e attestazioni, mantenendo private le prove salvo quando la divulgazione è espressamente prevista."],
-      ["CraftID Record Certificate", "Emetti e scarica un certificato versionato del record CraftID con un proprio numero di certificato. Registra lo snapshot pubblicato del CraftID; non certifica l’identità né la competenza professionale."],
+      ["CraftID Record Certificate", "Emetti e scarica un certificato con numero di versione della scheda CraftID, con un proprio numero di certificato e verifica tramite QR. Registra lo stato pubblicato della scheda CraftID; non certifica l’identità né la competenza professionale."],
       ["Tracciabilità dei prodotti", "Quando un CraftID è applicato a un prodotto o documento, l’identificativo può restare risolvibile nel tempo affinché il maker o laboratorio registrato possa essere identificato anche dopo la chiusura dell’account attivo."],
       ["Controllo della privacy", "Il titolare del CraftID decide cosa è pubblico: paese, regione o città, dettagli del profilo, contatti e foto. I laboratori possono inoltre scegliere esplicitamente se pubblicare un indirizzo aziendale esatto."],
       ["Collegamento Professional ↔ Workshop", "Un Professional CraftID può essere collegato a un Workshop CraftID senza fondere le due identità, così la persona conserva il proprio record professionale quando cambiano laboratorio, datore di lavoro o luogo di pratica."],
-      ["Fiducia trasparente", "CraftID non afferma che un maker sia “bravo” o certificato in senso generale. Mostra informazioni professionali strutturate e distingue informazioni autodichiarate, evidenze e dichiarazioni revisionate."],
+      ["Fiducia trasparente", "CraftID non afferma che un artigiano sia “bravo” o certificato in senso generale. Mostra informazioni professionali strutturate e distingue informazioni autodichiarate, evidenze e dichiarazioni esaminate."],
       ["Accesso attraverso la rete di partner", "Con lo sviluppo della rete, CraftID può essere utilizzato da partner nazionali e settoriali, organizzazioni artigiane, fiere, enti di formazione e programmi di supporto come riferimento professionale strutturato."],
     ],
     audience: "A chi è rivolto CraftID",
@@ -248,8 +253,9 @@ const copy = {
     instTitle: "Per istituzioni ed ecosistemi",
     instText: "Comprendi dove vengono praticate le competenze artigianali, individua le capacità regionali e supporta l’analisi delle competenze, i percorsi di formazione professionale, la continuità del patrimonio e la cooperazione transfrontaliera.",
     trustTitle: "La fiducia deve essere esplicita, non implicita.",
-    trustText: "CraftID non certifica una persona nel suo complesso. La revisione riguarda dichiarazioni specifiche e le evidenze ad esse collegate. Il linguaggio degli status pubblici mostra esattamente cosa è stato — e cosa non è stato — revisionato.",
+    trustText: "CraftID non certifica una persona nel suo complesso. L’esame riguarda dichiarazioni specifiche e le evidenze ad esse collegate. Il linguaggio degli status pubblici mostra esattamente cosa è stato — e cosa non è stato — esaminato.",
     methodology: "Leggi la metodologia",
+    trustEyebrow: "Modello di fiducia",
   },
   es: {
     pilotLabel: "Plataforma piloto",
@@ -275,8 +281,8 @@ const copy = {
     valueItems: [
       ["CraftID permanente", "Un único identificador profesional que puede utilizarse en productos, embalajes, tarjetas, sitios web, CV, catálogos y solicitudes. El CraftID permanece vinculado al mismo profesional o taller a lo largo del tiempo."],
       ["Perfil profesional público", "Un comprador, organizador de feria, socio o institución puede seguir el CraftID o el código QR para ver quién es el creador y qué práctica profesional presenta públicamente."],
-      ["Historial de competencias respaldado por evidencias", "Las competencias, la experiencia, la formación, las cualificaciones y otras declaraciones pueden vincularse gradualmente a evidencias y attestations, manteniendo las evidencias privadas salvo que su divulgación esté expresamente prevista."],
-      ["CraftID Record Certificate", "Emite y descarga un certificado versionado del registro CraftID con su propio número de certificado. Registra la instantánea publicada del CraftID; no certifica la identidad ni la competencia profesional."],
+      ["Historial de competencias respaldado por evidencias", "Las competencias, la experiencia, la formación, las cualificaciones y otras declaraciones pueden vincularse gradualmente a evidencias y constancias, manteniendo las evidencias privadas salvo que su divulgación esté expresamente prevista."],
+      ["CraftID Record Certificate", "Emite y descarga un certificado versionado de la ficha CraftID con su propio número de certificado y verificación mediante QR. Registra la versión publicada de la ficha CraftID; no certifica la identidad ni la competencia profesional."],
       ["Trazabilidad de productos", "Cuando un CraftID se coloca en un producto o documento, el identificador puede seguir siendo resoluble con el tiempo para que el creador o taller registrado pueda identificarse incluso después de cerrar la cuenta activa."],
       ["Control de privacidad", "El titular del CraftID decide qué es público: país, región o ciudad, datos del perfil, contactos y foto. Los talleres también pueden decidir expresamente si publican una dirección empresarial exacta."],
       ["Vínculo Professional ↔ Workshop", "Un Professional CraftID puede vincularse a un Workshop CraftID sin fusionar ambas identidades, de modo que una persona conserva su propio registro profesional cuando cambia de taller, empleador o lugar de práctica."],
@@ -291,6 +297,7 @@ const copy = {
     trustTitle: "La confianza debe ser explícita, no implícita.",
     trustText: "CraftID no certifica a una persona en su conjunto. La revisión se aplica a declaraciones concretas y a las evidencias vinculadas. El lenguaje de los estados públicos muestra exactamente qué ha sido — y qué no ha sido — revisado.",
     methodology: "Leer la metodología",
+    trustEyebrow: "Modelo de confianza",
   },
   uk: {
     pilotLabel: "Пілотна платформа",
@@ -332,6 +339,7 @@ const copy = {
     trustTitle: "Довіра має бути чіткою, а не припущеною.",
     trustText: "CraftID не сертифікує людину в цілому. Перевірка стосується конкретних тверджень і пов’язаних із ними доказів. Публічні статуси показують, що саме було перевірено — і що не було.",
     methodology: "Переглянути методологію",
+    trustEyebrow: "Модель довіри",
   },
 } as const;
 
@@ -433,7 +441,7 @@ export default async function HomePage({ searchParams }: HomeProps) {
         <section className="section trustBand">
           <div className="container trustBandInner">
             <div>
-              <div className="eyebrow">Trust model</div>
+              <div className="eyebrow">{t.trustEyebrow}</div>
               <h2>{t.trustTitle}</h2>
               <p>{t.trustText}</p>
             </div>
