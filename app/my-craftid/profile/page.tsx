@@ -1,3 +1,4 @@
+import { localeQuery, contentLocale, withLocale } from "@/lib/i18n";
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -78,12 +79,12 @@ const copy = {
 export default async function ProfilePage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
-  const t = copy[locale as keyof typeof copy] ?? copy.en;
+  const t = copy[contentLocale(locale)];
   const { supabase, userId, entity } = await getOwnedCraftId(params.entity);
-  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
-  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
-  if (params.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : localeQuery(locale);
+  if (!userId) redirect(`/login${localeQuery(locale)}`);
+  if (params.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
+  if (!entity) redirect(`/onboarding${localeQuery(locale)}`);
 
   const [result, contactsResult] = await Promise.all([
     entity.entity_type === "professional"
