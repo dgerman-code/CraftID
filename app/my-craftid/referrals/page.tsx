@@ -106,7 +106,7 @@ export default async function ReferralsPage({ searchParams }: Props) {
           <div className="eyebrow">{t.shareable}</div>
           {!contacts?.length ? <p className="emptyState">{t.noShareable}</p> : (
             <div className="tagRow">
-              {contacts.map((c) => <span className="tag" key={workspaceLabel.contactType(locale, c.contact_type)}>{c.contact_type}</span>)}
+              {contacts.map((c) => <span className="tag" key={c.contact_type}>{workspaceLabel.contactType(locale, c.contact_type)}</span>)}
             </div>
           )}
         </section>
