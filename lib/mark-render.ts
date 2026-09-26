@@ -167,7 +167,21 @@ export function renderCraftedInMarkSvg(input: {
 
 export async function renderSvgToPng(svg: string) {
   const sharp = (await import("sharp")).default;
-  const png = await sharp(Buffer.from(svg)).png().toBuffer();
+
+  // librsvg/Pango (used by Sharp) does not reliably resolve data-URI @font-face
+  // declarations. Keep the browser/download SVG untouched, but use a
+  // raster-safe generic sans-serif stack for dynamic text when producing PNG.
+  const rasterSafeSvg = svg
+    .replace(
+      /font-family='"CID Sans Crafted Medium",Montserrat,"Helvetica Neue",Arial,sans-serif'/g,
+      'font-family="sans-serif"',
+    )
+    .replace(
+      /font-family='"CID Sans Crafted Regular",Montserrat,"Helvetica Neue",Arial,sans-serif'/g,
+      'font-family="sans-serif"',
+    );
+
+  const png = await sharp(Buffer.from(rasterSafeSvg)).png().toBuffer();
   return new Uint8Array(png);
 }
 
