@@ -49,7 +49,7 @@ const copy = {
     intro: "Utworzony przez Ciebie wpis Professional lub Workshop jest bezpiecznie powiązany z Twoim kontem. Numer CraftID jest przydzielany dopiero po skonfigurowaniu konta.",
     email: "E-mail", password: "Hasło", confirm: "Potwierdź hasło", submit: "Utwórz konto",
     have: "Masz już konto?", signIn: "Zaloguj się",
-    note: "Tworząc konto, rozpoczynasz zapis zawodowy. CraftID nie certyfikuje Cię ani nie nadaje statusu zawodowego.",
+    note: "Tworząc konto, rozpoczynasz wpis zawodowy. CraftID nie certyfikuje Cię ani nie nadaje statusu zawodowego.",
     back: "Wróć do CraftID",
   },
   it: {
