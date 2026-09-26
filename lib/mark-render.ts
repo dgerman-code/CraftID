@@ -255,6 +255,41 @@ export async function renderSvgToPng(svg: string) {
   return new Uint8Array(png);
 }
 
+export async function renderCraftedInPrintSheetPdf(svg: string) {
+  const pngBytes = await renderSvgToPng(svg);
+  const pdf = await PDFDocument.create();
+  const page = pdf.addPage([595.28, 841.89]);
+  const mark = await pdf.embedPng(pngBytes);
+
+  // 3 × 3 gives each mark roughly 58 mm on A4: large enough for the
+  // country line, CraftID and QR to remain comfortably readable in print.
+  const markSize = 165;
+  const cols = 3;
+  const rows = 3;
+  const gapX = (page.getWidth() - cols * markSize) / (cols + 1);
+  const gapY = (page.getHeight() - rows * markSize) / (rows + 1);
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      const x = gapX + col * (markSize + gapX);
+      const y =
+        page.getHeight() -
+        gapY -
+        markSize -
+        row * (markSize + gapY);
+
+      page.drawImage(mark, {
+        x,
+        y,
+        width: markSize,
+        height: markSize,
+      });
+    }
+  }
+
+  return pdf.save();
+}
+
 function renderApprovedProfessionalStickerSvg(input: {
   craftId: string;
   qrDataUri: string;
