@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { uploadEvidence } from "./actions";
+import { localeQuery, contentLocale, withLocale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
@@ -49,12 +50,12 @@ const copy = {
 export default async function EvidencePage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
-  const t = copy[locale as keyof typeof copy] ?? copy.en;
+  const t = copy[contentLocale(locale)];
   const { supabase, userId, entity } = await getOwnedCraftId(params.entity);
-  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
-  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
-  if (params.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : localeQuery(locale);
+  if (!userId) redirect(`/login${localeQuery(locale)}`);
+  if (params.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
+  if (!entity) redirect(`/onboarding${localeQuery(locale)}`);
 
   const [{ data: evidence }, { data: claims }] = await Promise.all([
     supabase.from("evidence_items")
