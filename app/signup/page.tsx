@@ -33,7 +33,7 @@ const copy = {
     intro: "Der von Ihnen angelegte Professional- oder Workshop-Eintrag ist sicher mit Ihrem Konto verknüpft. Eine CraftID-Nummer wird erst nach der Kontoeinrichtung vergeben.",
     email: "E-Mail", password: "Passwort", confirm: "Passwort bestätigen", submit: "Konto erstellen",
     have: "Bereits registriert?", signIn: "Anmelden",
-    note: "Mit der Kontoerstellung beginnen Sie einen beruflichen Datensatz. CraftID zertifiziert Sie nicht und verleiht keinen Berufsstatus.",
+    note: "Mit der Kontoerstellung beginnen Sie einen beruflichen Eintrag. CraftID zertifiziert Sie nicht und verleiht keinen Berufsstatus.",
     back: "Zurück zu CraftID",
   },
   nl: {
