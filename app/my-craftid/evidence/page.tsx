@@ -75,6 +75,17 @@ const copy = {
   },
 } as const;
 
+const evidenceTypeOptions = {
+  en: { qualification_document: "Qualification document", experience_document: "Experience document", identity_document: "Identity document", business_registration: "Business registration", portfolio_evidence: "Portfolio evidence", external_reference: "External reference", other: "Other" },
+  fr: { qualification_document: "Document de qualification", experience_document: "Document d’expérience", identity_document: "Document d’identité", business_registration: "Enregistrement d’entreprise", portfolio_evidence: "Élément de portfolio", external_reference: "Référence externe", other: "Autre" },
+  de: { qualification_document: "Qualifikationsnachweis", experience_document: "Erfahrungsnachweis", identity_document: "Identitätsdokument", business_registration: "Gewerbe-/Unternehmensregistrierung", portfolio_evidence: "Portfolio-Nachweis", external_reference: "Externe Referenz", other: "Sonstiges" },
+  nl: { qualification_document: "Kwalificatiedocument", experience_document: "Ervaringsdocument", identity_document: "Identiteitsdocument", business_registration: "Bedrijfsregistratie", portfolio_evidence: "Portfoliobewijs", external_reference: "Externe referentie", other: "Anders" },
+  pl: { qualification_document: "Dokument kwalifikacji", experience_document: "Dokument doświadczenia", identity_document: "Dokument tożsamości", business_registration: "Rejestracja działalności", portfolio_evidence: "Materiał portfolio", external_reference: "Źródło zewnętrzne", other: "Inne" },
+  it: { qualification_document: "Documento di qualifica", experience_document: "Documento di esperienza", identity_document: "Documento d’identità", business_registration: "Registrazione dell’attività", portfolio_evidence: "Evidenza di portfolio", external_reference: "Riferimento esterno", other: "Altro" },
+  es: { qualification_document: "Documento de cualificación", experience_document: "Documento de experiencia", identity_document: "Documento de identidad", business_registration: "Registro empresarial", portfolio_evidence: "Evidencia de portfolio", external_reference: "Referencia externa", other: "Otro" },
+  uk: { qualification_document: "Документ про кваліфікацію", experience_document: "Документ про досвід", identity_document: "Документ для підтвердження особи", business_registration: "Реєстрація бізнесу", portfolio_evidence: "Матеріал портфоліо", external_reference: "Зовнішнє джерело", other: "Інше" },
+} as const;
+
 export default async function EvidencePage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
@@ -116,13 +127,13 @@ export default async function EvidencePage({ searchParams }: Props) {
               <label>{t.titleLabel}<input name="title" required /></label>
               <label>{t.type}
                 <select name="evidenceType" required defaultValue="qualification_document">
-                  <option value="qualification_document">{locale === "uk" ? "Документ про кваліфікацію" : "Qualification document"}</option>
-                  <option value="experience_document">{locale === "uk" ? "Документ про досвід" : "Experience document"}</option>
-                  <option value="identity_document">{locale === "uk" ? "Документ для підтвердження особи" : "Identity document"}</option>
-                  <option value="business_registration">{locale === "uk" ? "Реєстрація бізнесу" : "Business registration"}</option>
-                  <option value="portfolio_evidence">{locale === "uk" ? "Матеріал портфоліо" : "Portfolio evidence"}</option>
-                  <option value="external_reference">{locale === "uk" ? "Зовнішнє джерело" : "External reference"}</option>
-                  <option value="other">{locale === "uk" ? "Інше" : "Other"}</option>
+                  <option value="qualification_document">{evidenceTypeOptions[locale].qualification_document}</option>
+                  <option value="experience_document">{evidenceTypeOptions[locale].experience_document}</option>
+                  <option value="identity_document">{evidenceTypeOptions[locale].identity_document}</option>
+                  <option value="business_registration">{evidenceTypeOptions[locale].business_registration}</option>
+                  <option value="portfolio_evidence">{evidenceTypeOptions[locale].portfolio_evidence}</option>
+                  <option value="external_reference">{evidenceTypeOptions[locale].external_reference}</option>
+                  <option value="other">{evidenceTypeOptions[locale].other}</option>
                 </select>
               </label>
               <label>{t.issuer}<input name="issuer" /></label>
