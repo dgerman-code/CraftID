@@ -5,6 +5,7 @@ import {
   fetchBinaryAsset,
   fetchCraftedInTemplateSvg,
   fetchQrPng,
+  renderCraftedInMarkPngSvg,
   renderCraftedInMarkSvg,
   renderSvgToPng,
 } from "@/lib/mark-render";
@@ -38,34 +39,35 @@ export async function GET(request: NextRequest) {
 
   try {
     const assetOrigin = request.nextUrl.origin;
-    const [templateSvg, qr, mediumFont, regularFont] = await Promise.all([
+    const [templateSvg, qr] = await Promise.all([
       fetchCraftedInTemplateSvg(assetOrigin),
       fetchQrPng(result.entity.profileUrl, 620, 0),
-      fetchBinaryAsset(
-        new URL("/templates/cid-sans-500.woff2", assetOrigin).toString(),
-        "Crafted in medium font",
-      ),
-      fetchBinaryAsset(
-        new URL("/templates/cid-sans-400.woff2", assetOrigin).toString(),
-        "Crafted in regular font",
-      ),
     ]);
-
-    const svg = renderCraftedInMarkSvg({
-      templateSvg,
-      country,
-      craftId: result.entity.craftId,
-      qrDataUri: qr.dataUri,
-      mediumFontDataUri: mediumFont.dataUri,
-      regularFontDataUri: regularFont.dataUri,
-    });
 
     const download = request.nextUrl.searchParams.get("download") === "1";
     const safeCountry = countryCode || "country";
     const baseName = `craftid-crafted-in-${safeCountry}-${result.entity.craftId}`;
 
     if (format === "png") {
-      const png = await renderSvgToPng(svg);
+      const [mediumFont, regularFont] = await Promise.all([
+        fetchBinaryAsset(
+          new URL("/templates/cid-sans-500.ttf", assetOrigin).toString(),
+          "Crafted in medium TTF",
+        ),
+        fetchBinaryAsset(
+          new URL("/templates/cid-sans-400.ttf", assetOrigin).toString(),
+          "Crafted in regular TTF",
+        ),
+      ]);
+      const pngSvg = renderCraftedInMarkPngSvg({
+        templateSvg,
+        country,
+        craftId: result.entity.craftId,
+        qrDataUri: qr.dataUri,
+        mediumFontBytes: mediumFont.bytes,
+        regularFontBytes: regularFont.bytes,
+      });
+      const png = await renderSvgToPng(pngSvg);
       return new NextResponse(Buffer.from(png), {
         headers: {
           "Content-Type": "image/png",
@@ -75,6 +77,25 @@ export async function GET(request: NextRequest) {
         },
       });
     }
+
+    const [mediumFont, regularFont] = await Promise.all([
+      fetchBinaryAsset(
+        new URL("/templates/cid-sans-500.woff2", assetOrigin).toString(),
+        "Crafted in medium font",
+      ),
+      fetchBinaryAsset(
+        new URL("/templates/cid-sans-400.woff2", assetOrigin).toString(),
+        "Crafted in regular font",
+      ),
+    ]);
+    const svg = renderCraftedInMarkSvg({
+      templateSvg,
+      country,
+      craftId: result.entity.craftId,
+      qrDataUri: qr.dataUri,
+      mediumFontDataUri: mediumFont.dataUri,
+      regularFontDataUri: regularFont.dataUri,
+    });
 
     return new NextResponse(svg, {
       headers: {
