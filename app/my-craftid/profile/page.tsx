@@ -78,7 +78,7 @@ const copy = {
 export default async function ProfilePage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
-  const t = copy[locale];
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
   const { supabase, userId, entity } = await getOwnedCraftId(params.entity);
   const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
   if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
