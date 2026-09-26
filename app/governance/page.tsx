@@ -37,7 +37,7 @@ const copy = {
 
 export default async function GovernancePage({ searchParams }: Props) {
   const locale = localeFrom((await searchParams).lang);
-  const t = copy[locale];
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
 
   return (
     <>
