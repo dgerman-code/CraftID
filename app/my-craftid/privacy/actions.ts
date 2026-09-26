@@ -3,16 +3,19 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
+import { localeFrom, localeQuery } from "@/lib/i18n";
+import { workspaceActionCopy } from "@/lib/workspace-action-copy";
 
 export async function updatePrivacy(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const entityId = String(formData.get("entityId") ?? "").trim();
   const allowedPrecision = new Set(["country", "region", "city"]);
   const precision = String(formData.get("locationPrecision") ?? "city");
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
   const q = ownerWorkspaceQuery(lang, entity.id);
 
   const addressLine1 = String(formData.get("addressLine1") ?? "").trim();
@@ -22,9 +25,7 @@ export async function updatePrivacy(formData: FormData) {
   const countryCode = String(formData.get("addressCountryCode") ?? "").trim().toUpperCase();
 
   if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) {
-    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(
-      lang === "uk" ? "Код країни адреси має містити 2 літери." : "Address country code must contain 2 letters.",
-    )}`);
+    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(t.addressCountryCode)}`);
   }
 
   const canonicalPrecision = allowedPrecision.has(precision) ? precision : "city";
@@ -50,19 +51,11 @@ export async function updatePrivacy(formData: FormData) {
     formData.get("confirmExactAddressPublic") === "on";
 
   if (wantsExactPublic && !confirmsExactPublic) {
-    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(
-      lang === "uk"
-        ? "Підтвердьте згоду на публікацію повної адреси майстерні."
-        : "Confirm consent before publishing the full workshop address.",
-    )}`);
+    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(t.exactPublicConsent)}`);
   }
 
   if (wantsExactPublic && (!addressLine1 || !locality || !countryCode)) {
-    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(
-      lang === "uk"
-        ? "Для публічної адреси потрібні адреса, населений пункт і код країни."
-        : "A public workshop address requires address line 1, locality and country code.",
-    )}`);
+    redirect(`/my-craftid/privacy${q}&error=${encodeURIComponent(t.exactAddressRequired)}`);
   }
 
   if (hasAnyAddress) {
