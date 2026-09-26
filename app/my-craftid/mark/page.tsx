@@ -153,7 +153,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
   const t = copy[locale];
-  const { userId, entity } = await getOwnedCraftId(sp.entity);
+  const { userId, entity, supabase } = await getOwnedCraftId(sp.entity);
 
   if (!userId) redirect(`/login${localeQuery(locale)}`);
   if (sp.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
@@ -164,11 +164,26 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
   const siteUrl = getSiteUrl();
   const profileUrl = new URL("id/" + craftId, siteUrl).toString();
 
+  const workshopProfile =
+    entity.entity_type === "workshop"
+      ? await supabase
+          .from("workshop_profiles")
+          .select("country_code")
+          .eq("entity_id", entity.id)
+          .maybeSingle()
+      : null;
+  const workshopCountryCode =
+    workshopProfile?.data?.country_code?.trim().toUpperCase() || null;
+
   const stickerPreview = `/api/kit/sticker?entity=${encodeURIComponent(entity.id)}`;
   const stickerDownload = stickerPreview + "&download=1";
   const qrCodePreview = `/api/kit/qr?entity=${encodeURIComponent(entity.id)}`;
   const qrCodeDownload = qrCodePreview + "&download=1";
   const printSheetDownload = `/api/kit/print-sheet?entity=${encodeURIComponent(entity.id)}`;
+  const craftedInBase = `/api/kit/crafted-in?entity=${encodeURIComponent(entity.id)}`;
+  const craftedInPreview = craftedInBase + "&format=png";
+  const craftedInSvgDownload = craftedInBase + "&format=svg&download=1";
+  const craftedInPngDownload = craftedInBase + "&format=png&download=1";
 
   const publicBadgeUrl = new URL(
     "api/mark/badge?craftId=" + encodeURIComponent(craftId),
@@ -222,6 +237,37 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
               {t.downloadSticker}
             </a>
           </article>
+
+          {entity.entity_type === "workshop" ? (
+            <article className="markPanel">
+              <div className="eyebrow">{t.craftedIn}</div>
+              <p>{t.craftedInText}</p>
+              {workshopCountryCode ? (
+                <>
+                  <img
+                    className="craftIdBadgePreview"
+                    src={craftedInPreview}
+                    alt={`Crafted in ${workshopCountryCode} mark for CraftID #${craftId}`}
+                  />
+                  <div className="markButtonRow">
+                    <a className="button markAssetButton" href={craftedInSvgDownload}>
+                      {t.downloadCraftedInSvg}
+                    </a>
+                    <a className="button markAssetButton" href={craftedInPngDownload}>
+                      {t.downloadCraftedInPng}
+                    </a>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="privacyNote">{t.craftedInCountryMissing}</p>
+                  <Link className="button markAssetButton" href={"/my-craftid/profile" + q}>
+                    {t.editWorkshopProfile}
+                  </Link>
+                </>
+              )}
+            </article>
+          ) : null}
 
           <article className="markPanel">
             <div className="eyebrow">{t.qrCode}</div>
