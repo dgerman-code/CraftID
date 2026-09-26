@@ -14,6 +14,7 @@ const descriptions: Record<Locale, string> = {
   uk: "Європейська інфраструктура професійної ідентичності, навичок і доказів для майстрів та майстерень.",
 };
 
+// The proxy forwards the selected locale so root metadata and <html lang> stay in sync.
 async function requestLocale() {
   const requestHeaders = await headers();
   return localeFrom(requestHeaders.get("x-craftid-locale"));
