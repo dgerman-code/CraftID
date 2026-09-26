@@ -68,7 +68,7 @@ export async function closeCraftIdAccount(formData: FormData) {
   const lang = localeFrom(String(formData.get("lang") ?? "en"));
   const t = workspaceActionCopy[lang];
   const confirmation = String(formData.get("confirmation") ?? "").trim().toLowerCase();
-  const expected = lang === "uk" ? "закрити" : "close";
+  const expected = t.closeKeyword;
 
   if (confirmation !== expected) {
     redirect(errorUrl("/my-craftid", lang, t.closeConfirm));
