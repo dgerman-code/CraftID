@@ -3,11 +3,14 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
+import { localeFrom, localeQuery } from "@/lib/i18n";
+import { workspaceActionCopy } from "@/lib/workspace-action-copy";
 
 const allowedTypes = new Set(["skill", "experience", "qualification", "workshop_affiliation", "external_recognition", "origin", "craft_tradition"]);
 
 export async function addClaim(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const entityId = String(formData.get("entityId") ?? "").trim();
   const type = String(formData.get("claimType") ?? "");
   const title = String(formData.get("title") ?? "").trim();
@@ -15,12 +18,12 @@ export async function addClaim(formData: FormData) {
   const visibility = String(formData.get("visibility") ?? "public") === "private" ? "private" : "public";
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
   const q = ownerWorkspaceQuery(lang, entity.id);
 
   if (!allowedTypes.has(type) || !title) {
-    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent("Claim type and title are required")}`);
+    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(t.claimRequired)}`);
   }
 
   const { error } = await supabase.from("claims").insert({
@@ -40,21 +43,19 @@ export async function addClaim(formData: FormData) {
   redirect(`/my-craftid/claims${q}&message=added`);
 }
 
-
 export async function addSkillClaims(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const entityId = String(formData.get("entityId") ?? "").trim();
   const selected = [...new Set(formData.getAll("skillId").map((value) => String(value)).filter(Boolean))];
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
   const q = ownerWorkspaceQuery(lang, entity.id);
 
   if (!selected.length) {
-    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(
-      lang === "uk" ? "Оберіть щонайменше одну навичку" : "Choose at least one skill",
-    )}`);
+    redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(t.selectSkill)}`);
   }
 
   const { data: terms, error: termsError } = await supabase
@@ -66,7 +67,7 @@ export async function addSkillClaims(formData: FormData) {
 
   if (termsError || !terms?.length) {
     redirect(`/my-craftid/claims${q}&error=${encodeURIComponent(
-      termsError?.message ?? "Selected skills were not found",
+      termsError?.message ?? t.skillsNotFound,
     )}`);
   }
 
