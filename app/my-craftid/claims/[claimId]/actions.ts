@@ -3,6 +3,8 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
+import { localeFrom, localeQuery } from "@/lib/i18n";
+import { workspaceActionCopy } from "@/lib/workspace-action-copy";
 
 const allowedIndicators = new Set([
   "skill.usage_intensity",
@@ -19,12 +21,13 @@ const allowedIndicators = new Set([
 ]);
 
 export async function saveSkillProfile(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const claimId = String(formData.get("claimId") ?? "").trim();
   const entityId = String(formData.get("entityId") ?? "").trim();
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
   const q = ownerWorkspaceQuery(lang, entity.id);
 
   const { data: claim } = await supabase
@@ -35,7 +38,6 @@ export async function saveSkillProfile(formData: FormData) {
     .single();
 
   if (!claim) redirect(`/my-craftid/claims${q}`);
-
   if (claim.entity_id !== entity.id) redirect(`/my-craftid/claims${q}`);
 
   const entries = [...formData.entries()]
@@ -43,9 +45,7 @@ export async function saveSkillProfile(formData: FormData) {
     .map(([key, value]) => [key, String(value)] as const);
 
   if (!entries.length) {
-    redirect(`/my-craftid/claims/${claimId}${q}&error=${encodeURIComponent(
-      lang === "uk" ? "Оберіть хоча б одну відповідь" : "Choose at least one answer",
-    )}`);
+    redirect(`/my-craftid/claims/${claimId}${q}&error=${encodeURIComponent(t.selectAnswer)}`);
   }
 
   for (const [indicatorKey, value] of entries) {
