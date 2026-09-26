@@ -38,8 +38,8 @@ const copy = {
 export default async function SignupPage({ searchParams }: SignupPageProps) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
-  const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
+  const q = locale === "en" ? "" : `?lang=${locale}`;
 
   return (
     <main className="authPage">
