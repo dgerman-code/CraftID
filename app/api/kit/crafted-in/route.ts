@@ -25,12 +25,6 @@ export async function GET(request: NextRequest) {
   if (result.status !== 200 || !result.entity) {
     return new NextResponse("CraftID entity not found", { status: 404 });
   }
-  if (result.entity.entityType !== "workshop") {
-    return new NextResponse("Crafted in Mark is available for Workshop CraftID only", {
-      status: 403,
-    });
-  }
-
   const countryCode = result.entity.countryCode?.trim().toUpperCase() ?? "";
   const country = countryNameFromCode(countryCode);
   if (!country) {
