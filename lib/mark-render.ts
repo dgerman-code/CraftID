@@ -62,30 +62,20 @@ export async function fetchQrPng(target: string, size = 520, margin = 0) {
   };
 }
 
-const CRAFTED_IN_TEMPLATE_PARTS = 13;
-
 export async function fetchCraftedInTemplateSvg(assetOrigin: string) {
-  const parts = await Promise.all(
-    Array.from({ length: CRAFTED_IN_TEMPLATE_PARTS }, async (_, index) => {
-      const part = String(index).padStart(2, "0");
-      const url = new URL(
-        `/templates/crafted-in-template/part-${part}.txt`,
-        assetOrigin,
-      );
-      const response = await fetch(url, {
-        headers: { "User-Agent": "CraftID Download Kit" },
-        next: { revalidate: 60 * 60 * 24 * 30 },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Crafted in template part ${part} unavailable`);
-      }
-
-      return response.text();
-    }),
+  const response = await fetch(
+    new URL("/templates/crafted-in-template.svg", assetOrigin),
+    {
+      headers: { "User-Agent": "CraftID Download Kit" },
+      next: { revalidate: 60 * 60 * 24 * 30 },
+    },
   );
 
-  const template = parts.join("");
+  if (!response.ok) {
+    throw new Error("Crafted in template unavailable");
+  }
+
+  const template = await response.text();
   if (!template.startsWith("<svg") || !template.endsWith("</svg>")) {
     throw new Error("Crafted in template is invalid");
   }
