@@ -6,7 +6,7 @@ import { formatCraftId } from "@/lib/certificate";
 import { formatCertificateNumber } from "@/lib/craftid-format";
 import { getSiteUrl } from "@/lib/site-url";
 import { issueCertificate } from "./actions";
-import { localeQuery, contentLocale, withLocale } from "@/lib/i18n";
+import { localeQuery, contentLocale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
