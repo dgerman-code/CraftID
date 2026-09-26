@@ -5,6 +5,7 @@ import { localeFrom } from "@/components/site-shell";
 import { addClaim, addSkillClaims } from "./actions";
 import { localeQuery } from "@/lib/i18n";
 import { workspaceLabel } from "@/lib/workspace-labels";
+import { workspaceSkillLabel } from "@/lib/workspace-taxonomy-copy";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
@@ -151,7 +152,7 @@ export default async function ClaimsPage({ searchParams }: Props) {
                 <input type="hidden" name="entityId" value={entity.id} />
                 <div className="skillOptionGrid">
                   {skillTerms?.map((term) => {
-                    const label = locale === "uk" ? term.label_uk : term.label_en;
+                    const label = workspaceSkillLabel(locale, term.stable_key, term.label_en, term.label_uk);
                     const selected = selectedSkillIds.has(term.id);
                     return (
                       <label className={selected ? "skillOption selected" : "skillOption"} key={term.id}>
