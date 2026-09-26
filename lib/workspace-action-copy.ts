@@ -6,6 +6,7 @@ type WorkspaceActionText = {
   newWorkshop: string;
   createdSelectFailed: string;
   closeConfirm: string;
+  closeKeyword: string;
   claimRequired: string;
   selectSkill: string;
   skillsNotFound: string;
@@ -28,6 +29,7 @@ export const workspaceActionCopy: Record<Locale, WorkspaceActionText> = {
     newWorkshop: "New workshop",
     createdSelectFailed: "CraftID was created but the new record could not be selected.",
     closeConfirm: 'Type "close" to confirm account closure.',
+    closeKeyword: "close",
     claimRequired: "Claim type and title are required.",
     selectSkill: "Choose at least one skill.",
     skillsNotFound: "Selected skills were not found.",
@@ -47,7 +49,8 @@ export const workspaceActionCopy: Record<Locale, WorkspaceActionText> = {
     newProfessional: "Nouveau professionnel",
     newWorkshop: "Nouvel atelier",
     createdSelectFailed: "Le CraftID a été créé, mais le nouveau dossier n’a pas pu être sélectionné.",
-    closeConfirm: 'Tapez "close" pour confirmer la fermeture du compte.',
+    closeConfirm: 'Tapez "fermer" pour confirmer la fermeture du compte.',
+    closeKeyword: "fermer",
     claimRequired: "Le type et l’intitulé de la déclaration sont obligatoires.",
     selectSkill: "Sélectionnez au moins une compétence.",
     skillsNotFound: "Les compétences sélectionnées sont introuvables.",
@@ -67,7 +70,8 @@ export const workspaceActionCopy: Record<Locale, WorkspaceActionText> = {
     newProfessional: "Neue Fachperson",
     newWorkshop: "Neue Werkstatt",
     createdSelectFailed: "Die CraftID wurde erstellt, der neue Datensatz konnte jedoch nicht ausgewählt werden.",
-    closeConfirm: 'Geben Sie "close" ein, um die Kontoschließung zu bestätigen.',
+    closeConfirm: 'Geben Sie "schließen" ein, um die Kontoschließung zu bestätigen.',
+    closeKeyword: "schließen",
     claimRequired: "Art und Titel der Angabe sind erforderlich.",
     selectSkill: "Wählen Sie mindestens eine Kompetenz aus.",
     skillsNotFound: "Die ausgewählten Kompetenzen wurden nicht gefunden.",
@@ -87,7 +91,8 @@ export const workspaceActionCopy: Record<Locale, WorkspaceActionText> = {
     newProfessional: "Nieuwe professional",
     newWorkshop: "Nieuwe werkplaats",
     createdSelectFailed: "De CraftID is aangemaakt, maar het nieuwe dossier kon niet worden geselecteerd.",
-    closeConfirm: 'Typ "close" om het sluiten van het account te bevestigen.',
+    closeConfirm: 'Typ "sluiten" om het sluiten van het account te bevestigen.',
+    closeKeyword: "sluiten",
     claimRequired: "Type en titel van de verklaring zijn verplicht.",
     selectSkill: "Kies ten minste één vaardigheid.",
     skillsNotFound: "De geselecteerde vaardigheden zijn niet gevonden.",
@@ -107,7 +112,8 @@ export const workspaceActionCopy: Record<Locale, WorkspaceActionText> = {
     newProfessional: "Nowy profesjonalista",
     newWorkshop: "Nowa pracownia",
     createdSelectFailed: "CraftID został utworzony, ale nie udało się wybrać nowego zapisu.",
-    closeConfirm: 'Wpisz "close", aby potwierdzić zamknięcie konta.',
+    closeConfirm: 'Wpisz "zamknij", aby potwierdzić zamknięcie konta.',
+    closeKeyword: "zamknij",
     claimRequired: "Typ i tytuł deklaracji są wymagane.",
     selectSkill: "Wybierz co najmniej jedną umiejętność.",
     skillsNotFound: "Nie znaleziono wybranych umiejętności.",
@@ -127,7 +133,8 @@ export const workspaceActionCopy: Record<Locale, WorkspaceActionText> = {
     newProfessional: "Nuovo professionista",
     newWorkshop: "Nuovo laboratorio",
     createdSelectFailed: "Il CraftID è stato creato, ma non è stato possibile selezionare il nuovo record.",
-    closeConfirm: 'Digita "close" per confermare la chiusura dell’account.',
+    closeConfirm: 'Digita "chiudi" per confermare la chiusura dell’account.',
+    closeKeyword: "chiudi",
     claimRequired: "Tipo e titolo della dichiarazione sono obbligatori.",
     selectSkill: "Seleziona almeno una competenza.",
     skillsNotFound: "Le competenze selezionate non sono state trovate.",
@@ -147,7 +154,8 @@ export const workspaceActionCopy: Record<Locale, WorkspaceActionText> = {
     newProfessional: "Nuevo profesional",
     newWorkshop: "Nuevo taller",
     createdSelectFailed: "El CraftID se creó, pero no se pudo seleccionar el nuevo registro.",
-    closeConfirm: 'Escribe "close" para confirmar el cierre de la cuenta.',
+    closeConfirm: 'Escribe "cerrar" para confirmar el cierre de la cuenta.',
+    closeKeyword: "cerrar",
     claimRequired: "El tipo y el título de la declaración son obligatorios.",
     selectSkill: "Elige al menos una competencia.",
     skillsNotFound: "No se encontraron las competencias seleccionadas.",
@@ -168,6 +176,7 @@ export const workspaceActionCopy: Record<Locale, WorkspaceActionText> = {
     newWorkshop: "Нова майстерня",
     createdSelectFailed: "CraftID створено, але новий запис не вдалося вибрати.",
     closeConfirm: "Введіть «закрити», щоб підтвердити закриття облікового запису.",
+    closeKeyword: "закрити",
     claimRequired: "Потрібно вказати тип і назву твердження.",
     selectSkill: "Оберіть щонайменше одну навичку.",
     skillsNotFound: "Вибрані навички не знайдено.",
