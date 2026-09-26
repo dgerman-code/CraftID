@@ -72,6 +72,7 @@ const copy = {
     closeAccountText: "Your active CraftID records will be archived immediately and removed from Registry, Discover and Map. Existing CraftID numbers will remain resolvable as minimal historical records so products and documents already carrying the number do not become unverifiable.",
     closeAccountRetention: "Public contacts, profile images and active profile details will no longer be disclosed. The CraftID number is never reassigned. If you later return and recover this identity, the same CraftID is restored as a draft and must be reviewed before publication.",
     closeConfirm: 'Type "close" to confirm',
+    closeKeyword: "close",
     closeButton: "Archive records and close account",
   },
   fr: {
@@ -131,7 +132,8 @@ const copy = {
     closeAccount: "Fermer le compte CraftID",
     closeAccountText: "Vos dossiers CraftID actifs seront immédiatement archivés et retirés du Registre, de Discover et de la carte. Les numéros CraftID existants resteront résolvables sous forme de dossiers historiques minimaux afin que les produits et documents qui les portent restent vérifiables.",
     closeAccountRetention: "Les contacts publics, images de profil et détails actifs du profil ne seront plus divulgués. Le numéro CraftID n’est jamais réattribué. Si vous revenez ultérieurement et récupérez cette identité, le même CraftID sera restauré comme brouillon et devra être vérifié avant publication.",
-    closeConfirm: 'Tapez "close" pour confirmer',
+    closeConfirm: 'Tapez "fermer" pour confirmer',
+    closeKeyword: "fermer",
     closeButton: "Archiver les dossiers et fermer le compte",
   },
   de: {
@@ -191,7 +193,8 @@ const copy = {
     closeAccount: "CraftID-Konto schließen",
     closeAccountText: "Ihre aktiven CraftID-Datensätze werden sofort archiviert und aus Register, Discover und Karte entfernt. Bestehende CraftID-Nummern bleiben als minimale historische Datensätze auflösbar, damit Produkte und Dokumente mit dieser Nummer weiterhin überprüfbar bleiben.",
     closeAccountRetention: "Öffentliche Kontakte, Profilbilder und aktive Profildetails werden nicht mehr offengelegt. Die CraftID-Nummer wird niemals neu vergeben. Wenn Sie später zurückkehren und diese Identität wiederherstellen, wird dieselbe CraftID als Entwurf reaktiviert und muss vor der Veröffentlichung geprüft werden.",
-    closeConfirm: 'Geben Sie "close" zur Bestätigung ein',
+    closeConfirm: 'Geben Sie "schließen" zur Bestätigung ein',
+    closeKeyword: "schließen",
     closeButton: "Datensätze archivieren und Konto schließen",
   },
   nl: {
@@ -251,7 +254,8 @@ const copy = {
     closeAccount: "CraftID-account sluiten",
     closeAccountText: "Uw actieve CraftID-dossiers worden onmiddellijk gearchiveerd en verwijderd uit Registry, Discover en Map. Bestaande CraftID-nummers blijven als minimale historische dossiers opvraagbaar, zodat producten en documenten waarop het nummer al staat controleerbaar blijven.",
     closeAccountRetention: "Openbare contacten, profielafbeeldingen en actieve profielgegevens worden niet langer getoond. Het CraftID-nummer wordt nooit opnieuw toegewezen. Als u later terugkeert en deze identiteit herstelt, wordt dezelfde CraftID als concept hersteld en moet die vóór publicatie worden beoordeeld.",
-    closeConfirm: 'Typ "close" om te bevestigen',
+    closeConfirm: 'Typ "sluiten" om te bevestigen',
+    closeKeyword: "sluiten",
     closeButton: "Dossiers archiveren en account sluiten",
   },
   pl: {
@@ -311,7 +315,8 @@ const copy = {
     closeAccount: "Zamknij konto CraftID",
     closeAccountText: "Aktywne zapisy CraftID zostaną natychmiast zarchiwizowane i usunięte z Registry, Discover i Map. Istniejące numery CraftID pozostaną dostępne jako minimalne zapisy historyczne, aby produkty i dokumenty już oznaczone numerem nadal można było zweryfikować.",
     closeAccountRetention: "Publiczne dane kontaktowe, zdjęcia profilu i aktywne szczegóły profilu nie będą już ujawniane. Numer CraftID nigdy nie jest ponownie przydzielany. Jeśli później wrócisz i odzyskasz tę tożsamość, ten sam CraftID zostanie przywrócony jako wersja robocza i będzie wymagał przeglądu przed publikacją.",
-    closeConfirm: 'Wpisz "close", aby potwierdzić',
+    closeConfirm: 'Wpisz "zamknij", aby potwierdzić',
+    closeKeyword: "zamknij",
     closeButton: "Zarchiwizuj zapisy i zamknij konto",
   },
   it: {
@@ -371,7 +376,8 @@ const copy = {
     closeAccount: "Chiudi account CraftID",
     closeAccountText: "I record CraftID attivi saranno archiviati immediatamente e rimossi da Registry, Discover e Map. I numeri CraftID esistenti resteranno risolvibili come record storici minimi, così i prodotti e documenti che li riportano continueranno a essere verificabili.",
     closeAccountRetention: "Contatti pubblici, immagini del profilo e dettagli attivi non saranno più divulgati. Il numero CraftID non viene mai riassegnato. Se in futuro torni e recuperi questa identità, lo stesso CraftID sarà ripristinato come bozza e dovrà essere riesaminato prima della pubblicazione.",
-    closeConfirm: 'Digita "close" per confermare',
+    closeConfirm: 'Digita "chiudi" per confermare',
+    closeKeyword: "chiudi",
     closeButton: "Archivia i record e chiudi l’account",
   },
   es: {
@@ -431,7 +437,8 @@ const copy = {
     closeAccount: "Cerrar cuenta CraftID",
     closeAccountText: "Tus registros CraftID activos se archivarán inmediatamente y se eliminarán de Registry, Discover y Map. Los números CraftID existentes seguirán siendo resolubles como registros históricos mínimos para que los productos y documentos que ya los llevan sigan siendo verificables.",
     closeAccountRetention: "Los contactos públicos, imágenes de perfil y detalles activos dejarán de mostrarse. El número CraftID nunca se reasigna. Si vuelves más adelante y recuperas esta identidad, el mismo CraftID se restaurará como borrador y deberá revisarse antes de volver a publicarse.",
-    closeConfirm: 'Escribe "close" para confirmar',
+    closeConfirm: 'Escribe "cerrar" para confirmar',
+    closeKeyword: "cerrar",
     closeButton: "Archivar registros y cerrar cuenta",
   },
   uk: {
@@ -492,6 +499,7 @@ const copy = {
     closeAccountText: "Ваші активні записи CraftID будуть негайно перенесені в архів і зникнуть з Registry, Discover та Map. Уже видані номери CraftID залишаться доступними як мінімальні історичні записи, щоб вироби й документи з цим номером можна було перевірити.",
     closeAccountRetention: "Публічні контакти, фото профілю та активні дані профілю більше не розкриватимуться. Номер CraftID ніколи не буде виданий іншій сутності. Якщо ви повернетеся та відновите цю ідентичність, буде відновлено той самий CraftID як чернетку, яку потрібно перевірити перед повторною публікацією.",
     closeConfirm: "Введіть «закрити» для підтвердження",
+    closeKeyword: "закрити",
     closeButton: "Архівувати записи та закрити обліковий запис",
   },
 } as const;
@@ -694,7 +702,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
               <input
                 name="confirmation"
                 autoComplete="off"
-                placeholder={locale === "uk" ? "закрити" : "close"}
+                placeholder={t.closeKeyword}
                 required
               />
             </label>
