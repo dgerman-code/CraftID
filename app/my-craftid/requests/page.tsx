@@ -102,7 +102,7 @@ export default async function ContactRequestsPage({ searchParams }: Props) {
               <div className="requestMeta">
                 {request.requester_organisation ? <span>{t.organisation}: {request.requester_organisation}</span> : null}
                 {request.requester_role ? <span>{t.role}: {request.requester_role}</span> : null}
-                <span>{t.purpose}: {request.purpose.replaceAll("_", " ")}</span>
+                <span>{t.purpose}: {workspaceLabel.requestPurpose(locale, request.purpose)}</span>
                 <span>{t.submitted}: {new Date(request.submitted_at).toLocaleDateString(localeMeta[locale].intl)}</span>
               </div>
 
