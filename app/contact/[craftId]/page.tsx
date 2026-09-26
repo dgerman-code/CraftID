@@ -59,8 +59,8 @@ export default async function ContactPage({ params, searchParams }: Props) {
   const { craftId } = await params;
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
+  const q = locale === "en" ? "" : `?lang=${locale}`;
   const parsedCraftId = parseCraftId(craftId);
   const displayCraftId = parsedCraftId
     ? formatCraftId(parsedCraftId.number, parsedCraftId.check)
