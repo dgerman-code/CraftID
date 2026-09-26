@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { respondToInstitutionalReferral } from "./actions";
-import { localeQuery } from "@/lib/i18n";
+import { localeMeta, localeQuery } from "@/lib/i18n";
+import { workspaceLabel } from "@/lib/workspace-labels";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
@@ -105,7 +106,7 @@ export default async function ReferralsPage({ searchParams }: Props) {
           <div className="eyebrow">{t.shareable}</div>
           {!contacts?.length ? <p className="emptyState">{t.noShareable}</p> : (
             <div className="tagRow">
-              {contacts.map((c) => <span className="tag" key={c.contact_type}>{c.contact_type}</span>)}
+              {contacts.map((c) => <span className="tag" key={workspaceLabel.contactType(locale, c.contact_type)}>{c.contact_type}</span>)}
             </div>
           )}
         </section>
@@ -118,13 +119,13 @@ export default async function ReferralsPage({ searchParams }: Props) {
                   <span className="recordId">{r.requester_organisation}</span>
                   <h2>{r.title}</h2>
                 </div>
-                <span className="provenanceBadge">{t.status}: {r.status}</span>
+                <span className="provenanceBadge">{t.status}: {workspaceLabel.referralStatus(locale, r.status)}</span>
               </div>
 
               <div className="requestMeta">
                 <span>{t.organisation}: {r.requester_organisation}</span>
-                <span>{t.type}: {r.opportunity_type}</span>
-                {r.response_deadline ? <span>{t.deadline}: {r.response_deadline}</span> : null}
+                <span>{t.type}: {workspaceLabel.referralType(locale, r.opportunity_type)}</span>
+                {r.response_deadline ? <span>{t.deadline}: {new Date(`${r.response_deadline}T00:00:00`).toLocaleDateString(localeMeta[locale].intl)}</span> : null}
               </div>
 
               <p>{r.message}</p>
