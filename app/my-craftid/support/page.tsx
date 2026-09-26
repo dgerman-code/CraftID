@@ -94,6 +94,69 @@ const copy = {
   },
 } as const;
 
+const supportCategoryCopy = {
+  fr: {
+    funding_finance: ["Financement et soutien financier", "Subventions, chèques, aides, prêts, financement d’équipement et autres soutiens financiers."],
+    business_advisory: ["Soutien et conseil aux entreprises", "Planification, tarification, numérisation, conseil juridique ou opérationnel."],
+    certification_standards: ["Certification, normes et conformité", "Conseils sur la certification, les exigences produits, les essais, les normes et la conformité."],
+    training_skills: ["Formation et développement des compétences", "Développement des compétences techniques, numériques, entrepreneuriales, de gestion et autres."],
+    partnerships: ["Partenariats et coopération", "Coopération avec artisans, ateliers, designers, fournisseurs, institutions ou autres partenaires."],
+    markets_export: ["Marchés, ventes et export", "Salons, marketplaces, acheteurs B2B, distributeurs, export et soutien à l’internationalisation."],
+    production_equipment: ["Production, espace de travail et équipement", "Équipement, machines, ateliers partagés, capacité de production, logistique ou infrastructure."],
+    innovation_sustainability: ["Innovation et durabilité", "Fabrication numérique, nouvelles technologies, efficacité énergétique, production circulaire et matériaux durables."],
+  },
+  de: {
+    funding_finance: ["Finanzierung & finanzielle Unterstützung", "Zuschüsse, Gutscheine, Förderungen, Darlehen, Ausrüstungsfinanzierung und weitere finanzielle Unterstützung."],
+    business_advisory: ["Unternehmensunterstützung & Beratung", "Geschäftsplanung, Preisgestaltung, Digitalisierung sowie rechtliche oder operative Beratung."],
+    certification_standards: ["Zertifizierung, Standards & Compliance", "Beratung zu Zertifizierung, Produktanforderungen, Prüfungen, Standards und Compliance."],
+    training_skills: ["Schulung & Kompetenzentwicklung", "Technische, digitale, unternehmerische, Management- und weitere Kompetenzentwicklung."],
+    partnerships: ["Partnerschaften & Zusammenarbeit", "Zusammenarbeit mit Handwerksprofis, Werkstätten, Designern, Lieferanten, Institutionen oder anderen Partnern."],
+    markets_export: ["Märkte, Vertrieb & Export", "Messen, Marktplätze, B2B-Käufer, Vertriebspartner, Export und Internationalisierungsunterstützung."],
+    production_equipment: ["Produktion, Arbeitsraum & Ausstattung", "Ausrüstung, Maschinen, geteilte Werkstätten, Produktionskapazität, Logistik oder Infrastruktur."],
+    innovation_sustainability: ["Innovation & Nachhaltigkeit", "Digitale Fertigung, neue Technologien, Energieeffizienz, Kreislaufproduktion und nachhaltige Materialien."],
+  },
+  nl: {
+    funding_finance: ["Financiering & financiële ondersteuning", "Subsidies, vouchers, tegemoetkomingen, leningen, apparatuurfinanciering en andere financiële ondersteuning."],
+    business_advisory: ["Bedrijfsondersteuning & advies", "Bedrijfsplanning, prijsstelling, digitalisering, juridisch of operationeel advies."],
+    certification_standards: ["Certificering, normen & compliance", "Begeleiding rond certificering, productvereisten, testen, normen en compliance."],
+    training_skills: ["Opleiding & vaardighedenontwikkeling", "Technische, digitale, ondernemerschaps-, management- en andere vaardighedenontwikkeling."],
+    partnerships: ["Partnerschappen & samenwerking", "Samenwerking met ambachtsprofessionals, werkplaatsen, ontwerpers, leveranciers, instellingen of andere partners."],
+    markets_export: ["Markten, verkoop & export", "Beurzen, marketplaces, B2B-kopers, distributeurs, export en internationaliseringsondersteuning."],
+    production_equipment: ["Productie, werkruimte & apparatuur", "Apparatuur, machines, gedeelde werkplaatsen, productiecapaciteit, logistiek of infrastructuur."],
+    innovation_sustainability: ["Innovatie & duurzaamheid", "Digitale fabricage, nieuwe technologieën, energie-efficiëntie, circulaire productie en duurzame materialen."],
+  },
+  pl: {
+    funding_finance: ["Finansowanie i wsparcie finansowe", "Granty, vouchery, dotacje, pożyczki, finansowanie sprzętu i inne formy wsparcia finansowego."],
+    business_advisory: ["Wsparcie biznesowe i doradztwo", "Planowanie biznesowe, wycena, cyfryzacja oraz doradztwo prawne lub operacyjne."],
+    certification_standards: ["Certyfikacja, normy i zgodność", "Wsparcie dotyczące certyfikacji, wymagań produktowych, testów, norm i zgodności."],
+    training_skills: ["Szkolenia i rozwój umiejętności", "Rozwój umiejętności technicznych, cyfrowych, przedsiębiorczych, zarządczych i innych."],
+    partnerships: ["Partnerstwa i współpraca", "Współpraca z rzemieślnikami, pracowniami, projektantami, dostawcami, instytucjami i innymi partnerami."],
+    markets_export: ["Rynki, sprzedaż i eksport", "Targi, marketplace’y, kupujący B2B, dystrybutorzy, eksport i wsparcie internacjonalizacji."],
+    production_equipment: ["Produkcja, przestrzeń i sprzęt", "Sprzęt, maszyny, wspólne przestrzenie warsztatowe, moce produkcyjne, logistyka lub infrastruktura."],
+    innovation_sustainability: ["Innowacje i zrównoważony rozwój", "Produkcja cyfrowa, nowe technologie, efektywność energetyczna, produkcja obiegu zamkniętego i zrównoważone materiały."],
+  },
+  it: {
+    funding_finance: ["Finanziamenti e supporto finanziario", "Contributi, voucher, sovvenzioni, prestiti, finanziamento di attrezzature e altri supporti finanziari."],
+    business_advisory: ["Supporto e consulenza aziendale", "Pianificazione aziendale, prezzi, digitalizzazione, consulenza legale o operativa."],
+    certification_standards: ["Certificazione, standard e conformità", "Orientamento su certificazione, requisiti di prodotto, test, standard e conformità."],
+    training_skills: ["Formazione e sviluppo delle competenze", "Sviluppo di competenze tecniche, digitali, imprenditoriali, manageriali e altre."],
+    partnerships: ["Partnership e cooperazione", "Cooperazione con artigiani, laboratori, designer, fornitori, istituzioni o altri partner."],
+    markets_export: ["Mercati, vendite ed export", "Fiere, marketplace, acquirenti B2B, distributori, export e supporto all’internazionalizzazione."],
+    production_equipment: ["Produzione, spazio di lavoro e attrezzature", "Attrezzature, macchinari, laboratori condivisi, capacità produttiva, logistica o infrastrutture."],
+    innovation_sustainability: ["Innovazione e sostenibilità", "Fabbricazione digitale, nuove tecnologie, efficienza energetica, produzione circolare e materiali sostenibili."],
+  },
+  es: {
+    funding_finance: ["Financiación y apoyo financiero", "Subvenciones, vales, ayudas, préstamos, financiación de equipos y otras formas de apoyo financiero."],
+    business_advisory: ["Apoyo empresarial y asesoramiento", "Planificación empresarial, precios, digitalización y asesoramiento jurídico u operativo."],
+    certification_standards: ["Certificación, normas y cumplimiento", "Orientación sobre certificación, requisitos de producto, ensayos, normas y cumplimiento."],
+    training_skills: ["Formación y desarrollo de competencias", "Desarrollo de competencias técnicas, digitales, empresariales, de gestión y otras."],
+    partnerships: ["Alianzas y cooperación", "Cooperación con profesionales de la artesanía, talleres, diseñadores, proveedores, instituciones u otros socios."],
+    markets_export: ["Mercados, ventas y exportación", "Ferias, marketplaces, compradores B2B, distribuidores, exportación y apoyo a la internacionalización."],
+    production_equipment: ["Producción, espacio de trabajo y equipos", "Equipos, maquinaria, talleres compartidos, capacidad de producción, logística o infraestructura."],
+    innovation_sustainability: ["Innovación y sostenibilidad", "Fabricación digital, nuevas tecnologías, eficiencia energética, producción circular y materiales sostenibles."],
+  },
+} as const;
+
 export default async function SupportPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
@@ -143,9 +206,16 @@ export default async function SupportPage({ searchParams }: Props) {
           <div className="workspaceList">
             {(categories ?? []).map((category) => {
               const current = byCode.get(category.code);
-              const label = locale === "uk" ? category.label_uk : category.label_en;
-              const description =
-                locale === "uk" ? category.description_uk : category.description_en;
+              const localized =
+                locale === "uk"
+                  ? [category.label_uk, category.description_uk]
+                  : locale === "en"
+                    ? [category.label_en, category.description_en]
+                    : supportCategoryCopy[locale][
+                        category.code as keyof (typeof supportCategoryCopy)[typeof locale]
+                      ];
+              const label = localized?.[0] ?? category.label_en;
+              const description = localized?.[1] ?? category.description_en;
 
               return (
                 <article className="claimItem" key={category.code}>
