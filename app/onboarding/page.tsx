@@ -47,8 +47,8 @@ const copy = {
 export default async function OnboardingPage({ searchParams }: OnboardingPageProps) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
-  const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
+  const q = locale === "en" ? "" : `?lang=${locale}`;
 
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
