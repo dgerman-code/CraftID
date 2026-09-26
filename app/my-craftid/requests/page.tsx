@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { updateContactRequestStatus } from "./actions";
-import { localeQuery, contentLocale, withLocale } from "@/lib/i18n";
+import { localeQuery, contentLocale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
