@@ -133,7 +133,7 @@ export default async function SkillProfilePage({ params, searchParams }: Props) 
   const { claimId } = await params;
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
   const labels = optionLabels[locale];
   const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
   if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
