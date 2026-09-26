@@ -22,33 +22,29 @@ type PublicPartner = {
 };
 
 const roleLabels = {
+  en: { national_operator: "National Operator", partner: "Partner" },
+  fr: { national_operator: "Opérateur national", partner: "Partenaire" },
+  de: { national_operator: "Nationaler Betreiber", partner: "Partner" },
+  nl: { national_operator: "Nationale operator", partner: "Partner" },
+  pl: { national_operator: "Operator krajowy", partner: "Partner" },
+  it: { national_operator: "Operatore nazionale", partner: "Partner" },
+  es: { national_operator: "Operador nacional", partner: "Socio" },
+  uk: { national_operator: "Національний оператор", partner: "Партнер" },
+} as const;
+
+const copy = {
   en: {
-    national_operator: "National Operator",
-    partner: "Partner",
-  },
-  fr: {
-    national_operator: "Opérateur national",
-    partner: "Partenaire",
-  },
-  de: {
-    national_operator: "Nationaler Betreiber",
-    partner: "Partner",
-  },
-  nl: {
-    national_operator: "Nationale operator",
-    partner: "Partner",
-  },
-  pl: {
-    national_operator: "Operator krajowy",
-    partner: "Partner",
-  },
-  it: {
-    national_operator: "Operatore nazionale",
-    partner: "Partner",
-  },
-  es: {
-    national_operator: "Operador nacional",
-    partner: "Socio",
+    eyebrow: "European Network",
+    title: "Partners supporting the CraftID ecosystem.",
+    intro: "CraftID develops through cooperation with national operators and partner organisations. Only confirmed organisations are shown publicly.",
+    pilotEyebrow: "European rollout",
+    pilotTitle: "National and sectoral partnerships.",
+    pilotText: "CraftID is designed as European infrastructure. Initial implementation work is taking place in Belgium and Ukraine, with further expansion through national operators and sectoral partners across Europe.",
+    empty: "No public partner organisations are currently listed.",
+    country: "Country",
+    role: "Role",
+    website: "Website",
+    disclosure: "Partner status describes the organisation's relationship to CraftID. It does not by itself grant authority to certify professional claims.",
   },
   fr: {
     eyebrow: "Réseau européen",
@@ -129,26 +125,6 @@ const roleLabels = {
     disclosure: "El estatus de socio describe la relación de la organización con CraftID. Por sí solo no otorga autoridad para certificar declaraciones profesionales.",
   },
   uk: {
-    national_operator: "Національний оператор",
-    partner: "Партнер",
-  },
-} as const;
-
-const copy = {
-  en: {
-    eyebrow: "European Network",
-    title: "Partners supporting the CraftID ecosystem.",
-    intro: "CraftID develops through cooperation with national operators and partner organisations. Only confirmed organisations are shown publicly.",
-    pilotEyebrow: "European rollout",
-    pilotTitle: "National and sectoral partnerships.",
-    pilotText: "CraftID is designed as European infrastructure. Initial implementation work is taking place in Belgium and Ukraine, with further expansion through national operators and sectoral partners across Europe.",
-    empty: "No public partner organisations are currently listed.",
-    country: "Country",
-    role: "Role",
-    website: "Website",
-    disclosure: "Partner status describes the organisation's relationship to CraftID. It does not by itself grant authority to certify professional claims.",
-  },
-  uk: {
     eyebrow: "Європейська мережа",
     title: "Партнери, що підтримують екосистему CraftID.",
     intro: "CraftID розвивається через співпрацю з національними операторами та партнерськими організаціями. Публічно відображаються лише підтверджені організації.",
@@ -165,7 +141,7 @@ const copy = {
 
 export default async function NetworkPage({ searchParams }: Props) {
   const locale = localeFrom((await searchParams).lang);
-  const t = copy[locale as keyof typeof copy] ?? copy.en;
+  const t = copy[locale];
   const supabase = await createClient();
 
   const { data: partnersData, error: partnersError } = await supabase
