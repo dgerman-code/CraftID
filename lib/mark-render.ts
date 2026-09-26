@@ -165,23 +165,93 @@ export function renderCraftedInMarkSvg(input: {
   );
 }
 
+function appendSvgOverlay(templateSvg: string, overlay: string) {
+  const closeIndex = templateSvg.lastIndexOf("</svg>");
+  if (closeIndex < 0) throw new Error("Crafted in template closing tag missing");
+
+  return (
+    templateSvg.slice(0, closeIndex) +
+    overlay +
+    templateSvg.slice(closeIndex)
+  );
+}
+
+function renderVectorText(input: {
+  text: string;
+  fontBytes: Uint8Array;
+  fontSize: number;
+  centerX: number;
+  baselineY: number;
+  fill: string;
+}) {
+  const font = fontkit.create(input.fontBytes);
+  const run = font.layout(input.text);
+  const scale = input.fontSize / font.unitsPerEm;
+  const startX = input.centerX - (run.advanceWidth * scale) / 2;
+
+  let penX = 0;
+  let penY = 0;
+  const paths = run.glyphs.map((glyph, index) => {
+    const position = run.positions[index];
+    const x = startX + (penX + position.xOffset) * scale;
+    const y = input.baselineY - (penY + position.yOffset) * scale;
+    const path = `<path d="${glyph.path.toSVG()}" fill="${input.fill}" transform="translate(${x} ${y}) scale(${scale} -${scale})"/>`;
+
+    penX += position.xAdvance;
+    penY += position.yAdvance;
+    return path;
+  });
+
+  return paths.join("");
+}
+
+export function renderCraftedInMarkPngSvg(input: {
+  templateSvg: string;
+  country: string;
+  craftId: string;
+  qrDataUri: string;
+  mediumFontBytes: Uint8Array;
+  regularFontBytes: Uint8Array;
+}) {
+  const country = input.country.toUpperCase();
+  const countryFontSize = craftedInCountryFontSize(input.country);
+
+  const overlay = `
+    <g id="craftid-crafted-in-dynamic-vector">
+      ${renderVectorText({
+        text: country,
+        fontBytes: input.mediumFontBytes,
+        fontSize: countryFontSize,
+        centerX: 750,
+        baselineY: 746,
+        fill: "#b28e51",
+      })}
+      ${renderVectorText({
+        text: "#" + input.craftId,
+        fontBytes: input.regularFontBytes,
+        fontSize: 76,
+        centerX: 750,
+        baselineY: 956,
+        fill: "#1a2037",
+      })}
+      <image
+        href="${input.qrDataUri}"
+        x="643.6"
+        y="1076.6"
+        width="213"
+        height="213"
+        preserveAspectRatio="none"
+        style="image-rendering:pixelated"
+      />
+    </g>
+  `;
+
+  return appendSvgOverlay(input.templateSvg, overlay);
+}
+
 export async function renderSvgToPng(svg: string) {
   const sharp = (await import("sharp")).default;
-
-  // librsvg/Pango (used by Sharp) does not reliably resolve data-URI @font-face
-  // declarations. Keep the browser/download SVG untouched, but use a
-  // raster-safe generic sans-serif stack for dynamic text when producing PNG.
-  const rasterSafeSvg = svg
-    .replace(
-      /font-family='"CID Sans Crafted Medium",Montserrat,"Helvetica Neue",Arial,sans-serif'/g,
-      'font-family="sans-serif"',
-    )
-    .replace(
-      /font-family='"CID Sans Crafted Regular",Montserrat,"Helvetica Neue",Arial,sans-serif'/g,
-      'font-family="sans-serif"',
-    );
-
-  const png = await sharp(Buffer.from(rasterSafeSvg)).png().toBuffer();
+  const png = await sharp(Buffer.from(svg)).png().toBuffer();
   return new Uint8Array(png);
 }
 
