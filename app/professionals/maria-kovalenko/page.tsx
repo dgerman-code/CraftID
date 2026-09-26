@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
+import { contentLocale, localeQuery } from "@/lib/i18n";
 
 type Props = { searchParams: Promise<{ lang?: string }> };
 
@@ -60,8 +61,8 @@ const copy = {
 
 export default async function ProfessionalProfile({ searchParams }: Props) {
   const locale = localeFrom((await searchParams).lang);
-  const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
+  const t = copy[contentLocale(locale)];
+  const q = localeQuery(locale);
 
   return (
     <>
