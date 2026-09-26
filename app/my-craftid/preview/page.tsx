@@ -1,3 +1,4 @@
+import { localeQuery, contentLocale } from "@/lib/i18n";
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -52,12 +53,12 @@ const copy = {
 export default async function PreviewPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[contentLocale(locale)];
   const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
-  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
-  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
-  if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : localeQuery(locale);
+  if (!userId) redirect(`/login${localeQuery(locale)}`);
+  if (sp.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
+  if (!entity) redirect(`/onboarding${localeQuery(locale)}`);
 
   const profileResult =
     entity.entity_type === "professional"

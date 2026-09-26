@@ -1,3 +1,4 @@
+import { localeQuery, contentLocale } from "@/lib/i18n";
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -89,12 +90,12 @@ const copy = {
 export default async function CraftIdMarkPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[contentLocale(locale)];
   const { userId, entity } = await getOwnedCraftId(sp.entity);
 
-  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
-  if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
+  if (!userId) redirect(`/login${localeQuery(locale)}`);
+  if (sp.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
+  if (!entity) redirect(`/onboarding${localeQuery(locale)}`);
 
   const q = ownerWorkspaceQuery(locale, entity.id);
   const craftId = formatCraftId(entity.craftid_number, entity.craftid_check_digits);
@@ -138,7 +139,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
             <div className="markButtonRow">
               <Link
                 className="button"
-                href={`/id/${craftId}${locale === "uk" ? "?lang=uk" : ""}`}
+                href={`/id/${craftId}${localeQuery(locale)}`}
               >
                 {t.openProfile}
               </Link>

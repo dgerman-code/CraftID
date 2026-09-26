@@ -1,16 +1,32 @@
 import Link from "next/link";
+import {
+  localeFrom,
+  localeMeta,
+  supportedLocales,
+  withLocale,
+  type Locale,
+} from "@/lib/i18n";
 
-export type PublicLocale = "en" | "uk";
+export type PublicLocale = Locale;
+export { localeFrom };
 
-export function localeFrom(value?: string): PublicLocale {
-  return value === "uk" ? "uk" : "en";
-}
-
-function withLocale(path: string, locale: PublicLocale) {
-  return locale === "uk" ? `${path}?lang=uk` : path;
-}
-
-const labels = {
+const labels: Record<
+  PublicLocale,
+  {
+    discover: string;
+    skills: string;
+    methodology: string;
+    about: string;
+    network: string;
+    signIn: string;
+    initiative: string;
+    language: string;
+    privacy: string;
+    governance: string;
+    verifyCertificate: string;
+    footerLine: string;
+  }
+> = {
   en: {
     discover: "Discover",
     skills: "Skills",
@@ -24,6 +40,90 @@ const labels = {
     governance: "Governance",
     verifyCertificate: "Verify certificate",
     footerLine: "Professional identity · skills · evidence · trust",
+  },
+  fr: {
+    discover: "Explorer",
+    skills: "Compétences",
+    methodology: "Méthodologie",
+    about: "À propos",
+    network: "Réseau",
+    signIn: "Se connecter",
+    initiative: "Un instrument numérique d’EUFUA",
+    language: "Langue",
+    privacy: "Confidentialité",
+    governance: "Gouvernance",
+    verifyCertificate: "Vérifier un certificat",
+    footerLine: "Identité professionnelle · compétences · preuves · confiance",
+  },
+  de: {
+    discover: "Entdecken",
+    skills: "Kompetenzen",
+    methodology: "Methodik",
+    about: "Über CraftID",
+    network: "Netzwerk",
+    signIn: "Anmelden",
+    initiative: "Ein digitales Instrument von EUFUA",
+    language: "Sprache",
+    privacy: "Datenschutz",
+    governance: "Governance",
+    verifyCertificate: "Zertifikat prüfen",
+    footerLine: "Berufliche Identität · Kompetenzen · Nachweise · Vertrauen",
+  },
+  nl: {
+    discover: "Ontdekken",
+    skills: "Vaardigheden",
+    methodology: "Methodologie",
+    about: "Over CraftID",
+    network: "Netwerk",
+    signIn: "Inloggen",
+    initiative: "Een digitaal instrument van EUFUA",
+    language: "Taal",
+    privacy: "Privacy",
+    governance: "Governance",
+    verifyCertificate: "Certificaat controleren",
+    footerLine: "Professionele identiteit · vaardigheden · bewijs · vertrouwen",
+  },
+  pl: {
+    discover: "Odkrywaj",
+    skills: "Umiejętności",
+    methodology: "Metodologia",
+    about: "O CraftID",
+    network: "Sieć",
+    signIn: "Zaloguj się",
+    initiative: "Cyfrowe narzędzie EUFUA",
+    language: "Język",
+    privacy: "Prywatność",
+    governance: "Zarządzanie",
+    verifyCertificate: "Sprawdź certyfikat",
+    footerLine: "Tożsamość zawodowa · umiejętności · dowody · zaufanie",
+  },
+  it: {
+    discover: "Scopri",
+    skills: "Competenze",
+    methodology: "Metodologia",
+    about: "Informazioni",
+    network: "Rete",
+    signIn: "Accedi",
+    initiative: "Uno strumento digitale di EUFUA",
+    language: "Lingua",
+    privacy: "Privacy",
+    governance: "Governance",
+    verifyCertificate: "Verifica certificato",
+    footerLine: "Identità professionale · competenze · evidenze · fiducia",
+  },
+  es: {
+    discover: "Descubrir",
+    skills: "Competencias",
+    methodology: "Metodología",
+    about: "Acerca de CraftID",
+    network: "Red",
+    signIn: "Iniciar sesión",
+    initiative: "Un instrumento digital de EUFUA",
+    language: "Idioma",
+    privacy: "Privacidad",
+    governance: "Gobernanza",
+    verifyCertificate: "Verificar certificado",
+    footerLine: "Identidad profesional · competencias · evidencias · confianza",
   },
   uk: {
     discover: "Пошук",
@@ -39,7 +139,39 @@ const labels = {
     verifyCertificate: "Перевірити сертифікат",
     footerLine: "Професійна ідентичність · навички · докази · довіра",
   },
-} as const;
+};
+
+export function LanguageMenu({
+  locale,
+  pathname,
+}: {
+  locale: PublicLocale;
+  pathname: string;
+}) {
+  const languageLabel = labels[locale].language;
+
+  return (
+    <details className="languageMenu">
+      <summary aria-label={languageLabel}>
+        <span>{localeMeta[locale].label}</span>
+        <span className="languageMenuChevron" aria-hidden="true">⌄</span>
+      </summary>
+      <div className="languageMenuPanel">
+        {supportedLocales.map((language) => (
+          <Link
+            key={language}
+            className={locale === language ? "active" : ""}
+            href={withLocale(pathname, language)}
+            hrefLang={language}
+          >
+            <span>{localeMeta[language].label}</span>
+            <small>{localeMeta[language].short}</small>
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
 
 export function SiteHeader({
   locale,
@@ -66,15 +198,7 @@ export function SiteHeader({
             <Link className={isActive("/network") ? "active" : ""} href={withLocale("/network", locale)}>{t.network}</Link>
             <Link className={isActive("/about") ? "active" : ""} href={withLocale("/about", locale)}>{t.about}</Link>
           </nav>
-          <div className="languageSwitch" aria-label={t.language}>
-            <Link className={locale === "en" ? "active" : ""} href={pathname}>
-              EN
-            </Link>
-            <span>/</span>
-            <Link className={locale === "uk" ? "active" : ""} href={`${pathname}?lang=uk`}>
-              UA
-            </Link>
-          </div>
+          <LanguageMenu locale={locale} pathname={pathname} />
           <Link className="textLink" href={withLocale("/login", locale)}>
             {t.signIn}
           </Link>

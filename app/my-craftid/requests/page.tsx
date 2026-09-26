@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { updateContactRequestStatus } from "./actions";
+import { localeQuery, contentLocale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
@@ -47,12 +48,12 @@ const copy = {
 export default async function ContactRequestsPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[contentLocale(locale)];
   const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
-  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
-  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
-  if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : localeQuery(locale);
+  if (!userId) redirect(`/login${localeQuery(locale)}`);
+  if (sp.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
+  if (!entity) redirect(`/onboarding${localeQuery(locale)}`);
 
   const { data: requests } = await supabase
     .from("contact_requests")

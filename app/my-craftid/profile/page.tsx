@@ -1,3 +1,4 @@
+import { localeQuery, contentLocale } from "@/lib/i18n";
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -19,6 +20,8 @@ const copy = {
     region: "Region",
     city: "City",
     about: "About",
+    englishRecommended: "English recommended",
+    englishGuidance: "Use English for your professional title and main profile description where possible. English is the common cross-border language of CraftID records and helps your profile remain understandable across Europe.",
     save: "Save profile",
     back: "Back to My CraftID",
     saved: "Profile saved.",
@@ -51,6 +54,8 @@ const copy = {
     region: "Регіон",
     city: "Місто",
     about: "Про практику",
+    englishRecommended: "Рекомендовано англійською",
+    englishGuidance: "За можливості використовуйте англійську для професійної назви та основного опису профілю. Англійська є спільною транскордонною мовою записів CraftID і допомагає зробити профіль зрозумілим по всій Європі.",
     save: "Зберегти профіль",
     back: "Назад до Мій CraftID",
     saved: "Профіль збережено.",
@@ -78,12 +83,12 @@ const copy = {
 export default async function ProfilePage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
-  const t = copy[locale];
+  const t = copy[contentLocale(locale)];
   const { supabase, userId, entity } = await getOwnedCraftId(params.entity);
-  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : locale === "uk" ? "?lang=uk" : "";
-  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
-  if (params.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
+  const q = entity ? ownerWorkspaceQuery(locale, entity.id) : localeQuery(locale);
+  if (!userId) redirect(`/login${localeQuery(locale)}`);
+  if (params.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
+  if (!entity) redirect(`/onboarding${localeQuery(locale)}`);
 
   const [result, contactsResult] = await Promise.all([
     entity.entity_type === "professional"
@@ -126,6 +131,7 @@ export default async function ProfilePage({ searchParams }: Props) {
         <h1>{t.title}</h1>
         <p className="workspaceIntro">{t.intro}</p>
         <p className="privacyNote">{t.privacy}</p>
+        <p className="privacyNote"><strong>{t.englishRecommended}:</strong> {t.englishGuidance}</p>
 
         {params.error ? <p className="formMessage error">{params.error}</p> : null}
         {params.message ? (
@@ -158,7 +164,7 @@ export default async function ProfilePage({ searchParams }: Props) {
           <label>{t.name}<input name="displayName" defaultValue={record.display_name} required /></label>
           <label>{t.role}<input name="title" defaultValue={record.professional_title ?? record.craft_sector ?? ""} /></label>
           <div className="formGrid">
-            <label>{t.country}<input name="countryCode" maxLength={2} defaultValue={record.country_code ?? ""} placeholder="UA" /></label>
+            <label>{t.country}<input name="countryCode" maxLength={2} defaultValue={record.country_code ?? ""} placeholder="e.g. FR" /></label>
             <label>{t.region}<input name="region" defaultValue={record.region ?? ""} /></label>
             <label>{t.city}<input name="city" defaultValue={record.city ?? ""} /></label>
           </div>

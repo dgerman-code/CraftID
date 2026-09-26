@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { login, resendConfirmation } from "./actions";
-import { localeFrom } from "@/components/site-shell";
+import { LanguageMenu, localeFrom } from "@/components/site-shell";
 
 type LoginPageProps = {
   searchParams: Promise<{ error?: string; message?: string; lang?: string }>;
@@ -20,6 +20,61 @@ const copy = {
     resendTitle: "Confirmation email did not work?",
     resendText: "Enter the same email address and we will send a new confirmation link.",
     resend: "Resend confirmation",
+  },
+  fr: {
+    eyebrow: "Accès sécurisé",
+    title: "Se connecter à CraftID",
+    intro: "Accédez à votre dossier professionnel, vos preuves, vos paramètres de confidentialité et la gestion de votre profil.",
+    email: "E-mail", password: "Mot de passe", submit: "Se connecter",
+    new: "Nouveau sur CraftID ?", create: "Créer un compte", back: "Retour à CraftID",
+    resendTitle: "L’e-mail de confirmation n’a pas fonctionné ?",
+    resendText: "Saisissez la même adresse e-mail et nous enverrons un nouveau lien de confirmation.",
+    resend: "Renvoyer la confirmation",
+  },
+  de: {
+    eyebrow: "Sicherer Zugang", title: "Bei CraftID anmelden",
+    intro: "Greifen Sie auf Ihren beruflichen Datensatz, Nachweise, Datenschutzeinstellungen und die Profilverwaltung zu.",
+    email: "E-Mail", password: "Passwort", submit: "Anmelden",
+    new: "Neu bei CraftID?", create: "Konto erstellen", back: "Zurück zu CraftID",
+    resendTitle: "Bestätigungs-E-Mail hat nicht funktioniert?",
+    resendText: "Geben Sie dieselbe E-Mail-Adresse ein; wir senden einen neuen Bestätigungslink.",
+    resend: "Bestätigung erneut senden",
+  },
+  nl: {
+    eyebrow: "Veilige toegang", title: "Inloggen bij CraftID",
+    intro: "Krijg toegang tot uw professionele dossier, bewijs, privacy-instellingen en profielbeheer.",
+    email: "E-mail", password: "Wachtwoord", submit: "Inloggen",
+    new: "Nieuw bij CraftID?", create: "Account aanmaken", back: "Terug naar CraftID",
+    resendTitle: "Werkte de bevestigingsmail niet?",
+    resendText: "Voer hetzelfde e-mailadres in en we sturen een nieuwe bevestigingslink.",
+    resend: "Bevestiging opnieuw verzenden",
+  },
+  pl: {
+    eyebrow: "Bezpieczny dostęp", title: "Zaloguj się do CraftID",
+    intro: "Uzyskaj dostęp do swojego zapisu zawodowego, dowodów, ustawień prywatności i zarządzania profilem.",
+    email: "E-mail", password: "Hasło", submit: "Zaloguj się",
+    new: "Pierwszy raz w CraftID?", create: "Utwórz konto", back: "Wróć do CraftID",
+    resendTitle: "E-mail potwierdzający nie zadziałał?",
+    resendText: "Wpisz ten sam adres e-mail, a wyślemy nowy link potwierdzający.",
+    resend: "Wyślij potwierdzenie ponownie",
+  },
+  it: {
+    eyebrow: "Accesso sicuro", title: "Accedi a CraftID",
+    intro: "Accedi al tuo record professionale, alle evidenze, alle impostazioni sulla privacy e alla gestione del profilo.",
+    email: "E-mail", password: "Password", submit: "Accedi",
+    new: "Nuovo su CraftID?", create: "Crea un account", back: "Torna a CraftID",
+    resendTitle: "L’e-mail di conferma non ha funzionato?",
+    resendText: "Inserisci lo stesso indirizzo e-mail e invieremo un nuovo link di conferma.",
+    resend: "Invia di nuovo la conferma",
+  },
+  es: {
+    eyebrow: "Acceso seguro", title: "Iniciar sesión en CraftID",
+    intro: "Accede a tu registro profesional, evidencias, ajustes de privacidad y gestión del perfil.",
+    email: "Correo electrónico", password: "Contraseña", submit: "Iniciar sesión",
+    new: "¿Nuevo en CraftID?", create: "Crear una cuenta", back: "Volver a CraftID",
+    resendTitle: "¿No funcionó el correo de confirmación?",
+    resendText: "Introduce la misma dirección de correo y enviaremos un nuevo enlace de confirmación.",
+    resend: "Reenviar confirmación",
   },
   uk: {
     eyebrow: "Безпечний доступ",
@@ -41,18 +96,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
   const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
+  const q = locale === "en" ? "" : `?lang=${locale}`;
 
   return (
     <main className="authPage">
       <section className="authPanel">
         <div className="authTopline">
           <Link href={`/${q}`} className="brand authBrand">CraftID</Link>
-          <div className="languageSwitch">
-            <Link className={locale === "en" ? "active" : ""} href="/login">EN</Link>
-            <span>/</span>
-            <Link className={locale === "uk" ? "active" : ""} href="/login?lang=uk">UA</Link>
-          </div>
+          <LanguageMenu locale={locale} pathname="/login" />
         </div>
         <div className="eyebrow">{t.eyebrow}</div>
         <h1>{t.title}</h1>

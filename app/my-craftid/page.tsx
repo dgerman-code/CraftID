@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { logout } from "@/app/login/actions";
-import { localeFrom } from "@/components/site-shell";
+import { LanguageMenu, localeFrom } from "@/components/site-shell";
 import { closeCraftIdAccount, createAdditionalCraftId } from "./actions";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { formatCraftId } from "@/lib/craftid-format";
+import { localeQuery, contentLocale, withLocale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -138,12 +139,12 @@ const copy = {
 export default async function MyCraftIdPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[contentLocale(locale)];
 
   const { supabase, userId, entity, entities } = await getOwnedCraftId(sp.entity);
-  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
-  if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
+  if (!userId) redirect(`/login${localeQuery(locale)}`);
+  if (sp.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
+  if (!entity) redirect(`/onboarding${localeQuery(locale)}`);
 
   const entityIds = entities.map((item) => item.id);
   const [{ data: professionalProfiles }, { data: workshopProfiles }] = await Promise.all([
@@ -198,15 +199,14 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
       <div className="container">
         <div className="dashboardHeader">
           <div>
-            <Link href={locale === "uk" ? "/?lang=uk" : "/"} className="brand">CraftID</Link>
+            <Link href={withLocale("/", locale)} className="brand">CraftID</Link>
             <div className="eyebrow dashboardEyebrow">{t.eyebrow}</div>
           </div>
           <div className="dashboardActions">
-            <div className="languageSwitch">
-              <Link className={locale === "en" ? "active" : ""} href={`/my-craftid?entity=${entity.id}`}>EN</Link>
-              <span>/</span>
-              <Link className={locale === "uk" ? "active" : ""} href={`/my-craftid?lang=uk&entity=${entity.id}`}>UA</Link>
-            </div>
+            <LanguageMenu
+              locale={locale}
+              pathname={`/my-craftid?entity=${entity.id}`}
+            />
             <form action={logout}>
               <input type="hidden" name="lang" value={locale} />
               <button className="button" type="submit">{t.signOut}</button>

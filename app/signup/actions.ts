@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { localeFrom, localeQuery } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -8,8 +9,8 @@ export async function signup(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const confirmPassword = String(formData.get("confirmPassword") ?? "");
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const q = localeQuery(lang);
 
   const errorUrl = (message: string) =>
     `/signup${q ? `${q}&` : "?"}error=${encodeURIComponent(message)}`;

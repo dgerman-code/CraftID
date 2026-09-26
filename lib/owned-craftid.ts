@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { Locale } from "@/lib/i18n";
 
 export type OwnedCraftIdEntity = {
   id: string;
@@ -41,12 +42,12 @@ export async function getOwnedCraftId(requestedEntityId?: string | null) {
 }
 
 export function ownerWorkspaceQuery(
-  locale: "en" | "uk",
+  locale: Locale,
   entityId: string,
   extra?: Record<string, string>,
 ) {
   const params = new URLSearchParams();
-  if (locale === "uk") params.set("lang", "uk");
+  if (locale !== "en") params.set("lang", locale);
   params.set("entity", entityId);
   for (const [key, value] of Object.entries(extra ?? {})) {
     if (value) params.set(key, value);

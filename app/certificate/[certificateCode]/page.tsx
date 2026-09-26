@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { localeFrom } from "@/components/site-shell";
+import { LanguageMenu, localeFrom } from "@/components/site-shell";
+import { localeMeta } from "@/lib/i18n";
 import {
   formatCraftId,
   isCertificateCode,
@@ -39,6 +40,54 @@ const copy = {
     currentNote:
       "The certificate data above is the snapshot recorded when it was issued. Current CraftID status is shown separately.",
     revokedReason: "Revocation reason",
+  },
+  fr: {
+    eyebrow: "Vérification du certificat", title: "CraftID Record Certificate", valid: "Dossier de certificat trouvé", revoked: "Ce certificat a été révoqué",
+    craftId: "CraftID", certificateId: "Certificate No.", recordType: "Type de dossier", professional: "Professional", workshop: "Workshop",
+    issued: "Émis le", firstRegistered: "Premier enregistrement CraftID", country: "Pays du profil à l’émission", currentStatus: "Statut CraftID actuel",
+    download: "Télécharger le certificat PDF", openProfile: "Ouvrir le dossier CraftID",
+    disclaimer: "Ce certificat enregistre un instantané versionné d’un dossier CraftID publié. À lui seul, il ne vérifie ni identité légale, ni compétence professionnelle, ni qualification, licence légale, accréditation, qualité ou approbation institutionnelle de l’UE.",
+    currentNote: "Les données ci-dessus correspondent à l’instantané enregistré lors de l’émission. Le statut actuel du CraftID est affiché séparément.", revokedReason: "Motif de révocation",
+  },
+  de: {
+    eyebrow: "Zertifikatsprüfung", title: "CraftID Record Certificate", valid: "Zertifikatsdatensatz gefunden", revoked: "Dieses Zertifikat wurde widerrufen",
+    craftId: "CraftID", certificateId: "Certificate No.", recordType: "Datensatztyp", professional: "Professional", workshop: "Workshop",
+    issued: "Ausgestellt", firstRegistered: "CraftID erstmals registriert", country: "Profilland bei Ausgabe", currentStatus: "Aktueller CraftID-Status",
+    download: "Zertifikat als PDF herunterladen", openProfile: "CraftID-Datensatz öffnen",
+    disclaimer: "Dieses Zertifikat dokumentiert einen versionierten Snapshot eines veröffentlichten CraftID-Datensatzes. Es bestätigt für sich genommen weder rechtliche Identität, berufliche Kompetenz, Qualifikation, gesetzliche Lizenz, Akkreditierung, Qualität noch institutionelle EU-Billigung.",
+    currentNote: "Die oben genannten Zertifikatsdaten entsprechen dem bei der Ausgabe gespeicherten Stand. Der aktuelle CraftID-Status wird separat angezeigt.", revokedReason: "Widerrufsgrund",
+  },
+  nl: {
+    eyebrow: "Certificaatcontrole", title: "CraftID Record Certificate", valid: "Certificaatdossier gevonden", revoked: "Dit certificaat is ingetrokken",
+    craftId: "CraftID", certificateId: "Certificate No.", recordType: "Dossiertype", professional: "Professional", workshop: "Workshop",
+    issued: "Uitgegeven", firstRegistered: "CraftID eerste registratie", country: "Profielland bij uitgifte", currentStatus: "Huidige CraftID-status",
+    download: "Certificaat-PDF downloaden", openProfile: "CraftID-dossier openen",
+    disclaimer: "Dit certificaat legt een versiegebonden momentopname van een gepubliceerd CraftID-dossier vast. Het verifieert op zichzelf geen wettelijke identiteit, professionele bekwaamheid, kwalificatie, wettelijke vergunning, accreditatie, kwaliteit of institutionele EU-goedkeuring.",
+    currentNote: "De bovenstaande certificaatgegevens zijn de momentopname die bij uitgifte is vastgelegd. De huidige CraftID-status wordt apart weergegeven.", revokedReason: "Reden van intrekking",
+  },
+  pl: {
+    eyebrow: "Weryfikacja certyfikatu", title: "CraftID Record Certificate", valid: "Znaleziono zapis certyfikatu", revoked: "Ten certyfikat został wycofany",
+    craftId: "CraftID", certificateId: "Certificate No.", recordType: "Typ zapisu", professional: "Professional", workshop: "Workshop",
+    issued: "Wydano", firstRegistered: "Pierwsza rejestracja CraftID", country: "Kraj profilu przy wydaniu", currentStatus: "Bieżący status CraftID",
+    download: "Pobierz certyfikat PDF", openProfile: "Otwórz zapis CraftID",
+    disclaimer: "Ten certyfikat utrwala wersjonowaną migawkę opublikowanego zapisu CraftID. Sam w sobie nie weryfikuje tożsamości prawnej, kompetencji zawodowych, kwalifikacji, licencji ustawowej, akredytacji, jakości ani instytucjonalnego poparcia UE.",
+    currentNote: "Powyższe dane certyfikatu są migawką zapisaną w chwili wydania. Bieżący status CraftID jest pokazany osobno.", revokedReason: "Powód wycofania",
+  },
+  it: {
+    eyebrow: "Verifica del certificato", title: "CraftID Record Certificate", valid: "Record del certificato trovato", revoked: "Questo certificato è stato revocato",
+    craftId: "CraftID", certificateId: "Certificate No.", recordType: "Tipo di record", professional: "Professional", workshop: "Workshop",
+    issued: "Emesso", firstRegistered: "Prima registrazione CraftID", country: "Paese del profilo all’emissione", currentStatus: "Stato CraftID attuale",
+    download: "Scarica certificato PDF", openProfile: "Apri record CraftID",
+    disclaimer: "Questo certificato registra uno snapshot versionato di un record CraftID pubblicato. Di per sé non verifica identità legale, competenza professionale, qualifica, licenza prevista dalla legge, accreditamento, qualità o approvazione istituzionale dell’UE.",
+    currentNote: "I dati del certificato sopra riportati sono lo snapshot registrato al momento dell’emissione. Lo stato attuale del CraftID è mostrato separatamente.", revokedReason: "Motivo della revoca",
+  },
+  es: {
+    eyebrow: "Verificación de certificado", title: "CraftID Record Certificate", valid: "Registro de certificado encontrado", revoked: "Este certificado ha sido revocado",
+    craftId: "CraftID", certificateId: "Certificate No.", recordType: "Tipo de registro", professional: "Professional", workshop: "Workshop",
+    issued: "Emitido", firstRegistered: "Primera inscripción de CraftID", country: "País del perfil al emitir", currentStatus: "Estado actual de CraftID",
+    download: "Descargar certificado PDF", openProfile: "Abrir registro CraftID",
+    disclaimer: "Este certificado registra una instantánea versionada de un registro CraftID publicado. Por sí solo no verifica identidad legal, competencia profesional, cualificación, licencia legal, acreditación, calidad ni respaldo institucional de la UE.",
+    currentNote: "Los datos del certificado mostrados arriba son la instantánea registrada al emitirse. El estado actual de CraftID se muestra por separado.", revokedReason: "Motivo de revocación",
   },
   uk: {
     eyebrow: "Перевірка сертифіката",
@@ -89,14 +138,14 @@ export default async function CertificateVerificationPage({
     certificate.craftid_check_digits,
   );
   const profileHref =
-    "/id/" + craftId + (locale === "uk" ? "?lang=uk" : "");
+    "/id/" + craftId + (locale === "en" ? "" : `?lang=${locale}`);
   const pdfHref =
     "/api/certificate/" +
     encodeURIComponent(certificate.certificate_code) +
     "?lang=" +
     locale +
     "&download=1";
-  const dateLocale = locale === "uk" ? "uk-UA" : "en-GB";
+  const dateLocale = localeMeta[locale].intl;
   const revoked = certificate.certificate_status === "revoked";
 
   return (
@@ -105,11 +154,11 @@ export default async function CertificateVerificationPage({
         <header className="publicIdentityHeader">
           <Link
             className="brand"
-            href={locale === "uk" ? "/?lang=uk" : "/"}
+            href={locale === "en" ? "/" : `/?lang=${locale}`}
           >
             CraftID
           </Link>
-          <div className="recordId">{t.eyebrow}</div>
+          <div className="publicIdentityHeaderActions"><div className="recordId">{t.eyebrow}</div><LanguageMenu locale={locale} pathname={`/certificate/${encodeURIComponent(certificate.certificate_code)}`} /></div>
         </header>
 
         <section

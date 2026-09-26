@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { localeFrom } from "@/components/site-shell";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { saveSupportProfile } from "./actions";
+import { localeQuery, contentLocale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -58,12 +59,12 @@ const copy = {
 export default async function SupportPage({ searchParams }: Props) {
   const sp = await searchParams;
   const locale = localeFrom(sp.lang);
-  const t = copy[locale];
+  const t = copy[contentLocale(locale)];
 
   const { supabase, userId, entity } = await getOwnedCraftId(sp.entity);
-  if (!userId) redirect(locale === "uk" ? "/login?lang=uk" : "/login");
-  if (sp.entity && !entity) redirect(locale === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
-  if (!entity) redirect(locale === "uk" ? "/onboarding?lang=uk" : "/onboarding");
+  if (!userId) redirect(`/login${localeQuery(locale)}`);
+  if (sp.entity && !entity) redirect(`/my-craftid${localeQuery(locale)}`);
+  if (!entity) redirect(`/onboarding${localeQuery(locale)}`);
 
   const q = ownerWorkspaceQuery(locale, entity.id);
   const [{ data: categories }, { data: interests }, { data: preferences }] = await Promise.all([

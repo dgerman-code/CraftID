@@ -1,14 +1,15 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { localeFrom, localeQuery } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
 
 type EntityType = "professional" | "workshop";
 
 export async function createCraftId(formData: FormData) {
   const entityType = String(formData.get("entityType") ?? "") as EntityType;
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const q = localeQuery(lang);
 
   if (!["professional", "workshop"].includes(entityType)) {
     redirect(`/onboarding${q ? `${q}&` : "?"}error=Choose%20a%20valid%20profile%20type`);

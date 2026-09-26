@@ -1,5 +1,7 @@
+import type { Locale } from "@/lib/i18n";
+
 type CraftSkillsMapProps = {
-  locale: "en" | "uk";
+  locale: Locale;
   points: Array<{
     location: string;
     lat: number;
@@ -19,20 +21,16 @@ function escapeHtml(value: string) {
 }
 
 export function CraftSkillsMap({ locale, points }: CraftSkillsMapProps) {
-  const labels =
-    locale === "uk"
-      ? {
-          empty: "Поки немає опублікованих записів із доступною для карти локацією.",
-          city: "Рівень міста",
-          country: "Рівень країни",
-          records: "записів",
-        }
-      : {
-          empty: "No published records with a map-ready public location yet.",
-          city: "City level",
-          country: "Country level",
-          records: "records",
-        };
+  const labels = {
+    en: { empty: "No published records with a map-ready public location yet.", city: "City level", country: "Country level", records: "records", title: "CraftID Craft Skills Map" },
+    fr: { empty: "Aucun dossier publié avec une localisation publique exploitable sur la carte pour le moment.", city: "Niveau ville", country: "Niveau pays", records: "dossiers", title: "Carte des compétences artisanales CraftID" },
+    de: { empty: "Noch keine veröffentlichten Datensätze mit kartierbarem öffentlichem Standort.", city: "Stadtebene", country: "Landesebene", records: "Datensätze", title: "CraftID-Karte der Handwerkskompetenzen" },
+    nl: { empty: "Nog geen gepubliceerde dossiers met een openbare locatie die op de kaart kan worden weergegeven.", city: "Stadsniveau", country: "Landniveau", records: "dossiers", title: "CraftID-kaart van ambachtelijke vaardigheden" },
+    pl: { empty: "Nie ma jeszcze opublikowanych zapisów z publiczną lokalizacją gotową do pokazania na mapie.", city: "Poziom miasta", country: "Poziom kraju", records: "zapisów", title: "Mapa umiejętności rzemieślniczych CraftID" },
+    it: { empty: "Non ci sono ancora record pubblicati con una località pubblica disponibile per la mappa.", city: "Livello città", country: "Livello paese", records: "record", title: "Mappa delle competenze artigianali CraftID" },
+    es: { empty: "Todavía no hay registros publicados con una ubicación pública disponible para el mapa.", city: "Nivel de ciudad", country: "Nivel de país", records: "registros", title: "Mapa de competencias artesanales CraftID" },
+    uk: { empty: "Поки немає опублікованих записів із доступною для карти локацією.", city: "Рівень міста", country: "Рівень країни", records: "записів", title: "Карта ремісничих навичок CraftID" },
+  }[locale];
 
   const safePoints = points.map((point) => ({
     ...point,
@@ -160,7 +158,7 @@ export function CraftSkillsMap({ locale, points }: CraftSkillsMapProps) {
   return (
     <iframe
       className="craftSkillsMapFrame"
-      title={locale === "uk" ? "Карта ремісничих навичок CraftID" : "CraftID Craft Skills Map"}
+      title={labels.title}
       srcDoc={srcDoc}
       loading="lazy"
       referrerPolicy="strict-origin-when-cross-origin"

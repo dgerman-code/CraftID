@@ -1,14 +1,15 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { localeFrom, localeQuery } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site-url";
 
 export async function login(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const q = localeQuery(lang);
 
   if (!email || !password) {
     redirect(`/login${q ? `${q}&` : "?"}error=Email%20and%20password%20are%20required`);
@@ -37,8 +38,8 @@ export async function login(formData: FormData) {
 }
 
 export async function logout(formData?: FormData) {
-  const lang = String(formData?.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const lang = localeFrom(String(formData?.get("lang") ?? "en"));
+  const q = localeQuery(lang);
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect(`/${q}`);
@@ -47,8 +48,8 @@ export async function logout(formData?: FormData) {
 
 export async function resendConfirmation(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
-  const q = lang === "uk" ? "?lang=uk" : "";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const q = localeQuery(lang);
 
   if (!email) {
     redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(
