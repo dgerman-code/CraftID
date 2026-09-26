@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { updateContactRequestStatus } from "./actions";
-import { localeQuery } from "@/lib/i18n";
+import { localeMeta, localeQuery } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
@@ -102,7 +102,7 @@ export default async function ContactRequestsPage({ searchParams }: Props) {
                 {request.requester_organisation ? <span>{t.organisation}: {request.requester_organisation}</span> : null}
                 {request.requester_role ? <span>{t.role}: {request.requester_role}</span> : null}
                 <span>{t.purpose}: {request.purpose.replaceAll("_", " ")}</span>
-                <span>{t.submitted}: {new Date(request.submitted_at).toLocaleDateString(locale === "uk" ? "uk-UA" : "en-GB")}</span>
+                <span>{t.submitted}: {new Date(request.submitted_at).toLocaleDateString(localeMeta[locale].intl)}</span>
               </div>
 
               <p>{request.message}</p>
