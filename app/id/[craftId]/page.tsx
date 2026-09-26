@@ -60,8 +60,8 @@ const copy = {
 export default async function PublicCraftIdPage({ params, searchParams }: Props) {
   const { craftId } = await params;
   const locale = localeFrom((await searchParams).lang);
-  const t = copy[locale];
-  const q = locale === "uk" ? "?lang=uk" : "";
+  const t = copy[locale as keyof typeof copy] ?? copy.en;
+  const q = locale === "en" ? "" : `?lang=${locale}`;
 
   const parsed = parseCraftId(craftId);
   if (!parsed) notFound();
