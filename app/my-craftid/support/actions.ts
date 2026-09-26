@@ -3,14 +3,17 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
+import { localeFrom, localeQuery } from "@/lib/i18n";
+import { workspaceActionCopy } from "@/lib/workspace-action-copy";
 
 export async function saveSupportProfile(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const entityId = String(formData.get("entityId") ?? "").trim();
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
 
   const q = ownerWorkspaceQuery(lang, entity.id);
   const { data: categories, error: taxonomyError } = await supabase
@@ -31,11 +34,7 @@ export async function saveSupportProfile(formData: FormData) {
     const note = String(formData.get(`note_${category.code}`) ?? "").trim();
     if (note.length > 1000) {
       redirect(
-        `/my-craftid/support${q}&error=${encodeURIComponent(
-          lang === "uk"
-            ? "Пояснення для кожної категорії має містити не більше 1000 символів."
-            : "Each category note must be 1000 characters or fewer.",
-        )}`,
+        `/my-craftid/support${q}&error=${encodeURIComponent(t.supportNoteLimit)}`,
       );
     }
 

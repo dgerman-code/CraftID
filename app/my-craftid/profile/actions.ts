@@ -3,13 +3,16 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
+import { localeFrom, localeQuery } from "@/lib/i18n";
+import { workspaceActionCopy } from "@/lib/workspace-action-copy";
 
 export async function updateProfile(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const entityId = String(formData.get("entityId") ?? "").trim();
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
   const q = ownerWorkspaceQuery(lang, entity.id);
 
   const displayName = String(formData.get("displayName") ?? "").trim();
@@ -20,13 +23,11 @@ export async function updateProfile(formData: FormData) {
   const about = String(formData.get("about") ?? "").trim();
 
   if (!displayName) {
-    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent("Display name is required")}`);
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(t.displayNameRequired)}`);
   }
 
   if (countryCode && !/^[A-Z]{2}$/.test(countryCode)) {
-    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(
-      lang === "uk" ? "Код країни має містити 2 літери." : "Country code must contain 2 letters.",
-    )}`);
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(t.countryCode)}`);
   }
 
   const result =
@@ -57,30 +58,24 @@ export async function updateProfile(formData: FormData) {
   redirect(`/my-craftid/profile${q}&message=saved`);
 }
 
-
 export async function uploadProfileImage(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const entityId = String(formData.get("entityId") ?? "").trim();
   const file = formData.get("file");
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
   const q = ownerWorkspaceQuery(lang, entity.id);
 
   if (!(file instanceof File) || file.size === 0) {
-    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(
-      lang === "uk" ? "Оберіть зображення" : "Choose an image",
-    )}`);
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(t.chooseImage)}`);
   }
 
   const allowed = new Set(["image/jpeg", "image/png", "image/webp"]);
   if (!allowed.has(file.type) || file.size > 5 * 1024 * 1024) {
-    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(
-      lang === "uk"
-        ? "Дозволені JPEG, PNG або WebP до 5 МБ"
-        : "Use JPEG, PNG or WebP up to 5 MB",
-    )}`);
+    redirect(`/my-craftid/profile${q}&error=${encodeURIComponent(t.imageFormat)}`);
   }
 
   const table = entity.entity_type === "professional" ? "professional_profiles" : "workshop_profiles";
@@ -121,13 +116,12 @@ export async function uploadProfileImage(formData: FormData) {
   redirect(`/my-craftid/profile${q}&message=photo`);
 }
 
-
 export async function updateContactPoints(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
   const entityId = String(formData.get("entityId") ?? "").trim();
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
   const q = ownerWorkspaceQuery(lang, entity.id);
 
   const rows = [

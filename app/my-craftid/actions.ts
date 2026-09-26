@@ -3,9 +3,17 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
+import { localeFrom, localeQuery } from "@/lib/i18n";
+import { workspaceActionCopy } from "@/lib/workspace-action-copy";
+
+function errorUrl(path: string, lang: ReturnType<typeof localeFrom>, message: string) {
+  const q = localeQuery(lang);
+  return path + (q ? q + "&" : "?") + "error=" + encodeURIComponent(message);
+}
 
 export async function createAdditionalCraftId(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const requestedType = String(formData.get("entityType") ?? "");
   const entityType =
     requestedType === "professional" || requestedType === "workshop"
@@ -13,16 +21,11 @@ export async function createAdditionalCraftId(formData: FormData) {
       : null;
 
   if (!entityType) {
-    redirect(
-      "/my-craftid" +
-        (lang === "uk" ? "?lang=uk&" : "?") +
-        "error=" +
-        encodeURIComponent(lang === "uk" ? "Невірний тип CraftID." : "Invalid CraftID type."),
-    );
+    redirect(errorUrl("/my-craftid", lang, t.invalidCraftIdType));
   }
 
   const { supabase, userId, entities } = await getOwnedCraftId();
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
 
   const existing = entities.find((entity) => entity.entity_type === entityType);
   if (existing) {
@@ -35,9 +38,7 @@ export async function createAdditionalCraftId(formData: FormData) {
   }
 
   const displayName =
-    entityType === "professional"
-      ? lang === "uk" ? "Новий професіонал" : "New professional"
-      : lang === "uk" ? "Нова майстерня" : "New workshop";
+    entityType === "professional" ? t.newProfessional : t.newWorkshop;
 
   const { data, error } = await supabase.rpc("create_own_craftid", {
     p_entity_type: entityType,
@@ -45,27 +46,13 @@ export async function createAdditionalCraftId(formData: FormData) {
   });
 
   if (error) {
-    redirect(
-      "/my-craftid" +
-        (lang === "uk" ? "?lang=uk&" : "?") +
-        "error=" +
-        encodeURIComponent(error.message),
-    );
+    redirect(errorUrl("/my-craftid", lang, error.message));
   }
 
   const created = Array.isArray(data) ? data[0] : data;
   const entityId = created?.entity_id;
   if (!entityId) {
-    redirect(
-      "/my-craftid" +
-        (lang === "uk" ? "?lang=uk&" : "?") +
-        "error=" +
-        encodeURIComponent(
-          lang === "uk"
-            ? "CraftID створено, але новий запис не вдалося вибрати."
-            : "CraftID was created but the new record could not be selected.",
-        ),
-    );
+    redirect(errorUrl("/my-craftid", lang, t.createdSelectFailed));
   }
 
   revalidatePath("/my-craftid");
@@ -78,39 +65,24 @@ export async function createAdditionalCraftId(formData: FormData) {
 }
 
 export async function closeCraftIdAccount(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const confirmation = String(formData.get("confirmation") ?? "").trim().toLowerCase();
   const expected = lang === "uk" ? "закрити" : "close";
 
   if (confirmation !== expected) {
-    redirect(
-      "/my-craftid" +
-        (lang === "uk" ? "?lang=uk&" : "?") +
-        "error=" +
-        encodeURIComponent(
-          lang === "uk"
-            ? "Введіть «закрити», щоб підтвердити закриття облікового запису."
-            : 'Type "close" to confirm account closure.',
-        ),
-    );
+    redirect(errorUrl("/my-craftid", lang, t.closeConfirm));
   }
 
   const { supabase, userId } = await getOwnedCraftId();
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
 
   const { error } = await supabase.rpc("close_my_craftid_account");
   if (error) {
-    redirect(
-      "/my-craftid" +
-        (lang === "uk" ? "?lang=uk&" : "?") +
-        "error=" +
-        encodeURIComponent(error.message),
-    );
+    redirect(errorUrl("/my-craftid", lang, error.message));
   }
 
   await supabase.auth.signOut();
-  redirect(
-    (lang === "uk" ? "/?lang=uk&" : "/?") +
-      "account=closed",
-  );
+  const q = localeQuery(lang);
+  redirect("/" + (q ? q + "&" : "?") + "account=closed");
 }

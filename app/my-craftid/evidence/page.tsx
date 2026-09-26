@@ -3,54 +3,93 @@ import { redirect } from "next/navigation";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
 import { localeFrom } from "@/components/site-shell";
 import { uploadEvidence } from "./actions";
-import { localeQuery, contentLocale } from "@/lib/i18n";
+import { localeQuery } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 type Props = { searchParams: Promise<{ lang?: string; entity?: string; error?: string; message?: string }> };
 
 const copy = {
   en: {
-    eyebrow: "Evidence",
-    title: "Support individual claims with private evidence.",
+    eyebrow: "Evidence", title: "Support individual claims with private evidence.",
     intro: "Evidence is stored privately by default. Uploading a document does not verify a claim automatically; it creates material that may later be linked to a claim and reviewed.",
-    titleLabel: "Evidence title",
-    type: "Evidence type",
-    issuer: "Issuer / source",
-    claim: "Link to claim",
-    noClaim: "Do not link yet",
-    file: "File",
-    upload: "Upload evidence",
-    list: "Evidence library",
-    empty: "No evidence has been uploaded yet.",
-    back: "Back to My CraftID",
-    uploaded: "Evidence uploaded.",
+    titleLabel: "Evidence title", type: "Evidence type", issuer: "Issuer / source", claim: "Link to claim", noClaim: "Do not link yet", file: "File", upload: "Upload evidence",
+    list: "Evidence library", empty: "No evidence has been uploaded yet.", back: "Back to My CraftID", uploaded: "Evidence uploaded.",
     note: "Accepted formats: PDF, JPEG, PNG and WebP. Maximum file size: 10 MB.",
     privacy: "Raw evidence files are not public. Public profiles show review status or source information rather than exposing sensitive documents.",
   },
+  fr: {
+    eyebrow: "Preuves", title: "Étayer des déclarations individuelles avec des preuves privées.",
+    intro: "Les preuves sont privées par défaut. Le téléversement d’un document ne vérifie pas automatiquement une déclaration ; il crée un élément qui pourra ensuite être relié à une déclaration et examiné.",
+    titleLabel: "Titre de la preuve", type: "Type de preuve", issuer: "Émetteur / source", claim: "Lier à une déclaration", noClaim: "Ne pas lier pour le moment", file: "Fichier", upload: "Téléverser la preuve",
+    list: "Bibliothèque de preuves", empty: "Aucune preuve n’a encore été téléversée.", back: "Retour à Mon CraftID", uploaded: "Preuve téléversée.",
+    note: "Formats acceptés : PDF, JPEG, PNG et WebP. Taille maximale : 10 Mo.",
+    privacy: "Les fichiers de preuve bruts ne sont pas publics. Les profils publics affichent le statut d’examen ou des informations de source plutôt que des documents sensibles.",
+  },
+  de: {
+    eyebrow: "Nachweise", title: "Stützen Sie einzelne Angaben mit privaten Nachweisen.",
+    intro: "Nachweise werden standardmäßig privat gespeichert. Das Hochladen eines Dokuments bestätigt eine Angabe nicht automatisch; es schafft Material, das später mit einer Angabe verknüpft und geprüft werden kann.",
+    titleLabel: "Titel des Nachweises", type: "Nachweisart", issuer: "Aussteller / Quelle", claim: "Mit Angabe verknüpfen", noClaim: "Noch nicht verknüpfen", file: "Datei", upload: "Nachweis hochladen",
+    list: "Nachweisbibliothek", empty: "Noch keine Nachweise hochgeladen.", back: "Zurück zu Meine CraftID", uploaded: "Nachweis hochgeladen.",
+    note: "Akzeptierte Formate: PDF, JPEG, PNG und WebP. Maximale Dateigröße: 10 MB.",
+    privacy: "Original-Nachweisdateien sind nicht öffentlich. Öffentliche Profile zeigen Prüfstatus oder Quelleninformationen statt sensibler Dokumente.",
+  },
+  nl: {
+    eyebrow: "Bewijs", title: "Onderbouw afzonderlijke verklaringen met privébewijs.",
+    intro: "Bewijs wordt standaard privé opgeslagen. Het uploaden van een document verifieert een verklaring niet automatisch; het creëert materiaal dat later aan een verklaring kan worden gekoppeld en beoordeeld.",
+    titleLabel: "Titel van bewijs", type: "Type bewijs", issuer: "Uitgever / bron", claim: "Koppelen aan verklaring", noClaim: "Nog niet koppelen", file: "Bestand", upload: "Bewijs uploaden",
+    list: "Bewijsbibliotheek", empty: "Er is nog geen bewijs geüpload.", back: "Terug naar Mijn CraftID", uploaded: "Bewijs geüpload.",
+    note: "Geaccepteerde formaten: PDF, JPEG, PNG en WebP. Maximale bestandsgrootte: 10 MB.",
+    privacy: "Ruwe bewijsbestanden zijn niet openbaar. Openbare profielen tonen beoordelingsstatus of broninformatie in plaats van gevoelige documenten.",
+  },
+  pl: {
+    eyebrow: "Dowody", title: "Wspieraj poszczególne deklaracje prywatnymi dowodami.",
+    intro: "Dowody są domyślnie przechowywane prywatnie. Przesłanie dokumentu nie weryfikuje deklaracji automatycznie; tworzy materiał, który można później powiązać z deklaracją i poddać przeglądowi.",
+    titleLabel: "Tytuł dowodu", type: "Typ dowodu", issuer: "Wystawca / źródło", claim: "Powiąż z deklaracją", noClaim: "Na razie nie wiąż", file: "Plik", upload: "Prześlij dowód",
+    list: "Biblioteka dowodów", empty: "Nie przesłano jeszcze żadnych dowodów.", back: "Wróć do Mój CraftID", uploaded: "Dowód przesłany.",
+    note: "Akceptowane formaty: PDF, JPEG, PNG i WebP. Maksymalny rozmiar pliku: 10 MB.",
+    privacy: "Surowe pliki dowodowe nie są publiczne. Profile publiczne pokazują status przeglądu lub informacje o źródle zamiast ujawniać wrażliwe dokumenty.",
+  },
+  it: {
+    eyebrow: "Evidenze", title: "Supporta singole dichiarazioni con evidenze private.",
+    intro: "Le evidenze sono private per impostazione predefinita. Caricare un documento non verifica automaticamente una dichiarazione; crea materiale che potrà essere collegato e sottoposto a revisione in seguito.",
+    titleLabel: "Titolo dell’evidenza", type: "Tipo di evidenza", issuer: "Emittente / fonte", claim: "Collega a dichiarazione", noClaim: "Non collegare ancora", file: "File", upload: "Carica evidenza",
+    list: "Archivio evidenze", empty: "Non sono ancora state caricate evidenze.", back: "Torna a Il mio CraftID", uploaded: "Evidenza caricata.",
+    note: "Formati accettati: PDF, JPEG, PNG e WebP. Dimensione massima: 10 MB.",
+    privacy: "I file originali delle evidenze non sono pubblici. I profili pubblici mostrano lo stato di revisione o informazioni sulla fonte invece di esporre documenti sensibili.",
+  },
+  es: {
+    eyebrow: "Evidencias", title: "Respalda declaraciones individuales con evidencias privadas.",
+    intro: "Las evidencias se almacenan de forma privada por defecto. Subir un documento no verifica automáticamente una declaración; crea material que después puede vincularse y revisarse.",
+    titleLabel: "Título de la evidencia", type: "Tipo de evidencia", issuer: "Emisor / fuente", claim: "Vincular a declaración", noClaim: "No vincular todavía", file: "Archivo", upload: "Subir evidencia",
+    list: "Biblioteca de evidencias", empty: "Aún no se ha subido ninguna evidencia.", back: "Volver a Mi CraftID", uploaded: "Evidencia subida.",
+    note: "Formatos aceptados: PDF, JPEG, PNG y WebP. Tamaño máximo del archivo: 10 MB.",
+    privacy: "Los archivos de evidencia originales no son públicos. Los perfiles públicos muestran el estado de revisión o información de la fuente en lugar de exponer documentos sensibles.",
+  },
   uk: {
-    eyebrow: "Докази",
-    title: "Підтверджуйте окремі твердження приватними доказами.",
+    eyebrow: "Докази", title: "Підтверджуйте окремі твердження приватними доказами.",
     intro: "Докази за замовчуванням зберігаються приватно. Завантаження документа не підтверджує твердження автоматично; воно створює матеріал, який згодом можна пов’язати з твердженням і передати на перевірку.",
-    titleLabel: "Назва доказу",
-    type: "Тип доказу",
-    issuer: "Видавець / джерело",
-    claim: "Пов’язати з твердженням",
-    noClaim: "Поки не пов’язувати",
-    file: "Файл",
-    upload: "Завантажити доказ",
-    list: "Бібліотека доказів",
-    empty: "Доказів ще не завантажено.",
-    back: "Назад до Мій CraftID",
-    uploaded: "Доказ завантажено.",
+    titleLabel: "Назва доказу", type: "Тип доказу", issuer: "Видавець / джерело", claim: "Пов’язати з твердженням", noClaim: "Поки не пов’язувати", file: "Файл", upload: "Завантажити доказ",
+    list: "Бібліотека доказів", empty: "Доказів ще не завантажено.", back: "Назад до Мій CraftID", uploaded: "Доказ завантажено.",
     note: "Дозволені формати: PDF, JPEG, PNG і WebP. Максимальний розмір файла — 10 МБ.",
     privacy: "Первинні файли доказів не є публічними. Публічні профілі показують статус перевірки або інформацію про джерело, а не відкривають чутливі документи.",
   },
 } as const;
 
+const evidenceTypeOptions = {
+  en: { qualification_document: "Qualification document", experience_document: "Experience document", identity_document: "Identity document", business_registration: "Business registration", portfolio_evidence: "Portfolio evidence", external_reference: "External reference", other: "Other" },
+  fr: { qualification_document: "Document de qualification", experience_document: "Document d’expérience", identity_document: "Document d’identité", business_registration: "Enregistrement d’entreprise", portfolio_evidence: "Élément de portfolio", external_reference: "Référence externe", other: "Autre" },
+  de: { qualification_document: "Qualifikationsnachweis", experience_document: "Erfahrungsnachweis", identity_document: "Identitätsdokument", business_registration: "Gewerbe-/Unternehmensregistrierung", portfolio_evidence: "Portfolio-Nachweis", external_reference: "Externe Referenz", other: "Sonstiges" },
+  nl: { qualification_document: "Kwalificatiedocument", experience_document: "Ervaringsdocument", identity_document: "Identiteitsdocument", business_registration: "Bedrijfsregistratie", portfolio_evidence: "Portfoliobewijs", external_reference: "Externe referentie", other: "Anders" },
+  pl: { qualification_document: "Dokument kwalifikacji", experience_document: "Dokument doświadczenia", identity_document: "Dokument tożsamości", business_registration: "Rejestracja działalności", portfolio_evidence: "Materiał portfolio", external_reference: "Źródło zewnętrzne", other: "Inne" },
+  it: { qualification_document: "Documento di qualifica", experience_document: "Documento di esperienza", identity_document: "Documento d’identità", business_registration: "Registrazione dell’attività", portfolio_evidence: "Evidenza di portfolio", external_reference: "Riferimento esterno", other: "Altro" },
+  es: { qualification_document: "Documento de cualificación", experience_document: "Documento de experiencia", identity_document: "Documento de identidad", business_registration: "Registro empresarial", portfolio_evidence: "Evidencia de portfolio", external_reference: "Referencia externa", other: "Otro" },
+  uk: { qualification_document: "Документ про кваліфікацію", experience_document: "Документ про досвід", identity_document: "Документ для підтвердження особи", business_registration: "Реєстрація бізнесу", portfolio_evidence: "Матеріал портфоліо", external_reference: "Зовнішнє джерело", other: "Інше" },
+} as const;
+
 export default async function EvidencePage({ searchParams }: Props) {
   const params = await searchParams;
   const locale = localeFrom(params.lang);
-  const t = copy[contentLocale(locale)];
+  const t = copy[locale];
   const { supabase, userId, entity } = await getOwnedCraftId(params.entity);
   const q = entity ? ownerWorkspaceQuery(locale, entity.id) : localeQuery(locale);
   if (!userId) redirect(`/login${localeQuery(locale)}`);
@@ -88,13 +127,13 @@ export default async function EvidencePage({ searchParams }: Props) {
               <label>{t.titleLabel}<input name="title" required /></label>
               <label>{t.type}
                 <select name="evidenceType" required defaultValue="qualification_document">
-                  <option value="qualification_document">{locale === "uk" ? "Документ про кваліфікацію" : "Qualification document"}</option>
-                  <option value="experience_document">{locale === "uk" ? "Документ про досвід" : "Experience document"}</option>
-                  <option value="identity_document">{locale === "uk" ? "Документ для підтвердження особи" : "Identity document"}</option>
-                  <option value="business_registration">{locale === "uk" ? "Реєстрація бізнесу" : "Business registration"}</option>
-                  <option value="portfolio_evidence">{locale === "uk" ? "Матеріал портфоліо" : "Portfolio evidence"}</option>
-                  <option value="external_reference">{locale === "uk" ? "Зовнішнє джерело" : "External reference"}</option>
-                  <option value="other">{locale === "uk" ? "Інше" : "Other"}</option>
+                  <option value="qualification_document">{evidenceTypeOptions[locale].qualification_document}</option>
+                  <option value="experience_document">{evidenceTypeOptions[locale].experience_document}</option>
+                  <option value="identity_document">{evidenceTypeOptions[locale].identity_document}</option>
+                  <option value="business_registration">{evidenceTypeOptions[locale].business_registration}</option>
+                  <option value="portfolio_evidence">{evidenceTypeOptions[locale].portfolio_evidence}</option>
+                  <option value="external_reference">{evidenceTypeOptions[locale].external_reference}</option>
+                  <option value="other">{evidenceTypeOptions[locale].other}</option>
                 </select>
               </label>
               <label>{t.issuer}<input name="issuer" /></label>

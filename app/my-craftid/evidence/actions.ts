@@ -3,13 +3,16 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getOwnedCraftId, ownerWorkspaceQuery } from "@/lib/owned-craftid";
+import { localeFrom, localeQuery } from "@/lib/i18n";
+import { workspaceActionCopy } from "@/lib/workspace-action-copy";
 
 function safeName(name: string) {
   return name.replace(/[^a-zA-Z0-9._-]+/g, "-").slice(0, 120);
 }
 
 export async function uploadEvidence(formData: FormData) {
-  const lang = String(formData.get("lang") ?? "en") === "uk" ? "uk" : "en";
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const t = workspaceActionCopy[lang];
   const entityId = String(formData.get("entityId") ?? "").trim();
   const title = String(formData.get("title") ?? "").trim();
   const type = String(formData.get("evidenceType") ?? "").trim();
@@ -18,12 +21,12 @@ export async function uploadEvidence(formData: FormData) {
   const file = formData.get("file");
 
   const { supabase, userId, entity } = await getOwnedCraftId(entityId);
-  if (!userId) redirect(lang === "uk" ? "/login?lang=uk" : "/login");
-  if (!entity) redirect(lang === "uk" ? "/my-craftid?lang=uk" : "/my-craftid");
+  if (!userId) redirect(`/login${localeQuery(lang)}`);
+  if (!entity) redirect(`/my-craftid${localeQuery(lang)}`);
   const q = ownerWorkspaceQuery(lang, entity.id);
 
   if (!title || !type || !(file instanceof File) || file.size === 0) {
-    redirect(`/my-craftid/evidence${q}&error=${encodeURIComponent("Title, evidence type and file are required")}`);
+    redirect(`/my-craftid/evidence${q}&error=${encodeURIComponent(t.evidenceRequired)}`);
   }
 
   const path = `${userId}/${entity.id}/${crypto.randomUUID()}-${safeName(file.name)}`;
@@ -49,7 +52,7 @@ export async function uploadEvidence(formData: FormData) {
 
   if (insertError || !evidenceItem) {
     await supabase.storage.from("evidence").remove([path]);
-    redirect(`/my-craftid/evidence${q}&error=${encodeURIComponent(insertError.message)}`);
+    redirect(`/my-craftid/evidence${q}&error=${encodeURIComponent(insertError?.message ?? t.evidenceRequired)}`);
   }
 
   if (claimId) {
