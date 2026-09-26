@@ -5014,3 +5014,18 @@ button {
     right: 0;
   }
 }
+
+
+.publicIdentityHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .publicIdentityHeaderActions {
+    align-items: flex-end;
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+}
