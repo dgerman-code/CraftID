@@ -369,6 +369,43 @@ export function renderRoundStickerSvg(input: {
   return renderGenericStickerSvg(input);
 }
 
+export function renderRoundStickerPngSvg(input: {
+  craftId: string;
+  qrDataUri: string;
+  entityType: EntityType;
+  backgroundDataUri?: string;
+  mediumFontBytes?: Uint8Array;
+}) {
+  if (
+    input.entityType === "professional" &&
+    input.backgroundDataUri &&
+    input.mediumFontBytes
+  ) {
+    const craftId = esc(input.craftId);
+    const idPath = renderVectorText({
+      text: "#" + input.craftId,
+      fontBytes: input.mediumFontBytes,
+      fontSize: 76,
+      centerX: 750,
+      baselineY: 954.9,
+      fill: "#1a2037",
+    });
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="2000" viewBox="0 0 1500 1500" preserveAspectRatio="xMidYMid meet" role="img" aria-label="CraftID #${craftId}">
+      <image href="${input.backgroundDataUri}" x="0" y="0" width="1500" height="1500" preserveAspectRatio="none"/>
+      <g id="craftid-round-sticker-dynamic-vector">
+        ${idPath}
+        <image href="${input.qrDataUri}" x="643.6" y="1076.6" width="213" height="213" preserveAspectRatio="none" style="image-rendering:pixelated"/>
+      </g>
+    </svg>`;
+  }
+
+  return renderGenericStickerSvg({
+    craftId: input.craftId,
+    qrDataUri: input.qrDataUri,
+  });
+}
+
 export function renderQrLabelSvg(input: {
   craftId: string;
   qrDataUri: string;

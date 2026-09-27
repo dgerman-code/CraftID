@@ -18,7 +18,7 @@ const copy = {
     publicWarning: "This CraftID is not published yet. You can prepare owner-only files, but the public profile and website badge will not resolve until the record is published.",
     publicReady: "The public CraftID profile is available.", profile: "Public profile", openProfile: "Open public profile",
     rule: "Ordinary CraftID assets contain the CraftID identifier and QR only. Certificate No. is used only on an issued certificate.",
-    sticker: "Round Sticker / Seal", stickerText: "For packaging, workshop doors, product presentation and printed materials.", downloadSticker: "Download Round Sticker (SVG)",
+    sticker: "Round Sticker / Seal", stickerText: "For packaging, workshop doors, product presentation and printed materials.", downloadSticker: "Download Round Sticker (SVG)", downloadStickerPng: "Download Round Sticker (PNG)",
     craftedIn: "Crafted in Mark", craftedInText: "For product packaging, workshop presentation and print materials. Includes country, CraftID and QR code.", downloadCraftedInSvg: "Download Crafted in Mark (SVG)", downloadCraftedInPng: "Download Crafted in Mark (PNG)", downloadCraftedInPrintSheet: "Download Crafted in Print Sheet (PDF)", craftedInCountryMissing: "Add a country to this CraftID profile to generate this mark.", editWorkshopProfile: "Open profile",
     qrCode: "Standalone QR Code", qrCodeText: "A clean QR code for layouts where the Round Sticker / Seal is not suitable. It opens this CraftID's unique public profile.", downloadQrCode: "Download QR Code (PNG)",
     printSheet: "Print Sheet", printSheetText: "A4 sheet with multiple Round Sticker / Seal marks ready for printing.", downloadPrintSheet: "Download Print Sheet (PDF)",
@@ -35,7 +35,7 @@ const copy = {
     publicWarning: "Ce CraftID n’est pas encore publié. Vous pouvez préparer les fichiers réservés au titulaire, mais le profil public et le badge web ne fonctionneront qu’après publication.",
     publicReady: "Le profil public CraftID est disponible.", profile: "Profil public", openProfile: "Ouvrir le profil public",
     rule: "Les supports CraftID ordinaires contiennent uniquement l’identifiant CraftID et le QR. Le Certificate No. apparaît uniquement sur un certificat émis.",
-    sticker: "Autocollant rond / Sceau", stickerText: "Pour emballages, portes d’atelier, présentation des produits et supports imprimés.", downloadSticker: "Télécharger l’autocollant rond (SVG)",
+    sticker: "Autocollant rond / Sceau", stickerText: "Pour emballages, portes d’atelier, présentation des produits et supports imprimés.", downloadSticker: "Télécharger l’autocollant rond (SVG)", downloadStickerPng: "Télécharger l’autocollant rond (PNG)",
     craftedIn: "Crafted in Mark", craftedInText: "Pour les emballages de produits, la présentation de l’atelier et les supports imprimés. Comprend le pays, le CraftID et le QR code.", downloadCraftedInSvg: "Télécharger le Crafted in Mark (SVG)", downloadCraftedInPng: "Télécharger le Crafted in Mark (PNG)", downloadCraftedInPrintSheet: "Télécharger la feuille Crafted in (PDF)", craftedInCountryMissing: "Ajoutez un pays à ce profil CraftID pour générer cette marque.", editWorkshopProfile: "Ouvrir le profil",
     qrCode: "QR Code séparé", qrCodeText: "Un QR propre pour les mises en page où l’autocollant rond / sceau ne convient pas. Il ouvre le profil public unique de ce CraftID.", downloadQrCode: "Télécharger le QR Code (PNG)",
     printSheet: "Feuille d’impression", printSheetText: "Feuille A4 avec plusieurs autocollants ronds / sceaux prêts à imprimer.", downloadPrintSheet: "Télécharger la feuille d’impression (PDF)",
@@ -52,7 +52,7 @@ const copy = {
     publicWarning: "Diese CraftID ist noch nicht veröffentlicht. Sie können Dateien für den Inhaber vorbereiten, aber öffentliches Profil und Website-Badge funktionieren erst nach der Veröffentlichung.",
     publicReady: "Das öffentliche CraftID-Profil ist verfügbar.", profile: "Öffentliches Profil", openProfile: "Öffentliches Profil öffnen",
     rule: "Normale CraftID-Materialien enthalten nur CraftID-Kennung und QR. Die Certificate No. erscheint ausschließlich auf einem ausgestellten Zertifikat.",
-    sticker: "Runder Aufkleber / Siegel", stickerText: "Für Verpackungen, Werkstatttüren, Produktpräsentation und Druckmaterialien.", downloadSticker: "Runden Aufkleber herunterladen (SVG)",
+    sticker: "Runder Aufkleber / Siegel", stickerText: "Für Verpackungen, Werkstatttüren, Produktpräsentation und Druckmaterialien.", downloadSticker: "Runden Aufkleber herunterladen (SVG)", downloadStickerPng: "Runden Aufkleber herunterladen (PNG)",
     craftedIn: "Crafted in Mark", craftedInText: "Für Produktverpackungen, Werkstattpräsentation und Druckmaterialien. Enthält Land, CraftID und QR-Code.", downloadCraftedInSvg: "Crafted in Mark herunterladen (SVG)", downloadCraftedInPng: "Crafted in Mark herunterladen (PNG)", downloadCraftedInPrintSheet: "Crafted in Druckbogen herunterladen (PDF)", craftedInCountryMissing: "Fügen Sie diesem CraftID-Profil ein Land hinzu, um diese Marke zu erstellen.", editWorkshopProfile: "Profil öffnen",
     qrCode: "Separater QR-Code", qrCodeText: "Ein sauberer QR-Code für Layouts, in denen der runde Aufkleber / das Siegel nicht passt. Er öffnet das eindeutige öffentliche Profil dieser CraftID.", downloadQrCode: "QR-Code herunterladen (PNG)",
     printSheet: "Druckbogen", printSheetText: "A4-Bogen mit mehreren runden Aufklebern / Siegeln, druckfertig.", downloadPrintSheet: "Druckbogen herunterladen (PDF)",
@@ -69,7 +69,7 @@ const copy = {
     publicWarning: "Deze CraftID is nog niet gepubliceerd. U kunt bestanden voor de eigenaar voorbereiden, maar het openbare profiel en de websitebadge werken pas na publicatie.",
     publicReady: "Het openbare CraftID-profiel is beschikbaar.", profile: "Openbaar profiel", openProfile: "Openbaar profiel openen",
     rule: "Gewone CraftID-materialen bevatten alleen de CraftID-identificatie en QR. Certificate No. wordt alleen op een uitgegeven certificaat gebruikt.",
-    sticker: "Ronde sticker / zegel", stickerText: "Voor verpakking, werkplaatsdeuren, productpresentatie en drukwerk.", downloadSticker: "Ronde sticker downloaden (SVG)",
+    sticker: "Ronde sticker / zegel", stickerText: "Voor verpakking, werkplaatsdeuren, productpresentatie en drukwerk.", downloadSticker: "Ronde sticker downloaden (SVG)", downloadStickerPng: "Ronde sticker downloaden (PNG)",
     craftedIn: "Crafted in Mark", craftedInText: "Voor productverpakkingen, werkplaatspresentatie en drukwerk. Bevat land, CraftID en QR-code.", downloadCraftedInSvg: "Crafted in Mark downloaden (SVG)", downloadCraftedInPng: "Crafted in Mark downloaden (PNG)", downloadCraftedInPrintSheet: "Crafted in printvel downloaden (PDF)", craftedInCountryMissing: "Voeg een land toe aan dit CraftID-profiel om deze markering te genereren.", editWorkshopProfile: "Profiel openen",
     qrCode: "Losse QR-code", qrCodeText: "Een schone QR-code voor layouts waar de ronde sticker / het zegel niet geschikt is. Deze opent het unieke openbare profiel van deze CraftID.", downloadQrCode: "QR-code downloaden (PNG)",
     printSheet: "Printvel", printSheetText: "A4-vel met meerdere ronde stickers / zegels, klaar om te printen.", downloadPrintSheet: "Printvel downloaden (PDF)",
@@ -86,7 +86,7 @@ const copy = {
     publicWarning: "Ten CraftID nie jest jeszcze opublikowany. Możesz przygotować pliki dla właściciela, ale profil publiczny i badge na stronę zaczną działać dopiero po publikacji.",
     publicReady: "Publiczny profil CraftID jest dostępny.", profile: "Profil publiczny", openProfile: "Otwórz profil publiczny",
     rule: "Standardowe materiały CraftID zawierają tylko identyfikator CraftID i QR. Certificate No. jest używany wyłącznie na wydanym certyfikacie.",
-    sticker: "Okrągła naklejka / znak", stickerText: "Do opakowań, drzwi pracowni, prezentacji produktów i materiałów drukowanych.", downloadSticker: "Pobierz okrągłą naklejkę (SVG)",
+    sticker: "Okrągła naklejka / znak", stickerText: "Do opakowań, drzwi pracowni, prezentacji produktów i materiałów drukowanych.", downloadSticker: "Pobierz okrągłą naklejkę (SVG)", downloadStickerPng: "Pobierz okrągłą naklejkę (PNG)",
     craftedIn: "Crafted in Mark", craftedInText: "Do opakowań produktów, prezentacji pracowni i materiałów drukowanych. Zawiera kraj, CraftID i kod QR.", downloadCraftedInSvg: "Pobierz Crafted in Mark (SVG)", downloadCraftedInPng: "Pobierz Crafted in Mark (PNG)", downloadCraftedInPrintSheet: "Pobierz arkusz Crafted in (PDF)", craftedInCountryMissing: "Dodaj kraj do tego profilu CraftID, aby wygenerować ten znak.", editWorkshopProfile: "Otwórz profil",
     qrCode: "Oddzielny kod QR", qrCodeText: "Czysty kod QR do układów, w których okrągła naklejka / znak nie pasuje. Otwiera unikalny publiczny profil tego CraftID.", downloadQrCode: "Pobierz kod QR (PNG)",
     printSheet: "Arkusz do druku", printSheetText: "Arkusz A4 z wieloma okrągłymi naklejkami / znakami gotowymi do druku.", downloadPrintSheet: "Pobierz arkusz do druku (PDF)",
@@ -103,7 +103,7 @@ const copy = {
     publicWarning: "Questo CraftID non è ancora pubblicato. Puoi preparare i file riservati al titolare, ma profilo pubblico e badge web funzioneranno solo dopo la pubblicazione.",
     publicReady: "Il profilo pubblico CraftID è disponibile.", profile: "Profilo pubblico", openProfile: "Apri profilo pubblico",
     rule: "I normali materiali CraftID contengono solo identificatore CraftID e QR. Certificate No. compare esclusivamente su un certificato emesso.",
-    sticker: "Adesivo rotondo / sigillo", stickerText: "Per imballaggi, porte del laboratorio, presentazione dei prodotti e materiali stampati.", downloadSticker: "Scarica adesivo rotondo (SVG)",
+    sticker: "Adesivo rotondo / sigillo", stickerText: "Per imballaggi, porte del laboratorio, presentazione dei prodotti e materiali stampati.", downloadSticker: "Scarica adesivo rotondo (SVG)", downloadStickerPng: "Scarica adesivo rotondo (PNG)",
     craftedIn: "Crafted in Mark", craftedInText: "Per imballaggi dei prodotti, presentazione del laboratorio e materiali stampati. Include paese, CraftID e codice QR.", downloadCraftedInSvg: "Scarica Crafted in Mark (SVG)", downloadCraftedInPng: "Scarica Crafted in Mark (PNG)", downloadCraftedInPrintSheet: "Scarica foglio Crafted in (PDF)", craftedInCountryMissing: "Aggiungi un paese a questo profilo CraftID per generare questo marchio.", editWorkshopProfile: "Apri profilo",
     qrCode: "QR Code separato", qrCodeText: "Un QR pulito per layout in cui l’adesivo rotondo / sigillo non è adatto. Apre il profilo pubblico univoco di questo CraftID.", downloadQrCode: "Scarica QR Code (PNG)",
     printSheet: "Foglio di stampa", printSheetText: "Foglio A4 con più adesivi rotondi / sigilli pronti per la stampa.", downloadPrintSheet: "Scarica foglio di stampa (PDF)",
@@ -120,7 +120,7 @@ const copy = {
     publicWarning: "Este CraftID aún no está publicado. Puedes preparar archivos para el titular, pero el perfil público y el badge web no funcionarán hasta que se publique.",
     publicReady: "El perfil público CraftID está disponible.", profile: "Perfil público", openProfile: "Abrir perfil público",
     rule: "Los materiales CraftID ordinarios contienen solo el identificador CraftID y el QR. Certificate No. se utiliza únicamente en un certificado emitido.",
-    sticker: "Pegatina redonda / sello", stickerText: "Para embalajes, puertas del taller, presentación de productos y materiales impresos.", downloadSticker: "Descargar pegatina redonda (SVG)",
+    sticker: "Pegatina redonda / sello", stickerText: "Para embalajes, puertas del taller, presentación de productos y materiales impresos.", downloadSticker: "Descargar pegatina redonda (SVG)", downloadStickerPng: "Descargar pegatina redonda (PNG)",
     craftedIn: "Crafted in Mark", craftedInText: "Para embalajes de productos, presentación del taller y materiales impresos. Incluye país, CraftID y código QR.", downloadCraftedInSvg: "Descargar Crafted in Mark (SVG)", downloadCraftedInPng: "Descargar Crafted in Mark (PNG)", downloadCraftedInPrintSheet: "Descargar hoja Crafted in (PDF)", craftedInCountryMissing: "Añade un país a este perfil CraftID para generar esta marca.", editWorkshopProfile: "Abrir perfil",
     qrCode: "Código QR independiente", qrCodeText: "Un QR limpio para diseños en los que la pegatina redonda / sello no sea adecuada. Abre el perfil público único de este CraftID.", downloadQrCode: "Descargar código QR (PNG)",
     printSheet: "Hoja de impresión", printSheetText: "Hoja A4 con varias pegatinas redondas / sellos listas para imprimir.", downloadPrintSheet: "Descargar hoja de impresión (PDF)",
@@ -137,7 +137,7 @@ const copy = {
     publicWarning: "Цей CraftID ще не опубліковано. Власник може підготувати файли, але публічний профіль і website badge запрацюють лише після публікації запису.",
     publicReady: "Публічний профіль CraftID доступний.", profile: "Публічний профіль", openProfile: "Відкрити публічний профіль",
     rule: "Звичайні матеріали CraftID містять тільки ідентифікатор CraftID і QR. Certificate No. використовується лише на випущеному сертифікаті.",
-    sticker: "Round Sticker / Seal", stickerText: "Для пакування, дверей майстерні, презентації виробів і друкованих матеріалів.", downloadSticker: "Завантажити Round Sticker (SVG)",
+    sticker: "Round Sticker / Seal", stickerText: "Для пакування, дверей майстерні, презентації виробів і друкованих матеріалів.", downloadSticker: "Завантажити Round Sticker (SVG)", downloadStickerPng: "Завантажити Round Sticker (PNG)",
     craftedIn: "Crafted in Mark", craftedInText: "Для пакування виробів, презентації майстерні та друкованих матеріалів. Містить країну, CraftID і QR-код.", downloadCraftedInSvg: "Завантажити Crafted in Mark (SVG)", downloadCraftedInPng: "Завантажити Crafted in Mark (PNG)", downloadCraftedInPrintSheet: "Завантажити Crafted in Print Sheet (PDF)", craftedInCountryMissing: "Додайте країну до цього профілю CraftID, щоб згенерувати цей знак.", editWorkshopProfile: "Відкрити профіль",
     qrCode: "Окремий QR-код", qrCodeText: "Чистий QR-код для макетів, де Round Sticker / Seal не підходить. Він відкриває унікальний публічний профіль цього CraftID.", downloadQrCode: "Завантажити QR-код (PNG)",
     printSheet: "Print Sheet", printSheetText: "Аркуш A4 з кількома Round Sticker / Seal для друку.", downloadPrintSheet: "Завантажити Print Sheet (PDF)",
@@ -181,6 +181,7 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
 
   const stickerPreview = `/api/kit/sticker?entity=${encodeURIComponent(entity.id)}`;
   const stickerDownload = stickerPreview + "&download=1";
+  const stickerPngDownload = stickerPreview + "&format=png&download=1";
   const qrCodePreview = `/api/kit/qr?entity=${encodeURIComponent(entity.id)}`;
   const qrCodeDownload = qrCodePreview + "&download=1";
   const printSheetDownload = `/api/kit/print-sheet?entity=${encodeURIComponent(entity.id)}`;
@@ -241,6 +242,9 @@ export default async function CraftIdMarkPage({ searchParams }: Props) {
             <div className="markButtonRow">
               <a className="button markAssetButton" href={stickerDownload}>
                 {t.downloadSticker}
+              </a>
+              <a className="button markAssetButton" href={stickerPngDownload}>
+                {t.downloadStickerPng}
               </a>
               <a className="button markAssetButton" href={printSheetDownload}>
                 {t.downloadPrintSheet}
