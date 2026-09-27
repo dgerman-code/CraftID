@@ -3,7 +3,9 @@ import { getOwnedDownloadKitEntity } from "@/lib/download-kit";
 import {
   fetchBinaryAsset,
   fetchQrPng,
+  renderRoundStickerPngSvg,
   renderRoundStickerSvg,
+  renderSvgToPng,
 } from "@/lib/mark-render";
 
 export const dynamic = "force-dynamic";
@@ -17,14 +19,52 @@ export async function GET(request: NextRequest) {
   if (result.status === 400) return new NextResponse("Entity is required", { status: 400 });
   if (result.status !== 200 || !result.entity) return new NextResponse("CraftID entity not found", { status: 404 });
 
+  const format = (request.nextUrl.searchParams.get("format") ?? "svg").toLowerCase();
+  if (format !== "svg" && format !== "png") {
+    return new NextResponse("Unsupported sticker format", { status: 400 });
+  }
+
   try {
     const assetOrigin = request.nextUrl.origin;
-    const qrPromise = fetchQrPng(result.entity.profileUrl, 620, 0);
+    const qr = await fetchQrPng(result.entity.profileUrl, 620, 0);
 
-    const [qr, background, font] =
+    if (format === "png") {
+      const [background, mediumFont] =
+        result.entity.entityType === "professional"
+          ? await Promise.all([
+              fetchBinaryAsset(
+                new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
+                "Sticker template",
+              ),
+              fetchBinaryAsset(
+                new URL("/templates/cid-sans-500.ttf", assetOrigin).toString(),
+                "Sticker font",
+              ),
+            ])
+          : [null, null];
+
+      const pngSvg = renderRoundStickerPngSvg({
+        craftId: result.entity.craftId,
+        qrDataUri: qr.dataUri,
+        entityType: result.entity.entityType,
+        backgroundDataUri: background?.dataUri,
+        mediumFontBytes: mediumFont?.bytes,
+      });
+      const png = await renderSvgToPng(pngSvg);
+
+      return new NextResponse(Buffer.from(png), {
+        headers: {
+          "Content-Type": "image/png",
+          "Content-Disposition": `attachment; filename="craftid-round-sticker-${result.entity.craftId}.png"`,
+          "Cache-Control": "private, max-age=0, must-revalidate",
+          "X-Robots-Tag": "noindex",
+        },
+      });
+    }
+
+    const [background, font] =
       result.entity.entityType === "professional"
         ? await Promise.all([
-            qrPromise,
             fetchBinaryAsset(
               new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
               "Sticker template",
@@ -34,7 +74,7 @@ export async function GET(request: NextRequest) {
               "Sticker font",
             ),
           ])
-        : [await qrPromise, null, null];
+        : [null, null];
 
     const svg = renderRoundStickerSvg({
       craftId: result.entity.craftId,
