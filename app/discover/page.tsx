@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { CraftSkillsMap } from "@/components/craft-skills-map";
 import { resolvePublicMapCoordinate } from "@/lib/public-map";
 import { formatCraftId, parseCraftId } from "@/lib/craftid-format";
+import { claimStageLabel, strongestPublicClaimStage } from "@/lib/public-claim-stage";
 
 type Props = {
   searchParams: Promise<{
@@ -73,48 +74,6 @@ async function loadAllPublishedEntityIdentifiers(
   return rows;
 }
 
-const statusRank: Record<string, number> = {
-  self_declared: 0,
-  evidence_submitted: 1,
-  document_reviewed: 2,
-  evidence_reviewed: 3,
-  external_source_confirmed: 4,
-  identity_reviewed: 1,
-};
-
-function strongestClaimStatus(claims: PublicClaim[]) {
-  const relevant = claims.filter((claim) => claim.claim_type !== "identity");
-  if (!relevant.length) return null;
-  return [...relevant].sort(
-    (a, b) => (statusRank[b.status] ?? -1) - (statusRank[a.status] ?? -1),
-  )[0]?.status ?? null;
-}
-
-const statusCopy = {
-  en: {
-    self_declared: "Self-declared",
-    evidence_submitted: "Evidence submitted",
-    document_reviewed: "Document reviewed",
-    evidence_reviewed: "Evidence reviewed",
-    external_source_confirmed: "External source confirmed",
-    identity_reviewed: "Identity reviewed",
-  },
-  fr: { self_declared: "Autodéclaré", evidence_submitted: "Preuves soumises", document_reviewed: "Document examiné", evidence_reviewed: "Preuves examinées", external_source_confirmed: "Source externe confirmée", identity_reviewed: "Identité examinée" },
-  de: { self_declared: "Selbst angegeben", evidence_submitted: "Nachweise eingereicht", document_reviewed: "Dokument geprüft", evidence_reviewed: "Nachweise geprüft", external_source_confirmed: "Externe Quelle bestätigt", identity_reviewed: "Identität geprüft" },
-  nl: { self_declared: "Zelfverklaard", evidence_submitted: "Bewijs ingediend", document_reviewed: "Document beoordeeld", evidence_reviewed: "Bewijs beoordeeld", external_source_confirmed: "Externe bron bevestigd", identity_reviewed: "Identiteit beoordeeld" },
-  pl: { self_declared: "Zadeklarowane samodzielnie", evidence_submitted: "Dowody złożone", document_reviewed: "Dokument przejrzany", evidence_reviewed: "Dowody przejrzane", external_source_confirmed: "Źródło zewnętrzne potwierdzone", identity_reviewed: "Tożsamość przejrzana" },
-  it: { self_declared: "Autodichiarato", evidence_submitted: "Evidenze presentate", document_reviewed: "Documento revisionato", evidence_reviewed: "Evidenze revisionate", external_source_confirmed: "Fonte esterna confermata", identity_reviewed: "Identità revisionata" },
-  es: { self_declared: "Autodeclarado", evidence_submitted: "Evidencias presentadas", document_reviewed: "Documento revisado", evidence_reviewed: "Evidencias revisadas", external_source_confirmed: "Fuente externa confirmada", identity_reviewed: "Identidad revisada" },
-  uk: {
-    self_declared: "Самодекларовано",
-    evidence_submitted: "Докази подано",
-    document_reviewed: "Документ переглянуто",
-    evidence_reviewed: "Докази переглянуто",
-    external_source_confirmed: "Зовнішнє джерело підтверджено",
-    identity_reviewed: "Особу перевірено",
-  },
-} as const;
-
 const copy = {
   en: {
     eyebrow: "Public registry",
@@ -146,8 +105,8 @@ const copy = {
     empty: "No published records match these filters.",
     clear: "Clear filters",
     open: "Open record",
-    claimStatus: "Highest visible claim status",
-    noClaimStatus: "No reviewed public claim",
+    claimStatus: "Highest visible claim review stage", noClaimStatus: "No public claim stage",
+    claimStatusNote: "Claim review stages are claim-specific. They are not a certification or whole-profile verification.",
     mapTitle: "Craft Skills Map",
     mapText: "Explore privacy-safe geographic aggregates of published CraftID records. Exact addresses are never shown, and small map groups are suppressed before data reaches the map client.",
     listView: "List",
@@ -168,7 +127,8 @@ const copy = {
     search: "Rechercher dans le registre", placeholder: "Nom, métier ou compétence", craft: "Métier / compétence", country: "Pays", type: "Type de profil", all: "Tous",
     professional: "Professional", workshop: "Workshop", results: "Dossiers publiés", oneResult: "dossier publié", manyResults: "dossiers publiés",
     empty: "Aucun dossier publié ne correspond à ces filtres.", clear: "Effacer les filtres", open: "Ouvrir le dossier",
-    claimStatus: "Statut le plus élevé d’une déclaration visible", noClaimStatus: "Aucune déclaration publique examinée",
+    claimStatus: "Étape d’examen la plus élevée parmi les déclarations visibles", noClaimStatus: "Aucune étape publique de déclaration",
+    claimStatusNote: "Les étapes d’examen concernent des déclarations précises. Elles ne constituent ni une certification ni une vérification globale du profil.",
     mapTitle: "Carte des compétences artisanales", mapText: "Explorez des agrégats géographiques respectueux de la confidentialité à partir des dossiers CraftID publiés. Les adresses exactes ne sont jamais affichées et les petits groupes sont supprimés avant que les données n’atteignent le client cartographique.",
     listView: "Liste", mapView: "Carte", mapped: "groupes cartographiques",
     mapPrivacy: "Les positions sont des agrégats approximatifs. Le seuil minimal de divulgation configuré est appliqué côté serveur.",
@@ -186,7 +146,8 @@ const copy = {
     search: "Register durchsuchen", placeholder: "Name, Handwerk oder Kompetenz", craft: "Handwerk / Kompetenz", country: "Land", type: "Profiltyp", all: "Alle",
     professional: "Professional", workshop: "Workshop", results: "Veröffentlichte Datensätze", oneResult: "veröffentlichter Datensatz", manyResults: "veröffentlichte Datensätze",
     empty: "Keine veröffentlichten Datensätze entsprechen diesen Filtern.", clear: "Filter löschen", open: "Datensatz öffnen",
-    claimStatus: "Höchster sichtbarer Status einer Angabe", noClaimStatus: "Keine geprüfte öffentliche Angabe",
+    claimStatus: "Höchstes sichtbares Prüfstadium einer Angabe", noClaimStatus: "Kein öffentliches Prüfstadium",
+    claimStatusNote: "Prüfstadien gelten für einzelne Angaben. Sie sind keine Zertifizierung oder Verifizierung des gesamten Profils.",
     mapTitle: "Karte der Handwerkskompetenzen", mapText: "Erkunden Sie datenschutzgerechte geografische Aggregate veröffentlichter CraftID-Datensätze. Genaue Adressen werden nie angezeigt; kleine Gruppen werden unterdrückt, bevor Daten den Kartenclient erreichen.",
     listView: "Liste", mapView: "Karte", mapped: "Kartengruppen",
     mapPrivacy: "Kartenpositionen sind ungefähre Aggregate. Der konfigurierte Mindestschwellenwert für Offenlegung wird serverseitig durchgesetzt.",
@@ -204,7 +165,8 @@ const copy = {
     search: "Register doorzoeken", placeholder: "Naam, ambacht of vaardigheid", craft: "Ambacht / vaardigheid", country: "Land", type: "Profieltype", all: "Alle",
     professional: "Professional", workshop: "Workshop", results: "Gepubliceerde dossiers", oneResult: "gepubliceerd dossier", manyResults: "gepubliceerde dossiers",
     empty: "Geen gepubliceerde dossiers voldoen aan deze filters.", clear: "Filters wissen", open: "Dossier openen",
-    claimStatus: "Hoogste zichtbare claimstatus", noClaimStatus: "Geen beoordeelde openbare claim",
+    claimStatus: "Hoogste zichtbare beoordelingsfase van een claim", noClaimStatus: "Geen openbare claimfase",
+    claimStatusNote: "Beoordelingsfasen gelden voor afzonderlijke claims. Ze zijn geen certificering of verificatie van het volledige profiel.",
     mapTitle: "Kaart van ambachtelijke vaardigheden", mapText: "Verken privacyveilige geografische aggregaten van gepubliceerde CraftID-dossiers. Exacte adressen worden nooit getoond en kleine groepen worden onderdrukt voordat gegevens de kaartclient bereiken.",
     listView: "Lijst", mapView: "Kaart", mapped: "kaartgroepen",
     mapPrivacy: "Kaartposities zijn benaderde aggregaten. De ingestelde minimale openbaarmakingsdrempel wordt server-side afgedwongen.",
@@ -222,7 +184,8 @@ const copy = {
     search: "Szukaj w rejestrze", placeholder: "Imię, rzemiosło lub umiejętność", craft: "Rzemiosło / umiejętność", country: "Kraj", type: "Typ profilu", all: "Wszystkie",
     professional: "Professional", workshop: "Workshop", results: "Opublikowane zapisy", oneResult: "opublikowany zapis", manyResults: "opublikowane zapisy",
     empty: "Brak opublikowanych zapisów pasujących do tych filtrów.", clear: "Wyczyść filtry", open: "Otwórz zapis",
-    claimStatus: "Najwyższy widoczny status deklaracji", noClaimStatus: "Brak przejrzanej publicznej deklaracji",
+    claimStatus: "Najwyższy widoczny etap przeglądu deklaracji", noClaimStatus: "Brak publicznego etapu deklaracji",
+    claimStatusNote: "Etapy przeglądu dotyczą konkretnych deklaracji. Nie są certyfikacją ani weryfikacją całego profilu.",
     mapTitle: "Mapa umiejętności rzemieślniczych", mapText: "Przeglądaj bezpieczne dla prywatności agregaty geograficzne opublikowanych zapisów CraftID. Dokładne adresy nigdy nie są pokazywane, a małe grupy są ukrywane zanim dane trafią do klienta mapy.",
     listView: "Lista", mapView: "Mapa", mapped: "grupy na mapie",
     mapPrivacy: "Pozycje na mapie są przybliżonymi agregatami. Skonfigurowany minimalny próg ujawnienia jest egzekwowany po stronie serwera.",
@@ -240,7 +203,8 @@ const copy = {
     search: "Cerca nel registro", placeholder: "Nome, mestiere o competenza", craft: "Mestiere / competenza", country: "Paese", type: "Tipo di profilo", all: "Tutti",
     professional: "Professional", workshop: "Workshop", results: "Record pubblicati", oneResult: "record pubblicato", manyResults: "record pubblicati",
     empty: "Nessun record pubblicato corrisponde a questi filtri.", clear: "Azzera filtri", open: "Apri record",
-    claimStatus: "Stato più alto della dichiarazione visibile", noClaimStatus: "Nessuna dichiarazione pubblica revisionata",
+    claimStatus: "Fase di revisione più alta tra le dichiarazioni visibili", noClaimStatus: "Nessuna fase pubblica della dichiarazione",
+    claimStatusNote: "Le fasi di revisione riguardano singole dichiarazioni. Non costituiscono certificazione o verifica dell’intero profilo.",
     mapTitle: "Mappa delle competenze artigianali", mapText: "Esplora aggregati geografici rispettosi della privacy dei record CraftID pubblicati. Gli indirizzi esatti non vengono mai mostrati e i piccoli gruppi vengono soppressi prima che i dati raggiungano il client della mappa.",
     listView: "Elenco", mapView: "Mappa", mapped: "gruppi sulla mappa",
     mapPrivacy: "Le posizioni sono aggregati approssimativi. La soglia minima di divulgazione configurata viene applicata lato server.",
@@ -258,7 +222,8 @@ const copy = {
     search: "Buscar en el registro", placeholder: "Nombre, oficio o competencia", craft: "Oficio / competencia", country: "País", type: "Tipo de perfil", all: "Todos",
     professional: "Professional", workshop: "Workshop", results: "Registros publicados", oneResult: "registro publicado", manyResults: "registros publicados",
     empty: "Ningún registro publicado coincide con estos filtros.", clear: "Borrar filtros", open: "Abrir registro",
-    claimStatus: "Estado más alto de una declaración visible", noClaimStatus: "No hay declaración pública revisada",
+    claimStatus: "Etapa de revisión más alta entre las declaraciones visibles", noClaimStatus: "Sin etapa pública de declaración",
+    claimStatusNote: "Las etapas de revisión se aplican a declaraciones concretas. No son una certificación ni una verificación del perfil completo.",
     mapTitle: "Mapa de competencias artesanales", mapText: "Explora agregados geográficos respetuosos con la privacidad de los registros CraftID publicados. Las direcciones exactas nunca se muestran y los grupos pequeños se suprimen antes de que los datos lleguen al cliente del mapa.",
     listView: "Lista", mapView: "Mapa", mapped: "grupos en el mapa",
     mapPrivacy: "Las posiciones del mapa son agregados aproximados. El umbral mínimo de divulgación configurado se aplica en el servidor.",
@@ -293,8 +258,8 @@ const copy = {
     empty: "За цими фільтрами опублікованих записів не знайдено.",
     clear: "Очистити фільтри",
     open: "Відкрити запис",
-    claimStatus: "Найвищий статус видимого твердження",
-    noClaimStatus: "Немає переглянутих публічних тверджень",
+    claimStatus: "Найвищий видимий етап перевірки твердження", noClaimStatus: "Немає публічного етапу перевірки тверджень",
+    claimStatusNote: "Етапи перевірки стосуються конкретних тверджень. Вони не є сертифікацією або верифікацією профілю в цілому.",
     mapTitle: "Карта ремісничих навичок",
     mapText: "Переглядайте приватно-безпечні географічні агрегати опублікованих записів CraftID. Точні адреси не показуються, а малі групи приховуються до передавання даних у клієнт карти.",
     listView: "Список",
@@ -558,6 +523,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
             </div>
 
             <p className="privacyNote">{t.note}</p>
+            <p className="privacyNote">{t.claimStatusNote}</p>
           </div>
         </section>
 
@@ -588,12 +554,12 @@ export default async function DiscoverPage({ searchParams }: Props) {
                   const skills = (record.claims ?? [])
                     .filter((claim) => claim.claim_type === "skill")
                     .slice(0, 4);
-                  const status = strongestClaimStatus(record.claims ?? []);
+                  const status = strongestPublicClaimStage(record.claims ?? []);
                   const formatted = "#" + formatCraftId(record.craftid_number, record.craftid_check_digits);
                   const route = formatted.replace("#", "");
                   const role = record.professional_title ?? record.craft_sector ?? "";
                   const statusLabel = status
-                    ? statusCopy[locale][status as keyof (typeof statusCopy)[typeof locale]] ?? status
+                    ? claimStageLabel(locale, status)
                     : t.noClaimStatus;
 
                   return (
