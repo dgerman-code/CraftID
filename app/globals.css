@@ -5130,3 +5130,69 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Controlled duplicate resolution */
+.adminResolutionForm {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.adminResolutionForm label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.adminResolutionForm input,
+.adminResolutionForm select,
+.adminResolutionForm textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+}
+
+.adminResolutionForm textarea {
+  resize: vertical;
+}
+
+.adminResolutionForm input:focus,
+.adminResolutionForm select:focus,
+.adminResolutionForm textarea:focus {
+  border-color: var(--accent);
+}
+
+.adminResolutionWide {
+  grid-column: 1 / -1;
+}
+
+.adminResolutionSubmit {
+  display: grid;
+  align-content: end;
+  gap: 8px;
+}
+
+.adminResolutionSubmit small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .adminResolutionForm {
+    grid-template-columns: 1fr;
+  }
+
+  .adminResolutionWide {
+    grid-column: auto;
+  }
+}
