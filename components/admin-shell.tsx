@@ -20,6 +20,7 @@ const nav = [
   { href: "/admin/certificates", label: "Certificates", adminOnly: true },
   { href: "/admin/taxonomy", label: "Taxonomy", adminOnly: true },
   { href: "/admin/users", label: "Users & Roles", adminOnly: true },
+  { href: "/admin/account-integrity", label: "Account Integrity", adminOnly: true },
   { href: "/admin/audit", label: "Audit & Compliance", adminOnly: true },
   { href: "/admin/identifiers", label: "Identifier Administration", adminOnly: true },
 ];

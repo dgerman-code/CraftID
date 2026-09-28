@@ -18,6 +18,7 @@ const copy = {
     have: "Already registered?",
     signIn: "Sign in",
     note: "By creating an account, you are starting a professional record. CraftID does not certify you or grant professional status.",
+    continuity: "Already have a CraftID? Do not create a second account because your email changed. Sign in to the existing account and change the login email from Account & login.",
     back: "Back to CraftID",
   },
   fr: {
@@ -26,6 +27,7 @@ const copy = {
     email: "E-mail", password: "Mot de passe", confirm: "Confirmer le mot de passe", submit: "Créer le compte",
     have: "Déjà inscrit ?", signIn: "Se connecter",
     note: "En créant un compte, vous commencez un dossier professionnel. CraftID ne vous certifie pas et ne vous confère aucun statut professionnel.",
+    continuity: "Vous avez déjà un CraftID ? Ne créez pas un deuxième compte parce que votre e-mail a changé. Connectez-vous au compte existant et modifiez l’e-mail dans Compte et connexion.",
     back: "Retour à CraftID",
   },
   de: {
@@ -34,6 +36,7 @@ const copy = {
     email: "E-Mail", password: "Passwort", confirm: "Passwort bestätigen", submit: "Konto erstellen",
     have: "Bereits registriert?", signIn: "Anmelden",
     note: "Mit der Kontoerstellung beginnen Sie einen beruflichen Eintrag. CraftID zertifiziert Sie nicht und verleiht keinen Berufsstatus.",
+    continuity: "Sie haben bereits eine CraftID? Erstellen Sie wegen einer neuen E-Mail-Adresse kein zweites Konto. Melden Sie sich beim bestehenden Konto an und ändern Sie die Login-E-Mail unter Konto & Anmeldung.",
     back: "Zurück zu CraftID",
   },
   nl: {
@@ -42,6 +45,7 @@ const copy = {
     email: "E-mail", password: "Wachtwoord", confirm: "Bevestig wachtwoord", submit: "Account aanmaken",
     have: "Al geregistreerd?", signIn: "Inloggen",
     note: "Door een account aan te maken start u een professioneel dossier. CraftID certificeert u niet en verleent geen professionele status.",
+    continuity: "Hebt u al een CraftID? Maak geen tweede account aan omdat uw e-mailadres is gewijzigd. Log in op het bestaande account en wijzig de login-e-mail via Account & login.",
     back: "Terug naar CraftID",
   },
   pl: {
@@ -50,6 +54,7 @@ const copy = {
     email: "E-mail", password: "Hasło", confirm: "Potwierdź hasło", submit: "Utwórz konto",
     have: "Masz już konto?", signIn: "Zaloguj się",
     note: "Tworząc konto, rozpoczynasz wpis zawodowy. CraftID nie certyfikuje Cię ani nie nadaje statusu zawodowego.",
+    continuity: "Masz już CraftID? Nie twórz drugiego konta tylko dlatego, że zmienił się e-mail. Zaloguj się do istniejącego konta i zmień e-mail w sekcji Konto i logowanie.",
     back: "Wróć do CraftID",
   },
   it: {
@@ -58,6 +63,7 @@ const copy = {
     email: "E-mail", password: "Password", confirm: "Conferma password", submit: "Crea account",
     have: "Già registrato?", signIn: "Accedi",
     note: "Creando un account inizi un record professionale. CraftID non ti certifica e non conferisce uno status professionale.",
+    continuity: "Hai già un CraftID? Non creare un secondo account perché è cambiata la tua e-mail. Accedi all’account esistente e modifica l’e-mail in Account e accesso.",
     back: "Torna a CraftID",
   },
   es: {
@@ -66,6 +72,7 @@ const copy = {
     email: "Correo electrónico", password: "Contraseña", confirm: "Confirmar contraseña", submit: "Crear cuenta",
     have: "¿Ya estás registrado?", signIn: "Iniciar sesión",
     note: "Al crear una cuenta comienzas un registro profesional. CraftID no te certifica ni te concede un estatus profesional.",
+    continuity: "¿Ya tienes un CraftID? No crees una segunda cuenta porque cambió tu correo. Inicia sesión en la cuenta existente y cambia el correo en Cuenta e inicio de sesión.",
     back: "Volver a CraftID",
   },
   uk: {
@@ -79,6 +86,7 @@ const copy = {
     have: "Вже зареєстровані?",
     signIn: "Увійти",
     note: "Створення облікового запису розпочинає формування професійного запису. CraftID не сертифікує вас і не надає професійного статусу.",
+    continuity: "Уже маєте CraftID? Не створюйте другий акаунт лише через зміну email. Увійдіть до існуючого акаунта та змініть email у розділі «Обліковий запис і вхід».",
     back: "Повернутися до CraftID",
   },
 } as const;
@@ -99,6 +107,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
         <div className="eyebrow">{t.eyebrow}</div>
         <h1>{t.title}</h1>
         <p className="authIntro">{t.intro}</p>
+        <p className="privacyNote authContinuityNote">{t.continuity}</p>
 
         {params.error ? <p className="formMessage error">{params.error}</p> : null}
 
