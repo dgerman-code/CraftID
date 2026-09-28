@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   const countryCode = result.entity.countryCode?.trim().toUpperCase() ?? "";
   const country = countryNameFromCode(countryCode);
   if (!country) {
-    return new NextResponse("Workshop country is required", { status: 422 });
+    return new NextResponse("CraftID country is required", { status: 422 });
   }
 
   const format = request.nextUrl.searchParams.get("format") ?? "svg";
