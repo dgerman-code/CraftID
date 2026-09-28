@@ -290,7 +290,7 @@ export async function renderCraftedInPrintSheetPdf(svg: string) {
   return pdf.save();
 }
 
-function renderApprovedProfessionalStickerSvg(input: {
+function renderApprovedRoundStickerSvg(input: {
   craftId: string;
   qrDataUri: string;
   backgroundDataUri: string;
@@ -353,12 +353,8 @@ export function renderRoundStickerSvg(input: {
   backgroundDataUri?: string;
   fontDataUri?: string;
 }) {
-  if (
-    input.entityType === "professional" &&
-    input.backgroundDataUri &&
-    input.fontDataUri
-  ) {
-    return renderApprovedProfessionalStickerSvg({
+  if (input.backgroundDataUri && input.fontDataUri) {
+    return renderApprovedRoundStickerSvg({
       craftId: input.craftId,
       qrDataUri: input.qrDataUri,
       backgroundDataUri: input.backgroundDataUri,
@@ -376,11 +372,7 @@ export function renderRoundStickerPngSvg(input: {
   backgroundDataUri?: string;
   mediumFontBytes?: Uint8Array;
 }) {
-  if (
-    input.entityType === "professional" &&
-    input.backgroundDataUri &&
-    input.mediumFontBytes
-  ) {
+  if (input.backgroundDataUri && input.mediumFontBytes) {
     const craftId = esc(input.craftId);
     const idPath = renderVectorText({
       text: "#" + input.craftId,
@@ -560,11 +552,7 @@ export async function renderPrintSheetPdf(input: {
   backgroundJpeg?: Uint8Array;
   mediumFontBytes?: Uint8Array;
 }) {
-  if (
-    input.entityType === "professional" &&
-    input.backgroundJpeg &&
-    input.mediumFontBytes
-  ) {
+  if (input.backgroundJpeg && input.mediumFontBytes) {
     return renderApprovedPrintSheetPdf({
       craftId: input.craftId,
       qrPng: input.qrPng,

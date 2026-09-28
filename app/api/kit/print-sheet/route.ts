@@ -19,22 +19,17 @@ export async function GET(request: NextRequest) {
 
   try {
     const assetOrigin = request.nextUrl.origin;
-    const qrPromise = fetchQrPng(result.entity.profileUrl, 620, 0);
-
-    const [qr, background, font] =
-      result.entity.entityType === "professional"
-        ? await Promise.all([
-            qrPromise,
-            fetchBinaryAsset(
-              new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
-              "Sticker template",
-            ),
-            fetchBinaryAsset(
-              new URL("/templates/cid-sans-500.ttf", assetOrigin).toString(),
-              "Sticker font",
-            ),
-          ])
-        : [await qrPromise, null, null];
+    const [qr, background, font] = await Promise.all([
+      fetchQrPng(result.entity.profileUrl, 620, 0),
+      fetchBinaryAsset(
+        new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
+        "Sticker template",
+      ),
+      fetchBinaryAsset(
+        new URL("/templates/cid-sans-500.ttf", assetOrigin).toString(),
+        "Sticker font",
+      ),
+    ]);
 
     const pdf = await renderPrintSheetPdf({
       craftId: result.entity.craftId,
