@@ -5423,3 +5423,380 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Partner roles and opportunities */
+.adminPartnerSimpleColumns {
+  grid-template-columns: minmax(220px, 1.45fr) minmax(150px, 0.8fr) minmax(190px, 1fr) minmax(180px, 0.9fr) 70px 54px;
+}
+
+.adminFormDivider {
+  height: 1px;
+  margin: 8px 0;
+  background: var(--line);
+}
+
+.adminPortalAccessList {
+  display: grid;
+  gap: 8px;
+}
+
+.adminPortalAccessList > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.partnerPortalTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.partnerOrgGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 26px 0 34px;
+}
+
+.partnerOrgCard {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  background: #fff;
+}
+
+.partnerOrgCard h2 {
+  margin: 10px 0 6px;
+  font-size: 1.25rem;
+}
+
+.partnerOrgCard small {
+  color: var(--muted);
+}
+
+.partnerPortalModules {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 28px;
+}
+
+.partnerPortalModules .dashboardModule {
+  min-height: 220px;
+}
+
+.partnerOpportunityLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.partnerOpportunityList {
+  display: grid;
+}
+
+.partnerOpportunityRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.partnerOpportunityRow:first-child {
+  border-top: 0;
+}
+
+.partnerOpportunityRow h3 {
+  margin: 8px 0 6px;
+}
+
+.partnerOpportunityRow p {
+  margin: 0 0 8px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.partnerOpportunityRow small {
+  color: var(--muted);
+}
+
+.partnerInterestList,
+.myOpportunityList {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.partnerInterestCard,
+.myOpportunityCard {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  background: #fff;
+}
+
+.partnerInterestHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.partnerInterestHeader h2,
+.myOpportunityCard h2 {
+  margin: 8px 0 6px;
+}
+
+.partnerInterestHeader p,
+.myOpportunityCard > p {
+  color: var(--muted);
+}
+
+.partnerInterestMessage,
+.partnerResponseRecorded,
+.myOpportunityResponse {
+  margin-top: 18px;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.partnerInterestContact {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.partnerInterestContact > div {
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.partnerInterestContact dt,
+.publicOpportunityCard dt,
+.opportunityFacts dt {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.partnerInterestContact dd,
+.publicOpportunityCard dd,
+.opportunityFacts dd {
+  margin: 5px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.partnerResponseForm {
+  margin-top: 20px;
+}
+
+.opportunityFilters {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) auto auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.opportunityFilters label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.opportunityFilters select {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.publicOpportunityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.publicOpportunityCard {
+  display: grid;
+  align-content: start;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  background: #fff;
+}
+
+.publicOpportunityCard h2 {
+  margin: 10px 0 10px;
+  font-size: 1.35rem;
+  letter-spacing: -0.03em;
+}
+
+.publicOpportunityCard > p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.publicOpportunityCard dl {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.publicOpportunityCard dl > div {
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+}
+
+.opportunityDetailHero .backLink {
+  display: inline-block;
+  margin-bottom: 26px;
+}
+
+.opportunityDetailGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.opportunityFacts dl {
+  margin: 0;
+}
+
+.opportunityFacts dl > div {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.opportunityActions {
+  display: grid;
+  gap: 10px;
+  position: sticky;
+  top: 28px;
+}
+
+.opportunityActions small {
+  color: var(--muted);
+}
+
+.opportunityInterestContext {
+  display: grid;
+  gap: 4px;
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.opportunityInterestContext span {
+  color: var(--muted);
+}
+
+.entitySwitchRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0;
+}
+
+.myOpportunityResponse {
+  margin-bottom: 14px;
+}
+
+.opportunityResponseLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.partnerWorkspaceBanner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: center;
+  margin-top: 28px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  background: #fff;
+}
+
+.partnerWorkspaceBanner h2 {
+  margin: 8px 0 8px;
+}
+
+.partnerWorkspaceBanner p {
+  margin: 0;
+  color: var(--muted);
+}
+
+@media (max-width: 1100px) {
+  .adminPartnerSimpleColumns {
+    grid-template-columns: minmax(220px, 1.3fr) minmax(140px, 0.8fr) minmax(180px, 1fr) 70px 54px;
+  }
+
+  .adminPartnerSimpleColumns > :nth-child(4) {
+    display: none;
+  }
+
+  .partnerOpportunityLayout,
+  .opportunityDetailGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .publicOpportunityGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .opportunityActions {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .adminPartnerSimpleColumns,
+  .partnerOrgGrid,
+  .partnerPortalModules,
+  .publicOpportunityGrid,
+  .partnerInterestContact,
+  .opportunityFilters,
+  .partnerWorkspaceBanner {
+    grid-template-columns: 1fr;
+  }
+
+  .adminPartnerSimpleColumns > :nth-child(4) {
+    display: initial;
+  }
+
+  .partnerPortalTop,
+  .partnerInterestHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .partnerOpportunityRow,
+  .opportunityFacts dl > div {
+    grid-template-columns: 1fr;
+  }
+}
