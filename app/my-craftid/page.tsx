@@ -62,6 +62,10 @@ const copy = {
     referralsText: "Review project, partnership, training and commission invitations routed through CraftID.",
     support: "Opportunities & Support",
     supportText: "Tell CraftID what kinds of funding, advice, training, partnerships and other support are relevant to you.",
+    myOpportunities: "My opportunities",
+    myOpportunitiesText: "Track your interest requests and responses from CraftID partner organisations.",
+    partnerWorkspace: "Partner workspace",
+    partnerWorkspaceText: "Manage opportunities and interest requests for your assigned partner organisation.",
     certificate: "CraftID Record Certificate",
     certificateText: "Issue and download a versioned certificate of this CraftID record with a public Certificate No. and QR verification.",
     mark: "CraftID Mark",
@@ -140,6 +144,10 @@ const copy = {
     referralsText: "Examinez les invitations à des projets, partenariats, formations et commandes transmises via CraftID.",
     support: "Opportunités et soutien",
     supportText: "Indiquez à CraftID les financements, conseils, formations, partenariats et autres formes de soutien qui vous intéressent.",
+    myOpportunities: "Mes opportunités",
+    myOpportunitiesText: "Suivez vos manifestations d’intérêt et les réponses des organisations partenaires CraftID.",
+    partnerWorkspace: "Espace partenaire",
+    partnerWorkspaceText: "Gérez les opportunités et les demandes d’intérêt pour votre organisation partenaire désignée.",
     certificate: "Certificat du dossier CraftID",
     certificateText: "Émettez et téléchargez un certificat versionné de ce dossier CraftID avec un Certificate No. public et une vérification QR.",
     mark: "Marque CraftID",
@@ -218,6 +226,10 @@ const copy = {
     referralsText: "Prüfen Sie Einladungen zu Projekten, Partnerschaften, Schulungen und Aufträgen, die über CraftID vermittelt werden.",
     support: "Möglichkeiten & Unterstützung",
     supportText: "Teilen Sie CraftID mit, welche Finanzierung, Beratung, Schulung, Partnerschaften und weitere Unterstützung für Sie relevant sind.",
+    myOpportunities: "Meine Möglichkeiten",
+    myOpportunitiesText: "Verfolgen Sie Ihre Interessenanfragen und Antworten von CraftID-Partnerorganisationen.",
+    partnerWorkspace: "Partnerbereich",
+    partnerWorkspaceText: "Verwalten Sie Angebote und Interessenanfragen für Ihre zugewiesene Partnerorganisation.",
     certificate: "CraftID-Datensatzzertifikat",
     certificateText: "Stellen Sie ein versioniertes Zertifikat dieses CraftID-Datensatzes mit öffentlicher Certificate No. und QR-Prüfung aus und laden Sie es herunter.",
     mark: "CraftID Mark",
@@ -296,6 +308,10 @@ const copy = {
     referralsText: "Beoordeel uitnodigingen voor projecten, partnerschappen, training en opdrachten die via CraftID worden doorgestuurd.",
     support: "Kansen & ondersteuning",
     supportText: "Laat CraftID weten welke financiering, advies, training, partnerschappen en andere ondersteuning voor u relevant zijn.",
+    myOpportunities: "Mijn mogelijkheden",
+    myOpportunitiesText: "Volg uw interesseverzoeken en reacties van CraftID-partnerorganisaties.",
+    partnerWorkspace: "Partnerwerkruimte",
+    partnerWorkspaceText: "Beheer mogelijkheden en interesseverzoeken voor uw toegewezen partnerorganisatie.",
     certificate: "CraftID Record Certificate",
     certificateText: "Geef een versiecertificaat van dit CraftID-dossier uit en download het met een openbare Certificate No. en QR-verificatie.",
     mark: "CraftID Mark",
@@ -374,6 +390,10 @@ const copy = {
     referralsText: "Przeglądaj zaproszenia do projektów, partnerstw, szkoleń i zleceń przekazywane przez CraftID.",
     support: "Możliwości i wsparcie",
     supportText: "Wskaż CraftID, jakie finansowanie, doradztwo, szkolenia, partnerstwa i inne formy wsparcia są dla Ciebie istotne.",
+    myOpportunities: "Moje możliwości",
+    myOpportunitiesText: "Śledź zgłoszenia zainteresowania i odpowiedzi organizacji partnerskich CraftID.",
+    partnerWorkspace: "Panel partnera",
+    partnerWorkspaceText: "Zarządzaj możliwościami i zgłoszeniami zainteresowania dla przypisanej organizacji partnerskiej.",
     certificate: "Certyfikat zapisu CraftID",
     certificateText: "Wydaj i pobierz wersjonowany certyfikat tego zapisu CraftID z publicznym Certificate No. i weryfikacją QR.",
     mark: "CraftID Mark",
@@ -452,6 +472,10 @@ const copy = {
     referralsText: "Esamina inviti a progetti, partnership, formazione e incarichi inoltrati tramite CraftID.",
     support: "Opportunità e supporto",
     supportText: "Indica a CraftID quali finanziamenti, consulenze, formazioni, partnership e altre forme di supporto sono rilevanti per te.",
+    myOpportunities: "Le mie opportunità",
+    myOpportunitiesText: "Segui le manifestazioni di interesse e le risposte delle organizzazioni partner CraftID.",
+    partnerWorkspace: "Spazio partner",
+    partnerWorkspaceText: "Gestisci opportunità e richieste di interesse per l’organizzazione partner assegnata.",
     certificate: "Certificato del record CraftID",
     certificateText: "Emetti e scarica un certificato versionato di questo record CraftID con Certificate No. pubblico e verifica QR.",
     mark: "CraftID Mark",
@@ -530,6 +554,10 @@ const copy = {
     referralsText: "Revisa invitaciones a proyectos, alianzas, formación y encargos canalizadas a través de CraftID.",
     support: "Oportunidades y apoyo",
     supportText: "Indica a CraftID qué financiación, asesoramiento, formación, alianzas y otras formas de apoyo son relevantes para ti.",
+    myOpportunities: "Mis oportunidades",
+    myOpportunitiesText: "Sigue tus solicitudes de interés y las respuestas de organizaciones asociadas CraftID.",
+    partnerWorkspace: "Espacio de socio",
+    partnerWorkspaceText: "Gestiona oportunidades y solicitudes de interés para tu organización asociada asignada.",
     certificate: "Certificado del registro CraftID",
     certificateText: "Emite y descarga un certificado versionado de este registro CraftID con Certificate No. público y verificación QR.",
     mark: "CraftID Mark",
@@ -608,6 +636,10 @@ const copy = {
     referralsText: "Переглядайте запрошення до проєктів, партнерств, навчання та замовлень, передані через CraftID.",
     support: "Можливості та підтримка",
     supportText: "Вкажіть, які види фінансування, консультацій, навчання, партнерств та іншої підтримки для вас актуальні.",
+    myOpportunities: "Мої можливості",
+    myOpportunitiesText: "Відстежуйте свої запити «Я зацікавлений» та відповіді партнерських організацій CraftID.",
+    partnerWorkspace: "Робочий простір партнера",
+    partnerWorkspaceText: "Керуйте можливостями та запитами зацікавлених для призначеної партнерської організації.",
     certificate: "Сертифікат запису CraftID",
     certificateText: "Випускайте та завантажуйте версійний сертифікат цього запису CraftID із публічним номером сертифіката та QR-перевіркою.",
     mark: "CraftID Mark",
@@ -738,6 +770,9 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
         : publicationPass
           ? t.publicationReady
           : t.publicationBlocked;
+
+  const { data: partnerOrganisations } = await supabase.rpc("current_partner_organisations");
+  const hasPartnerAccess = Array.isArray(partnerOrganisations) && partnerOrganisations.length > 0;
 
   const selectedQuery = ownerWorkspaceQuery(locale, entity.id);
   const hasProfessional = entities.some((item) => item.entity_type === "professional");
@@ -889,6 +924,7 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             [t.requests, t.requestsText, "/my-craftid/requests"],
             [t.referrals, t.referralsText, "/my-craftid/referrals"],
             [t.support, t.supportText, "/my-craftid/support"],
+            [t.myOpportunities, t.myOpportunitiesText, "/my-craftid/opportunities"],
             [t.accountLogin, t.accountLoginText, "/my-craftid/account"],
             [t.certificate, t.certificateText, "/my-craftid/certificate"],
             [t.mark, t.markText, "/my-craftid/mark"],
@@ -901,6 +937,19 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             </article>
           ))}
         </section>
+
+        {hasPartnerAccess ? (
+          <section className="partnerWorkspaceBanner">
+            <div>
+              <div className="eyebrow">{t.partnerWorkspace}</div>
+              <h2>{t.partnerWorkspace}</h2>
+              <p>{t.partnerWorkspaceText}</p>
+            </div>
+            <Link className="button buttonPrimary" href={`/partner${localeQuery(locale)}`}>
+              {t.open} →
+            </Link>
+          </section>
+        ) : null}
 
         <section className="accountClosureSection">
           <div>
