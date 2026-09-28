@@ -28,6 +28,19 @@ export async function login(formData: FormData) {
     redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(message)}`);
   }
 
+  const { data: superseded, error: supersededError } = await supabase.rpc(
+    "current_account_superseded",
+  );
+
+  if (!supersededError && superseded) {
+    await supabase.auth.signOut();
+    const message =
+      lang === "uk"
+        ? "Цей обліковий запис було консолідовано після перевірки дублювання. Увійдіть через збережений обліковий запис CraftID або зверніться до адміністратора."
+        : "This login account was consolidated after duplicate-account review. Sign in with the retained CraftID account or contact an administrator.";
+    redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(message)}`);
+  }
+
   const { data: entity } = await supabase
     .from("craftid_entities")
     .select("id")
