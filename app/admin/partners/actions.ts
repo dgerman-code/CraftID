@@ -6,6 +6,19 @@ import { createClient } from "@/lib/supabase/server";
 
 const roles = new Set(["national_operator", "partner"]);
 
+function partnerSaveError(message: string, countryCode: string) {
+  const lower = message.toLowerCase();
+
+  if (
+    lower.includes("partner_organisations_one_confirmed_national_operator_per_country") ||
+    lower.includes("duplicate key value violates unique constraint")
+  ) {
+    return `A National Operator is already assigned for ${countryCode}. Edit the existing organisation or assign this organisation as Country Partner.`;
+  }
+
+  return message;
+}
+
 export async function savePartnerOrganisation(formData: FormData) {
   const id = String(formData.get("id") ?? "").trim() || null;
   const legalNameEn = String(formData.get("legalNameEn") ?? "").trim();
@@ -39,6 +52,32 @@ export async function savePartnerOrganisation(formData: FormData) {
   const { data: role } = await supabase.rpc("current_staff_role");
   if (role !== "admin") redirect("/admin");
 
+  if (partnerRole === "national_operator") {
+    const { data: existingPartners, error: existingError } = await supabase.rpc(
+      "admin_partner_organisations",
+    );
+
+    if (!existingError && Array.isArray(existingPartners)) {
+      const conflict = existingPartners.find(
+        (partner) =>
+          partner.country_code === countryCode &&
+          partner.partner_role === "national_operator" &&
+          partner.id !== id,
+      );
+
+      if (conflict) {
+        const message =
+          `A National Operator is already assigned for ${countryCode}: ` +
+          `${conflict.short_name_en || conflict.legal_name_en}. Edit that organisation or choose Country Partner.`;
+        redirect(
+          `/admin/partners?error=${encodeURIComponent(message)}&edit=${encodeURIComponent(
+            id ?? conflict.id,
+          )}`,
+        );
+      }
+    }
+  }
+
   const { data: savedPartnerId, error } = await supabase.rpc(
     "admin_save_partner_organisation",
     {
@@ -61,7 +100,10 @@ export async function savePartnerOrganisation(formData: FormData) {
   );
 
   if (error) {
-    redirect("/admin/partners?error=" + encodeURIComponent(error.message));
+    const message = partnerSaveError(error.message, countryCode);
+    redirect(
+      `/admin/partners?error=${encodeURIComponent(message)}${id ? `&edit=${encodeURIComponent(id)}` : ""}`,
+    );
   }
 
   const partnerId = String(savedPartnerId ?? id ?? "").trim();
@@ -220,4 +262,48 @@ export async function revokePartnerPortalAccess(formData: FormData) {
 
   revalidatePath("/admin/partners");
   redirect(`/admin/partners?edit=${partnerId}&message=access-updated`);
+}
+
+
+export async function deletePartnerOrganisation(formData: FormData) {
+  const partnerId = String(formData.get("partnerId") ?? "").trim();
+  const reason = String(formData.get("reason") ?? "").trim();
+
+  if (!partnerId) {
+    redirect(
+      "/admin/partners?error=" +
+        encodeURIComponent("Select a partner organisation to delete."),
+    );
+  }
+
+  const supabase = await createClient();
+  const { data: role } = await supabase.rpc("current_staff_role");
+  if (role !== "admin") redirect("/admin");
+
+  const { data: logoPath, error } = await supabase.rpc(
+    "admin_delete_partner_organisation",
+    {
+      p_partner_organisation_id: partnerId,
+      p_reason: reason || "Removed by Platform Admin",
+    },
+  );
+
+  if (error) {
+    redirect(
+      `/admin/partners?edit=${encodeURIComponent(partnerId)}&error=${encodeURIComponent(
+        error.message,
+      )}`,
+    );
+  }
+
+  if (logoPath) {
+    await supabase.storage
+      .from("partner-logos")
+      .remove([String(logoPath)]);
+  }
+
+  revalidatePath("/admin/partners");
+  revalidatePath("/network");
+  revalidatePath("/opportunities");
+  redirect("/admin/partners?message=deleted");
 }
