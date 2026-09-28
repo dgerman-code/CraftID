@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
+  deletePartnerOrganisation,
   revokePartnerPortalAccess,
   savePartnerOrganisation,
 } from "./actions";
@@ -47,6 +49,12 @@ const roleLabels: Record<string, string> = {
   partner: "Country Partner",
 };
 
+const messageCopy: Record<string, string> = {
+  saved: "Partner organisation saved.",
+  deleted: "Partner organisation deleted.",
+  "access-updated": "Partner portal access updated.",
+};
+
 export default async function PartnerAdminPage({ searchParams }: Props) {
   const sp = await searchParams;
   const supabase = await createClient();
@@ -68,7 +76,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
   );
 
   const edit = sp.edit
-    ? partners.find((partner) => partner.id === sp.edit)
+    ? partners.find((partner) => partner.id === sp.edit) ?? null
     : null;
   const editPrivate = edit ? privateByPartner.get(edit.id) : null;
   const editLogoUrl = edit?.logo_path
@@ -77,7 +85,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
     : null;
 
   return (
-    <main className="adminPage">
+    <main className="adminPage partnerAdminPage">
       <div className="adminPageHeader">
         <div className="eyebrow">CraftID country network</div>
         <h1>Countries & Partner Roles</h1>
@@ -94,47 +102,47 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
       ) : null}
       {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
       {sp.message ? (
-        <p className="formMessage">Partner organisation saved.</p>
+        <p className="formMessage">
+          {messageCopy[sp.message] ?? "Partner organisation updated."}
+        </p>
       ) : null}
 
-      <div className="adminDetailGrid">
-        <section className="adminPanel">
+      <div className="partnerAdminLayout">
+        <section className="adminPanel partnerAdminListPanel">
           <div className="adminPanelHeader">
             <div>
               <div className="eyebrow">Assigned roles</div>
               <h2>Country partner register</h2>
             </div>
-            <span>{partners.length}</span>
+            <div className="partnerAdminHeaderActions">
+              <span>{partners.length}</span>
+              <Link className="button partnerAdminAddButton" href="/admin/partners">
+                + Add organisation
+              </Link>
+            </div>
           </div>
 
-          <div className="adminTable">
-            <div className="adminTableHead adminPartnerSimpleColumns">
-              <span>Organisation</span>
-              <span>Country / Role</span>
-              <span>Admin contact</span>
-              <span>Portal access</span>
-              <span>Public</span>
-              <span></span>
-            </div>
-
+          <div className="partnerAdminCards">
             {partners.map((partner) => {
               const details = privateByPartner.get(partner.id);
+              const logoUrl = partner.logo_path
+                ? supabase.storage.from("partner-logos").getPublicUrl(partner.logo_path)
+                    .data.publicUrl
+                : null;
+
               return (
-                <div
-                  className="adminTableRow adminPartnerSimpleColumns"
+                <article
+                  className={
+                    edit?.id === partner.id
+                      ? "partnerAdminCard active"
+                      : "partnerAdminCard"
+                  }
                   key={partner.id}
                 >
-                  <div className="adminPartnerIdentityCell">
-                    <div className="adminPartnerLogoThumb">
-                      {partner.logo_path ? (
-                        <img
-                          src={
-                            supabase.storage
-                              .from("partner-logos")
-                              .getPublicUrl(partner.logo_path).data.publicUrl
-                          }
-                          alt=""
-                        />
+                  <div className="partnerAdminCardMain">
+                    <div className="adminPartnerLogoThumb partnerAdminCardLogo">
+                      {logoUrl ? (
+                        <img src={logoUrl} alt="" />
                       ) : (
                         <span>
                           {(partner.short_name_en || partner.legal_name_en)
@@ -143,73 +151,87 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
                         </span>
                       )}
                     </div>
-                    <div className="adminRegistryIdentity">
-                      <strong>
-                        {partner.short_name_en || partner.legal_name_en}
-                      </strong>
-                      <span>{partner.legal_name_en}</span>
+
+                    <div className="partnerAdminCardIdentity">
+                      <div className="recordId">
+                        {partner.country_code} ·{" "}
+                        {roleLabels[partner.partner_role] ?? partner.partner_role}
+                      </div>
+                      <h3>{partner.short_name_en || partner.legal_name_en}</h3>
+                      {partner.short_name_en ? (
+                        <p>{partner.legal_name_en}</p>
+                      ) : null}
                     </div>
                   </div>
 
-                  <div className="adminRegistryIdentity">
-                    <strong>{partner.country_code}</strong>
-                    <span>
-                      {roleLabels[partner.partner_role] ?? partner.partner_role}
-                    </span>
+                  <div className="partnerAdminCardMeta">
+                    <div>
+                      <span>Admin contact</span>
+                      <strong>{details?.contact_name || "—"}</strong>
+                      {details?.contact_title ? (
+                        <small>{details.contact_title}</small>
+                      ) : null}
+                      {details?.contact_email ? (
+                        <small>{details.contact_email}</small>
+                      ) : null}
+                    </div>
+
+                    <div>
+                      <span>Portal access</span>
+                      <strong>
+                        {details?.portal_emails?.length
+                          ? details.portal_emails.length
+                          : "—"}
+                      </strong>
+                      {details?.portal_emails?.[0] ? (
+                        <small>{details.portal_emails[0]}</small>
+                      ) : null}
+                    </div>
+
+                    <div>
+                      <span>Public</span>
+                      <strong>{partner.is_public ? "Yes" : "No"}</strong>
+                    </div>
                   </div>
 
-                  <div className="adminRegistryIdentity">
-                    <strong>{details?.contact_name || "—"}</strong>
-                    {details?.contact_title ? (
-                      <span>{details.contact_title}</span>
-                    ) : null}
-                    {details?.contact_email ? (
-                      <small>{details.contact_email}</small>
-                    ) : null}
-                    {details?.contact_phone ? (
-                      <small>{details.contact_phone}</small>
-                    ) : null}
+                  <div className="partnerAdminCardActions">
+                    <Link
+                      className="button partnerAdminEditButton"
+                      href={`/admin/partners?edit=${partner.id}`}
+                    >
+                      Edit
+                    </Link>
                   </div>
-
-                  <div className="adminRegistryIdentity">
-                    {details?.portal_emails?.length ? (
-                      details.portal_emails.map((email) => (
-                        <small key={email}>{email}</small>
-                      ))
-                    ) : (
-                      <span>—</span>
-                    )}
-                  </div>
-
-                  <span>{partner.is_public ? "Yes" : "No"}</span>
-                  <a
-                    className="textButton"
-                    href={`/admin/partners?edit=${partner.id}`}
-                  >
-                    Edit
-                  </a>
-                </div>
+                </article>
               );
             })}
 
             {!partners.length ? (
-              <p className="emptyState adminEmptyTable">
-                No country partner roles assigned yet.
-              </p>
+              <p className="emptyState">No country partner roles assigned yet.</p>
             ) : null}
           </div>
         </section>
 
-        <aside className="adminPanel">
-          <div className="eyebrow">
-            {edit ? "Edit country role" : "Assign organisation"}
+        <aside className="adminPanel partnerAdminEditorPanel">
+          <div className="partnerAdminEditorHeader">
+            <div>
+              <div className="eyebrow">
+                {edit ? "Edit assigned organisation" : "Assign organisation"}
+              </div>
+              <h2>{edit ? edit.legal_name_en : "Add partner organisation"}</h2>
+            </div>
+            {edit ? (
+              <Link className="textButton" href="/admin/partners">
+                Close
+              </Link>
+            ) : null}
           </div>
-          <h2>{edit ? edit.legal_name_en : "Add partner organisation"}</h2>
 
           <form
-            className="adminStatusForm"
+            className="adminStatusForm partnerAdminForm"
             action={savePartnerOrganisation}
             encType="multipart/form-data"
+            key={edit?.id ?? "new-partner"}
           >
             <input type="hidden" name="id" value={edit?.id ?? ""} />
             <input
@@ -418,7 +440,11 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
 
             <label>
               Add portal login email
-              <input name="portalEmail" type="email" placeholder="name@organisation.eu" />
+              <input
+                name="portalEmail"
+                type="email"
+                placeholder="name@organisation.eu"
+              />
             </label>
 
             {editPrivate?.portal_emails?.length ? (
@@ -435,16 +461,52 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
                     >
                       Revoke
                     </button>
-                    <input type="hidden" name="partnerId" value={edit?.id ?? ""} />
+                    <input
+                      type="hidden"
+                      name="partnerId"
+                      value={edit?.id ?? ""}
+                    />
                   </div>
                 ))}
               </div>
             ) : null}
 
-            <button className="button buttonPrimary" type="submit">
-              {edit ? "Save assignment" : "Assign organisation"}
-            </button>
+            <div className="partnerAdminSaveRow">
+              <button className="button buttonPrimary" type="submit">
+                {edit ? "Save changes" : "Assign organisation"}
+              </button>
+              {edit ? (
+                <Link className="button" href="/admin/partners">
+                  Cancel
+                </Link>
+              ) : null}
+            </div>
           </form>
+
+          {edit ? (
+            <div className="partnerAdminDangerZone">
+              <div>
+                <div className="eyebrow">Delete organisation</div>
+                <p>
+                  Deletion removes the country role, private contact card and
+                  partner portal access. If this organisation already owns
+                  opportunities, deletion is blocked to protect interaction
+                  history.
+                </p>
+              </div>
+              <form action={deletePartnerOrganisation}>
+                <input type="hidden" name="partnerId" value={edit.id} />
+                <input
+                  type="hidden"
+                  name="reason"
+                  value="Removed from Countries & Partner Roles by Platform Admin"
+                />
+                <button className="button dangerButton" type="submit">
+                  Delete organisation
+                </button>
+              </form>
+            </div>
+          ) : null}
         </aside>
       </div>
     </main>
