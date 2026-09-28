@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { LanguageMenu, localeFrom } from "@/components/site-shell";
 import { localeMeta } from "@/lib/i18n";
 import { formatCraftId, parseCraftId } from "@/lib/craftid-format";
+import { claimStageLabel } from "@/lib/public-claim-stage";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,10 @@ type Props = {
 const copy = {
   en: {
     identity: "Professional identity record",
+    professionalIdentity: "Professional CraftID record",
+    workshopIdentity: "Workshop CraftID record",
+    claimStage: "Claim review stage",
+    claimStageNotice: "This stage applies only to the individual claim. It does not certify or verify the whole profile.",
     about: "About",
     skills: "Skills",
     location: "Location",
@@ -37,6 +42,10 @@ const copy = {
   },
   fr: {
     identity: "Dossier d’identité professionnelle", about: "À propos", skills: "Compétences", location: "Localisation", exactAddress: "Adresse de l’atelier",
+    professionalIdentity: "Dossier CraftID Professional",
+    workshopIdentity: "Dossier CraftID Workshop",
+    claimStage: "Étape d’examen de la déclaration",
+    claimStageNotice: "Cette étape s’applique uniquement à la déclaration concernée. Elle ne certifie ni ne vérifie l’ensemble du profil.",
     links: "Présence externe", contact: "Contacter via CraftID",
     notice: "CraftID est une infrastructure indépendante d’identité professionnelle et de preuves. Ce profil n’est ni une certification de qualité ni une reconnaissance de l’UE.",
     unavailable: "Non disponible", website: "Site web", linkedin: "LinkedIn", portfolio: "Portfolio",
@@ -47,6 +56,10 @@ const copy = {
   },
   de: {
     identity: "Datensatz zur beruflichen Identität", about: "Über die Praxis", skills: "Kompetenzen", location: "Standort", exactAddress: "Werkstattadresse",
+    professionalIdentity: "Professional-CraftID-Datensatz",
+    workshopIdentity: "Workshop-CraftID-Datensatz",
+    claimStage: "Prüfstadium der Angabe",
+    claimStageNotice: "Dieses Stadium gilt nur für die jeweilige Angabe. Es zertifiziert oder verifiziert nicht das gesamte Profil.",
     links: "Externe Präsenz", contact: "Über CraftID kontaktieren",
     notice: "CraftID ist eine unabhängige Infrastruktur für berufliche Identität und Nachweise. Dieses Profil ist weder Qualitätszertifizierung noch EU-Anerkennung.",
     unavailable: "Nicht verfügbar", website: "Website", linkedin: "LinkedIn", portfolio: "Portfolio",
@@ -57,6 +70,10 @@ const copy = {
   },
   nl: {
     identity: "Dossier professionele identiteit", about: "Over", skills: "Vaardigheden", location: "Locatie", exactAddress: "Werkplaatsadres",
+    professionalIdentity: "Professional CraftID-dossier",
+    workshopIdentity: "Workshop CraftID-dossier",
+    claimStage: "Beoordelingsfase van de claim",
+    claimStageNotice: "Deze fase geldt alleen voor de afzonderlijke claim. Zij certificeert of verifieert niet het volledige profiel.",
     links: "Externe aanwezigheid", contact: "Contact via CraftID",
     notice: "CraftID is een onafhankelijke infrastructuur voor professionele identiteit en bewijs. Dit profiel is geen kwaliteitscertificering of EU-erkenning.",
     unavailable: "Niet beschikbaar", website: "Website", linkedin: "LinkedIn", portfolio: "Portfolio",
@@ -67,6 +84,10 @@ const copy = {
   },
   pl: {
     identity: "Zapis tożsamości zawodowej", about: "O praktyce", skills: "Umiejętności", location: "Lokalizacja", exactAddress: "Adres pracowni",
+    professionalIdentity: "Wpis Professional CraftID",
+    workshopIdentity: "Wpis Workshop CraftID",
+    claimStage: "Etap przeglądu deklaracji",
+    claimStageNotice: "Ten etap dotyczy wyłącznie konkretnej deklaracji. Nie certyfikuje ani nie weryfikuje całego profilu.",
     links: "Obecność zewnętrzna", contact: "Kontakt przez CraftID",
     notice: "CraftID jest niezależną infrastrukturą tożsamości zawodowej i dowodów. Ten profil nie jest certyfikatem jakości ani uznaniem UE.",
     unavailable: "Brak danych", website: "Strona internetowa", linkedin: "LinkedIn", portfolio: "Portfolio",
@@ -77,6 +98,10 @@ const copy = {
   },
   it: {
     identity: "Record di identità professionale", about: "Informazioni", skills: "Competenze", location: "Località", exactAddress: "Indirizzo del laboratorio",
+    professionalIdentity: "Record Professional CraftID",
+    workshopIdentity: "Record Workshop CraftID",
+    claimStage: "Fase di revisione della dichiarazione",
+    claimStageNotice: "Questa fase si applica solo alla singola dichiarazione. Non certifica né verifica l’intero profilo.",
     links: "Presenza esterna", contact: "Contatta tramite CraftID",
     notice: "CraftID è un’infrastruttura indipendente per identità professionale ed evidenze. Questo profilo non è una certificazione di qualità né un riconoscimento dell’UE.",
     unavailable: "Non disponibile", website: "Sito web", linkedin: "LinkedIn", portfolio: "Portfolio",
@@ -87,6 +112,10 @@ const copy = {
   },
   es: {
     identity: "Registro de identidad profesional", about: "Acerca de", skills: "Competencias", location: "Ubicación", exactAddress: "Dirección del taller",
+    professionalIdentity: "Registro Professional CraftID",
+    workshopIdentity: "Registro Workshop CraftID",
+    claimStage: "Etapa de revisión de la declaración",
+    claimStageNotice: "Esta etapa se aplica únicamente a la declaración concreta. No certifica ni verifica el perfil completo.",
     links: "Presencia externa", contact: "Contactar a través de CraftID",
     notice: "CraftID es una infraestructura independiente de identidad profesional y evidencias. Este perfil no es una certificación de calidad ni un reconocimiento de la UE.",
     unavailable: "No disponible", website: "Sitio web", linkedin: "LinkedIn", portfolio: "Portfolio",
@@ -97,6 +126,10 @@ const copy = {
   },
   uk: {
     identity: "Запис професійної ідентичності",
+    professionalIdentity: "Запис CraftID професіонала",
+    workshopIdentity: "Запис CraftID майстерні",
+    claimStage: "Етап перевірки твердження",
+    claimStageNotice: "Цей етап стосується лише конкретного твердження. Він не сертифікує і не верифікує профіль у цілому.",
     about: "Про практику",
     skills: "Навички",
     location: "Місце",
@@ -254,7 +287,9 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
         <header className="publicIdentityHeader">
           <Link className="brand" href={`/${q}`}>CraftID</Link>
           <div className="publicIdentityHeaderActions">
-            <div className="recordId">{t.identity}</div>
+            <div className="recordId">
+              {record.entity_type === "professional" ? t.professionalIdentity : t.workshopIdentity}
+            </div>
             <LanguageMenu locale={locale} pathname={`/id/${routeId}`} />
           </div>
         </header>
@@ -293,8 +328,17 @@ export default async function PublicCraftIdPage({ params, searchParams }: Props)
             <div className="profileBlock">
               <div className="eyebrow">{t.skills}</div>
               {claims?.length ? (
-                <div className="tagRow">
-                  {claims.map((claim) => <span className="tag" key={claim.id}>{claim.title}</span>)}
+                <div className="publicClaimList">
+                  {claims.map((claim) => (
+                    <div className="publicClaimItem" key={claim.id}>
+                      <span className="tag">{claim.title}</span>
+                      <span className="publicClaimStage">
+                        <small>{t.claimStage}</small>
+                        <strong>{claimStageLabel(locale, claim.status)}</strong>
+                      </span>
+                    </div>
+                  ))}
+                  <p className="publicClaimStageNotice">{t.claimStageNotice}</p>
                 </div>
               ) : <p>{t.unavailable}</p>}
             </div>
