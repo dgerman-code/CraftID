@@ -31,6 +31,21 @@ const copy = {
     location: "Location",
     notSet: "Not set",
     next: "Next steps",
+    readiness: "Readiness",
+    publicationTrack: "Registry publication",
+    publicationPublished: "Published",
+    publicationReady: "Ready for admin publication",
+    publicationBlocked: "Publication requirements incomplete",
+    publicationText: "Publication checks the minimum public-registry integrity gate. It is not certification or professional verification.",
+    reviewTrack: "Evidence review",
+    reviewNone: "No evidence submitted",
+    evidenceReviewed: "evidence reviewed",
+    reviewText: "Evidence review is separate from publication and applies to specific claims and supporting materials.",
+    needsClarification: "Needs clarification",
+    addName: "Add a display name",
+    reviewPrivacy: "Complete privacy settings",
+    readyAdminReview: "Minimum gate complete — ready for admin publication review",
+    suspendedAdmin: "This record is suspended — contact CraftID administration",
     profile: "Profile",
     profileText: "Manage the information that describes you or your workshop.",
     skills: "Skills & claims",
@@ -94,6 +109,21 @@ const copy = {
     location: "Localisation",
     notSet: "Non renseigné",
     next: "Étapes suivantes",
+    readiness: "Préparation",
+    publicationTrack: "Publication au registre",
+    publicationPublished: "Publié",
+    publicationReady: "Prêt pour la publication administrative",
+    publicationBlocked: "Exigences de publication incomplètes",
+    publicationText: "La publication vérifie uniquement le seuil minimal d’intégrité du registre public. Ce n’est ni une certification ni une vérification professionnelle.",
+    reviewTrack: "Examen des preuves",
+    reviewNone: "Aucune preuve soumise",
+    evidenceReviewed: "preuves examinées",
+    reviewText: "L’examen des preuves est distinct de la publication et porte sur des déclarations et pièces justificatives précises.",
+    needsClarification: "Clarification requise",
+    addName: "Ajouter un nom d’affichage",
+    reviewPrivacy: "Compléter les paramètres de confidentialité",
+    readyAdminReview: "Seuil minimal atteint — prêt pour l’examen administratif de publication",
+    suspendedAdmin: "Ce dossier est suspendu — contactez l’administration CraftID",
     profile: "Profil",
     profileText: "Gérez les informations qui vous décrivent, vous ou votre atelier.",
     skills: "Compétences et déclarations",
@@ -157,6 +187,21 @@ const copy = {
     location: "Standort",
     notSet: "Nicht angegeben",
     next: "Nächste Schritte",
+    readiness: "Bereitschaft",
+    publicationTrack: "Registerveröffentlichung",
+    publicationPublished: "Veröffentlicht",
+    publicationReady: "Bereit für administrative Veröffentlichung",
+    publicationBlocked: "Veröffentlichungsanforderungen unvollständig",
+    publicationText: "Die Veröffentlichung prüft nur die Mindestanforderungen an die Integrität des öffentlichen Registers. Sie ist keine Zertifizierung oder berufliche Verifizierung.",
+    reviewTrack: "Nachweisprüfung",
+    reviewNone: "Keine Nachweise eingereicht",
+    evidenceReviewed: "Nachweise geprüft",
+    reviewText: "Die Nachweisprüfung ist von der Veröffentlichung getrennt und bezieht sich auf konkrete Angaben und Belege.",
+    needsClarification: "Klärung erforderlich",
+    addName: "Anzeigenamen hinzufügen",
+    reviewPrivacy: "Datenschutzeinstellungen vervollständigen",
+    readyAdminReview: "Mindestanforderungen erfüllt — bereit für administrative Veröffentlichungsprüfung",
+    suspendedAdmin: "Dieser Datensatz ist ausgesetzt — wenden Sie sich an die CraftID-Administration",
     profile: "Profil",
     profileText: "Verwalten Sie die Angaben, die Sie oder Ihre Werkstatt beschreiben.",
     skills: "Kompetenzen & Angaben",
@@ -220,6 +265,21 @@ const copy = {
     location: "Locatie",
     notSet: "Niet ingesteld",
     next: "Volgende stappen",
+    readiness: "Gereedheid",
+    publicationTrack: "Publicatie in het register",
+    publicationPublished: "Gepubliceerd",
+    publicationReady: "Klaar voor administratieve publicatie",
+    publicationBlocked: "Publicatievereisten onvolledig",
+    publicationText: "Publicatie controleert alleen de minimale integriteitsvereisten voor het openbare register. Het is geen certificering of professionele verificatie.",
+    reviewTrack: "Beoordeling van bewijs",
+    reviewNone: "Geen bewijs ingediend",
+    evidenceReviewed: "bewijsstukken beoordeeld",
+    reviewText: "Beoordeling van bewijs staat los van publicatie en geldt voor specifieke claims en ondersteunende stukken.",
+    needsClarification: "Verduidelijking nodig",
+    addName: "Weergavenaam toevoegen",
+    reviewPrivacy: "Privacy-instellingen voltooien",
+    readyAdminReview: "Minimale drempel voltooid — klaar voor administratieve publicatiebeoordeling",
+    suspendedAdmin: "Dit dossier is opgeschort — neem contact op met CraftID-beheer",
     profile: "Profiel",
     profileText: "Beheer de informatie die u of uw werkplaats beschrijft.",
     skills: "Vaardigheden & verklaringen",
@@ -283,6 +343,21 @@ const copy = {
     location: "Lokalizacja",
     notSet: "Nie ustawiono",
     next: "Następne kroki",
+    readiness: "Gotowość",
+    publicationTrack: "Publikacja w rejestrze",
+    publicationPublished: "Opublikowano",
+    publicationReady: "Gotowe do publikacji administracyjnej",
+    publicationBlocked: "Wymagania publikacji niekompletne",
+    publicationText: "Publikacja sprawdza wyłącznie minimalny próg integralności publicznego rejestru. Nie jest certyfikacją ani weryfikacją zawodową.",
+    reviewTrack: "Przegląd dowodów",
+    reviewNone: "Nie przesłano dowodów",
+    evidenceReviewed: "dowodów sprawdzono",
+    reviewText: "Przegląd dowodów jest oddzielny od publikacji i dotyczy konkretnych deklaracji oraz materiałów potwierdzających.",
+    needsClarification: "Wymaga wyjaśnienia",
+    addName: "Dodaj nazwę wyświetlaną",
+    reviewPrivacy: "Uzupełnij ustawienia prywatności",
+    readyAdminReview: "Minimalny próg spełniony — gotowe do administracyjnego przeglądu publikacji",
+    suspendedAdmin: "Ten wpis jest zawieszony — skontaktuj się z administracją CraftID",
     profile: "Profil",
     profileText: "Zarządzaj informacjami opisującymi Ciebie lub Twoją pracownię.",
     skills: "Umiejętności i deklaracje",
@@ -346,6 +421,21 @@ const copy = {
     location: "Località",
     notSet: "Non impostato",
     next: "Passaggi successivi",
+    readiness: "Preparazione",
+    publicationTrack: "Pubblicazione nel registro",
+    publicationPublished: "Pubblicato",
+    publicationReady: "Pronto per la pubblicazione amministrativa",
+    publicationBlocked: "Requisiti di pubblicazione incompleti",
+    publicationText: "La pubblicazione verifica solo la soglia minima di integrità del registro pubblico. Non è una certificazione né una verifica professionale.",
+    reviewTrack: "Revisione delle evidenze",
+    reviewNone: "Nessuna evidenza inviata",
+    evidenceReviewed: "evidenze revisionate",
+    reviewText: "La revisione delle evidenze è separata dalla pubblicazione e riguarda dichiarazioni e materiali di supporto specifici.",
+    needsClarification: "Chiarimento necessario",
+    addName: "Aggiungi un nome visualizzato",
+    reviewPrivacy: "Completa le impostazioni di privacy",
+    readyAdminReview: "Soglia minima completata — pronto per la revisione amministrativa di pubblicazione",
+    suspendedAdmin: "Questo record è sospeso — contatta l’amministrazione CraftID",
     profile: "Profilo",
     profileText: "Gestisci le informazioni che descrivono te o il tuo laboratorio.",
     skills: "Competenze e dichiarazioni",
@@ -409,6 +499,21 @@ const copy = {
     location: "Ubicación",
     notSet: "No establecido",
     next: "Próximos pasos",
+    readiness: "Preparación",
+    publicationTrack: "Publicación en el registro",
+    publicationPublished: "Publicado",
+    publicationReady: "Listo para publicación administrativa",
+    publicationBlocked: "Requisitos de publicación incompletos",
+    publicationText: "La publicación solo comprueba el umbral mínimo de integridad del registro público. No es una certificación ni una verificación profesional.",
+    reviewTrack: "Revisión de evidencias",
+    reviewNone: "No se han enviado evidencias",
+    evidenceReviewed: "evidencias revisadas",
+    reviewText: "La revisión de evidencias es independiente de la publicación y se aplica a declaraciones y materiales de apoyo concretos.",
+    needsClarification: "Se necesita aclaración",
+    addName: "Añadir un nombre visible",
+    reviewPrivacy: "Completar los ajustes de privacidad",
+    readyAdminReview: "Umbral mínimo completo — listo para revisión administrativa de publicación",
+    suspendedAdmin: "Este registro está suspendido — contacta con la administración de CraftID",
     profile: "Perfil",
     profileText: "Gestiona la información que te describe a ti o a tu taller.",
     skills: "Competencias y declaraciones",
@@ -472,6 +577,21 @@ const copy = {
     location: "Місце",
     notSet: "Не вказано",
     next: "Наступні кроки",
+    readiness: "Готовність",
+    publicationTrack: "Публікація в реєстрі",
+    publicationPublished: "Опубліковано",
+    publicationReady: "Готово до адміністративної публікації",
+    publicationBlocked: "Вимоги до публікації не виконані",
+    publicationText: "Публікація перевіряє лише мінімальний рівень цілісності публічного реєстру. Це не сертифікація і не професійна верифікація.",
+    reviewTrack: "Перевірка доказів",
+    reviewNone: "Докази не подані",
+    evidenceReviewed: "доказів перевірено",
+    reviewText: "Перевірка доказів є окремою від публікації та стосується конкретних тверджень і підтвердних матеріалів.",
+    needsClarification: "Потрібне уточнення",
+    addName: "Додайте публічне ім’я",
+    reviewPrivacy: "Завершіть налаштування приватності",
+    readyAdminReview: "Мінімальні вимоги виконано — готово до адміністративної перевірки для публікації",
+    suspendedAdmin: "Цей запис призупинено — зверніться до адміністрації CraftID",
     profile: "Профіль",
     profileText: "Керуйте інформацією, що описує вас або вашу майстерню.",
     skills: "Навички та твердження",
@@ -555,24 +675,69 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
   const record = profiles.get(entity.id) ?? null;
   const typeLabel = entity.entity_type === "professional" ? t.typeProfessional : t.typeWorkshop;
 
-  const [{ count: skillCount }, { count: experienceCount }, { count: evidenceCount }] =
-    await Promise.all([
-      supabase.from("claims").select("id", { count: "exact", head: true }).eq("entity_id", entity.id).eq("claim_type", "skill"),
-      supabase.from("claims").select("id", { count: "exact", head: true }).eq("entity_id", entity.id).in("claim_type", ["experience", "qualification"]),
-      supabase.from("evidence_items").select("id", { count: "exact", head: true }).eq("owner_entity_id", entity.id),
-    ]);
+  const [
+    { count: experienceCount },
+    { data: publicationGateData },
+    { data: reviewProgressData },
+  ] = await Promise.all([
+    supabase
+      .from("claims")
+      .select("id", { count: "exact", head: true })
+      .eq("entity_id", entity.id)
+      .in("claim_type", ["experience", "qualification"]),
+    supabase.rpc("publication_gate_status", { p_entity_id: entity.id }),
+    supabase.rpc("owner_review_progress", { p_entity_id: entity.id }),
+  ]);
 
-  const hasTitle = Boolean(record?.professional_title ?? record?.craft_sector);
-  const hasLocation = Boolean(record?.city ?? record?.region ?? record?.country_code);
-  const nextSteps: string[] = [];
+  const publicationGate = (publicationGateData ?? {}) as {
+    pass?: boolean;
+    failures?: unknown;
+  };
+  const publicationFailures = Array.isArray(publicationGate.failures)
+    ? publicationGate.failures.filter((item): item is string => typeof item === "string")
+    : [];
+  const publicationPass = Boolean(publicationGate.pass);
 
-  if (!hasTitle) nextSteps.push(t.addTitle);
-  if (!hasLocation) nextSteps.push(t.addLocation);
-  if (!skillCount) nextSteps.push(t.addSkills);
+  const reviewProgress = (reviewProgressData ?? {}) as {
+    claim_count?: number;
+    reviewed_claim_count?: number;
+    evidence_count?: number;
+    reviewed_evidence_count?: number;
+    needs_clarification_count?: number;
+  };
+  const evidenceCount = Number(reviewProgress.evidence_count ?? 0);
+  const reviewedEvidenceCount = Number(reviewProgress.reviewed_evidence_count ?? 0);
+  const needsClarificationCount = Number(reviewProgress.needs_clarification_count ?? 0);
+
+  const requiredStepLabels: Record<string, string> = {
+    display_name: t.addName,
+    professional_title_or_craft_sector: t.addTitle,
+    public_location: t.addLocation,
+    skill_claim: t.addSkills,
+    privacy_settings: t.reviewPrivacy,
+  };
+
+  const nextSteps: string[] = publicationFailures.map(
+    (failure) => requiredStepLabels[failure] ?? failure.replaceAll("_", " "),
+  );
+
+  if (entity.public_status === "suspended") {
+    nextSteps.push(t.suspendedAdmin);
+  } else if (entity.public_status !== "published" && publicationPass) {
+    nextSteps.push(t.readyAdminReview);
+  }
   if (!experienceCount) nextSteps.push(t.addExperience);
   if (!evidenceCount) nextSteps.push(t.addEvidence);
-  if (entity.public_status !== "published") nextSteps.push(t.reviewPublish);
   if (!nextSteps.length && entity.public_status === "published") nextSteps.push(t.maintain);
+
+  const publicationStateLabel =
+    entity.public_status === "published"
+      ? t.publicationPublished
+      : entity.public_status === "suspended"
+        ? t.suspended
+        : publicationPass
+          ? t.publicationReady
+          : t.publicationBlocked;
 
   const selectedQuery = ownerWorkspaceQuery(locale, entity.id);
   const hasProfessional = entities.some((item) => item.entity_type === "professional");
@@ -681,6 +846,38 @@ export default async function MyCraftIdPage({ searchParams }: Props) {
             <ol>{nextSteps.map((step) => <li key={step}>{step}</li>)}</ol>
           </aside>
         </div>
+
+        <section className="readinessTracks" aria-label={t.readiness}>
+          <article className={`readinessTrack ${entity.public_status === "published" || publicationPass ? "ready" : "blocked"}`}>
+            <div className="eyebrow">{t.publicationTrack}</div>
+            <strong>{publicationStateLabel}</strong>
+            <p>{t.publicationText}</p>
+            {publicationFailures.length ? (
+              <ul>
+                {publicationFailures.map((failure) => (
+                  <li key={failure}>
+                    {requiredStepLabels[failure] ?? failure.replaceAll("_", " ")}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </article>
+
+          <article className="readinessTrack review">
+            <div className="eyebrow">{t.reviewTrack}</div>
+            <strong>
+              {evidenceCount
+                ? `${reviewedEvidenceCount}/${evidenceCount} ${t.evidenceReviewed}`
+                : t.reviewNone}
+            </strong>
+            <p>{t.reviewText}</p>
+            {needsClarificationCount ? (
+              <span className="readinessNotice">
+                {t.needsClarification}: {needsClarificationCount}
+              </span>
+            ) : null}
+          </article>
+        </section>
 
         <section className="dashboardModules">
           {[
