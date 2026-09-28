@@ -17,6 +17,7 @@ const copy = {
     empty: "There are no claim-evidence links available for review.",
     decision: "Decision",
     result: "Resulting claim status",
+    statusNote: "The resulting status records the review/provenance stage. It does not mean the claim was positively endorsed; the Decision field records that separately.",
     notes: "Private reviewer notes",
     submit: "Record review",
     done: "Review recorded.",
@@ -31,6 +32,7 @@ const copy = {
     empty: "Немає зв’язків між твердженнями та доказами, доступних для перевірки.",
     decision: "Рішення",
     result: "Підсумковий статус твердження",
+    statusNote: "Підсумковий статус фіксує етап перевірки або походження даних. Він не означає позитивного схвалення твердження; це окремо фіксується в полі «Рішення».",
     notes: "Приватні нотатки рецензента",
     submit: "Зафіксувати перевірку",
     done: "Перевірку зафіксовано.",
@@ -124,6 +126,7 @@ export default async function ReviewPage({ searchParams }: Props) {
                         <option value="external_source_confirmed">External source confirmed</option>
                         <option value="identity_reviewed">Identity reviewed</option>
                       </select>
+                      <small className="fieldHelp">{t.statusNote}</small>
                     </label>
                     <label>{t.notes}<textarea name="privateNotes" rows={4} /></label>
                     <button className="button buttonPrimary" type="submit">{t.submit}</button>
