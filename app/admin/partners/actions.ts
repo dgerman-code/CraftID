@@ -6,9 +6,6 @@ import { createClient } from "@/lib/supabase/server";
 
 const roles = new Set(["national_operator", "partner"]);
 
-const statuses = new Set(["invited", "in_discussion", "confirmed", "inactive"]);
-const agreementStatuses = new Set(["none", "draft", "mandate_on_file", "agreement_signed"]);
-
 export async function savePartnerOrganisation(formData: FormData) {
   const id = String(formData.get("id") ?? "").trim() || null;
   const legalNameEn = String(formData.get("legalNameEn") ?? "").trim();
@@ -17,52 +14,51 @@ export async function savePartnerOrganisation(formData: FormData) {
   const shortNameUk = String(formData.get("shortNameUk") ?? "").trim();
   const countryCode = String(formData.get("countryCode") ?? "").trim().toUpperCase();
   const partnerRole = String(formData.get("partnerRole") ?? "").trim();
-  const status = String(formData.get("status") ?? "").trim();
-  const agreementStatus = String(formData.get("agreementStatus") ?? "").trim();
   const websiteUrl = String(formData.get("websiteUrl") ?? "").trim();
   const descriptionEn = String(formData.get("descriptionEn") ?? "").trim();
   const descriptionUk = String(formData.get("descriptionUk") ?? "").trim();
-  const scopeNote = String(formData.get("scopeNote") ?? "").trim();
   const isPublic = String(formData.get("isPublic") ?? "") === "on";
   const sortOrder = Number(formData.get("sortOrder") ?? 0);
+  const agreementStatus = String(formData.get("agreementStatus") ?? "none").trim() || "none";
+
+  const contactName = String(formData.get("contactName") ?? "").trim();
+  const contactTitle = String(formData.get("contactTitle") ?? "").trim();
+  const contactEmail = String(formData.get("contactEmail") ?? "").trim();
+  const contactPhone = String(formData.get("contactPhone") ?? "").trim();
+  const internalNote = String(formData.get("internalNote") ?? "").trim();
+  const portalEmail = String(formData.get("portalEmail") ?? "").trim();
+
   const logo = formData.get("logo");
   const removeLogo = formData.get("removeLogo") === "on";
 
-  if (
-    !legalNameEn ||
-    countryCode.length !== 2 ||
-    !roles.has(partnerRole) ||
-    !statuses.has(status) ||
-    !agreementStatuses.has(agreementStatus)
-  ) {
+  if (!legalNameEn || !/^[A-Z]{2}$/.test(countryCode) || !roles.has(partnerRole)) {
     redirect("/admin/partners?error=" + encodeURIComponent("Complete the required partner fields."));
-  }
-
-  if (isPublic && status !== "confirmed") {
-    redirect("/admin/partners?error=" + encodeURIComponent("Only confirmed partners can be public."));
   }
 
   const supabase = await createClient();
   const { data: role } = await supabase.rpc("current_staff_role");
   if (role !== "admin") redirect("/admin");
 
-  const { data: savedPartnerId, error } = await supabase.rpc("admin_save_partner_organisation", {
-    p_id: id,
-    p_legal_name_en: legalNameEn,
-    p_legal_name_uk: legalNameUk || null,
-    p_short_name_en: shortNameEn || null,
-    p_short_name_uk: shortNameUk || null,
-    p_country_code: countryCode,
-    p_partner_role: partnerRole,
-    p_status: status,
-    p_agreement_status: agreementStatus,
-    p_website_url: websiteUrl || null,
-    p_description_en: descriptionEn || null,
-    p_description_uk: descriptionUk || null,
-    p_scope_note: scopeNote || null,
-    p_is_public: isPublic,
-    p_sort_order: Number.isFinite(sortOrder) ? sortOrder : 0,
-  });
+  const { data: savedPartnerId, error } = await supabase.rpc(
+    "admin_save_partner_organisation",
+    {
+      p_id: id,
+      p_legal_name_en: legalNameEn,
+      p_legal_name_uk: legalNameUk || null,
+      p_short_name_en: shortNameEn || null,
+      p_short_name_uk: shortNameUk || null,
+      p_country_code: countryCode,
+      p_partner_role: partnerRole,
+      p_status: "confirmed",
+      p_agreement_status: agreementStatus,
+      p_website_url: websiteUrl || null,
+      p_description_en: descriptionEn || null,
+      p_description_uk: descriptionUk || null,
+      p_scope_note: null,
+      p_is_public: isPublic,
+      p_sort_order: Number.isFinite(sortOrder) ? sortOrder : 0,
+    },
+  );
 
   if (error) {
     redirect("/admin/partners?error=" + encodeURIComponent(error.message));
@@ -70,7 +66,49 @@ export async function savePartnerOrganisation(formData: FormData) {
 
   const partnerId = String(savedPartnerId ?? id ?? "").trim();
   if (!partnerId) {
-    redirect("/admin/partners?error=" + encodeURIComponent("Partner saved, but its ID could not be resolved."));
+    redirect(
+      "/admin/partners?error=" +
+        encodeURIComponent("Partner saved, but its ID could not be resolved."),
+    );
+  }
+
+  const { error: contactError } = await supabase.rpc(
+    "admin_save_partner_contact_card",
+    {
+      p_partner_organisation_id: partnerId,
+      p_contact_name: contactName || null,
+      p_contact_title: contactTitle || null,
+      p_contact_email: contactEmail || null,
+      p_contact_phone: contactPhone || null,
+      p_internal_note: internalNote || null,
+    },
+  );
+
+  if (contactError) {
+    redirect(
+      `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+        contactError.message,
+      )}`,
+    );
+  }
+
+  if (portalEmail) {
+    const { error: membershipError } = await supabase.rpc(
+      "admin_save_partner_membership",
+      {
+        p_partner_organisation_id: partnerId,
+        p_login_email: portalEmail,
+        p_is_active: true,
+      },
+    );
+
+    if (membershipError) {
+      redirect(
+        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+          membershipError.message,
+        )}`,
+      );
+    }
   }
 
   if (logo instanceof File && logo.size > 0) {
@@ -83,7 +121,12 @@ export async function savePartnerOrganisation(formData: FormData) {
       );
     }
 
-    const ext = logo.type === "image/png" ? "png" : logo.type === "image/webp" ? "webp" : "jpg";
+    const ext =
+      logo.type === "image/png"
+        ? "png"
+        : logo.type === "image/webp"
+          ? "webp"
+          : "jpg";
     const logoPath = `${partnerId}/${crypto.randomUUID()}.${ext}`;
 
     const { error: uploadError } = await supabase.storage
@@ -95,7 +138,9 @@ export async function savePartnerOrganisation(formData: FormData) {
 
     if (uploadError) {
       redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(uploadError.message)}`,
+        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+          uploadError.message,
+        )}`,
       );
     }
 
@@ -110,12 +155,16 @@ export async function savePartnerOrganisation(formData: FormData) {
     if (logoLinkError) {
       await supabase.storage.from("partner-logos").remove([logoPath]);
       redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(logoLinkError.message)}`,
+        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+          logoLinkError.message,
+        )}`,
       );
     }
 
     if (oldLogoPath && oldLogoPath !== logoPath) {
-      await supabase.storage.from("partner-logos").remove([String(oldLogoPath)]);
+      await supabase.storage
+        .from("partner-logos")
+        .remove([String(oldLogoPath)]);
     }
   } else if (removeLogo) {
     const { data: oldLogoPath, error: removeLinkError } = await supabase.rpc(
@@ -128,16 +177,47 @@ export async function savePartnerOrganisation(formData: FormData) {
 
     if (removeLinkError) {
       redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(removeLinkError.message)}`,
+        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+          removeLinkError.message,
+        )}`,
       );
     }
 
     if (oldLogoPath) {
-      await supabase.storage.from("partner-logos").remove([String(oldLogoPath)]);
+      await supabase.storage
+        .from("partner-logos")
+        .remove([String(oldLogoPath)]);
     }
   }
 
   revalidatePath("/admin/partners");
   revalidatePath("/network");
+  revalidatePath("/opportunities");
   redirect(`/admin/partners?edit=${partnerId}&message=saved`);
+}
+
+export async function revokePartnerPortalAccess(formData: FormData) {
+  const partnerId = String(formData.get("partnerId") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+
+  const supabase = await createClient();
+  const { data: role } = await supabase.rpc("current_staff_role");
+  if (role !== "admin") redirect("/admin");
+
+  const { error } = await supabase.rpc("admin_save_partner_membership", {
+    p_partner_organisation_id: partnerId,
+    p_login_email: email,
+    p_is_active: false,
+  });
+
+  if (error) {
+    redirect(
+      `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+        error.message,
+      )}`,
+    );
+  }
+
+  revalidatePath("/admin/partners");
+  redirect(`/admin/partners?edit=${partnerId}&message=access-updated`);
 }
