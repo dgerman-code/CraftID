@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { localeFrom, localeQuery } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site-url";
+import { safeInternalPath } from "@/lib/safe-next";
 
 export async function signup(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
@@ -11,6 +12,8 @@ export async function signup(formData: FormData) {
   const confirmPassword = String(formData.get("confirmPassword") ?? "");
   const lang = localeFrom(String(formData.get("lang") ?? "en"));
   const q = localeQuery(lang);
+  const next = safeInternalPath(String(formData.get("next") ?? ""));
+  const destination = next ?? `/onboarding${q}`;
 
   const errorUrl = (message: string) =>
     `/signup${q ? `${q}&` : "?"}error=${encodeURIComponent(message)}`;
@@ -32,7 +35,7 @@ export async function signup(formData: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo: `${getSiteUrl()}auth/callback?next=${encodeURIComponent(`/onboarding${q}`)}`,
+      emailRedirectTo: `${getSiteUrl()}auth/callback?next=${encodeURIComponent(destination)}`,
     },
   });
 
@@ -41,7 +44,7 @@ export async function signup(formData: FormData) {
   }
 
   if (data.session) {
-    redirect(`/onboarding${q}`);
+    redirect(destination);
   }
 
   const message =

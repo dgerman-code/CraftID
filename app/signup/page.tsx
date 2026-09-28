@@ -3,7 +3,7 @@ import { signup } from "./actions";
 import { LanguageMenu, localeFrom } from "@/components/site-shell";
 
 type SignupPageProps = {
-  searchParams: Promise<{ error?: string; lang?: string }>;
+  searchParams: Promise<{ error?: string; lang?: string; next?: string }>;
 };
 
 const copy = {
@@ -113,6 +113,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
 
         <form className="authForm" action={signup}>
           <input type="hidden" name="lang" value={locale} />
+          <input type="hidden" name="next" value={params.next ?? ""} />
           <label>{t.email}<input name="email" type="email" autoComplete="email" required /></label>
           <label>{t.password}<input name="password" type="password" autoComplete="new-password" required minLength={8} /></label>
           <label>{t.confirm}<input name="confirmPassword" type="password" autoComplete="new-password" required minLength={8} /></label>
@@ -120,7 +121,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
         </form>
 
         <p className="authLegal">{t.note}</p>
-        <p className="authFoot">{t.have} <Link href={`/login${q}`}>{t.signIn}</Link></p>
+        <p className="authFoot">{t.have} <Link href={`/login${q ? `${q}&` : "?"}next=${encodeURIComponent(params.next ?? "")}`}>{t.signIn}</Link></p>
         <p className="authBack"><Link href={`/${q}`}>← {t.back}</Link></p>
       </section>
     </main>

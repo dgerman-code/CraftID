@@ -4,12 +4,14 @@ import { redirect } from "next/navigation";
 import { localeFrom, localeQuery } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
 import { getSiteUrl } from "@/lib/site-url";
+import { safeInternalPath } from "@/lib/safe-next";
 
 export async function login(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
   const lang = localeFrom(String(formData.get("lang") ?? "en"));
   const q = localeQuery(lang);
+  const next = safeInternalPath(String(formData.get("next") ?? ""));
 
   if (!email || !password) {
     redirect(`/login${q ? `${q}&` : "?"}error=Email%20and%20password%20are%20required`);
@@ -41,13 +43,16 @@ export async function login(formData: FormData) {
     redirect(`/login${q ? `${q}&` : "?"}error=${encodeURIComponent(message)}`);
   }
 
-  const { data: entity } = await supabase
-    .from("craftid_entities")
-    .select("id")
-    .limit(1)
-    .maybeSingle();
+  if (next) redirect(next);
 
-  redirect(entity ? `/my-craftid${q}` : `/onboarding${q}`);
+  const [{ data: entity }, { data: partnerOrgs }] = await Promise.all([
+    supabase.from("craftid_entities").select("id").limit(1).maybeSingle(),
+    supabase.rpc("current_partner_organisations"),
+  ]);
+
+  if (entity) redirect(`/my-craftid${q}`);
+  if (Array.isArray(partnerOrgs) && partnerOrgs.length) redirect(`/partner${q}`);
+  redirect(`/onboarding${q}`);
 }
 
 export async function logout(formData?: FormData) {
