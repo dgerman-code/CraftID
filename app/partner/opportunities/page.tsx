@@ -355,26 +355,28 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
                 </select>
               </label>
 
-              <label>
-                {ua ? "Вибрані країни" : "Selected countries"}
-                <select
-                  name="eligibleCountries"
-                  multiple
-                  size={10}
-                  defaultValue={edit?.eligible_countries ?? []}
-                >
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.code}>
-                      {country.label}
-                    </option>
-                  ))}
-                </select>
-                <small className="fieldHelp">
+              <fieldset className="opportunityCountryPicker">
+                <legend>{ua ? "Вибрані країни" : "Selected countries"}</legend>
+                <p className="fieldHelp">
                   {ua
-                    ? "Використовується лише для режиму «Вибрані країни». На Mac/Windows можна вибрати кілька країн стандартним multi-select."
-                    : "Used only for Selected countries. Use the standard multi-select controls to choose more than one country."}
-                </small>
-              </label>
+                    ? "Використовується лише для режиму «Вибрані країни». Просто відмітьте будь-які потрібні країни — вони не повинні бути поруч у списку."
+                    : "Used only for Selected countries. Tick any countries independently; they do not need to be adjacent in the list."}
+                </p>
+                <div className="opportunityCountryGrid">
+                  {countries.map((country) => (
+                    <label className="opportunityCountryOption" key={country.code}>
+                      <input
+                        type="checkbox"
+                        name="eligibleCountries"
+                        value={country.code}
+                        defaultChecked={edit?.eligible_countries?.includes(country.code) ?? false}
+                      />
+                      <span>{country.label}</span>
+                      <small>{country.code}</small>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
 
               <div className="adminFormSplit">
                 <label>

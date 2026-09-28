@@ -6016,3 +6016,91 @@ button {
     width: 100%;
   }
 }
+
+
+/* Independent opportunity country picker */
+.opportunityCountryPicker {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.opportunityCountryPicker > legend {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.opportunityCountryPicker > .fieldHelp {
+  margin: 0 0 12px;
+}
+
+.opportunityCountryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.opportunityCountryOption {
+  display: grid !important;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  gap: 8px !important;
+  align-items: center;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink) !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  cursor: pointer;
+}
+
+.opportunityCountryOption:hover {
+  border-color: var(--accent);
+}
+
+.opportunityCountryOption:has(input:checked) {
+  border-color: var(--accent);
+  background: #eef3f8;
+}
+
+.opportunityCountryOption input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.opportunityCountryOption span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.opportunityCountryOption small {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .opportunityCountryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .opportunityCountryGrid {
+    grid-template-columns: 1fr;
+  }
+}
