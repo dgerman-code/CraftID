@@ -55,5 +55,7 @@ export async function submitReview(formData: FormData) {
   }
 
   revalidatePath("/admin/review");
+  revalidatePath("/admin/registry");
+  revalidatePath("/my-craftid");
   redirect(`/admin/review${q ? `${q}&` : "?"}message=reviewed`);
 }

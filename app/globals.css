@@ -5196,3 +5196,69 @@ button {
     grid-column: auto;
   }
 }
+
+
+/* Publication readiness vs evidence review */
+.readinessTracks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.readinessTrack {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--line);
+  background: #fff;
+}
+
+.readinessTrack.ready {
+  border-top-color: var(--accent);
+}
+
+.readinessTrack.blocked {
+  border-top-color: var(--danger);
+}
+
+.readinessTrack.review {
+  border-top-color: var(--accent);
+}
+
+.readinessTrack > strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.16rem;
+  letter-spacing: -0.02em;
+}
+
+.readinessTrack p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.readinessTrack ul {
+  margin: 16px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.readinessNotice {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+@media (max-width: 800px) {
+  .readinessTracks {
+    grid-template-columns: 1fr;
+  }
+}
