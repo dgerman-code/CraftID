@@ -14,6 +14,7 @@ const labels: Record<
   PublicLocale,
   {
     discover: string;
+    opportunities: string;
     skills: string;
     methodology: string;
     about: string;
@@ -29,6 +30,7 @@ const labels: Record<
 > = {
   en: {
     discover: "Discover",
+    opportunities: "Opportunities",
     skills: "Skills",
     methodology: "Methodology",
     about: "About",
@@ -43,6 +45,7 @@ const labels: Record<
   },
   fr: {
     discover: "Explorer",
+    opportunities: "Opportunités",
     skills: "Compétences",
     methodology: "Méthodologie",
     about: "À propos",
@@ -57,6 +60,7 @@ const labels: Record<
   },
   de: {
     discover: "Entdecken",
+    opportunities: "Möglichkeiten",
     skills: "Kompetenzen",
     methodology: "Methodik",
     about: "Über CraftID",
@@ -71,6 +75,7 @@ const labels: Record<
   },
   nl: {
     discover: "Ontdekken",
+    opportunities: "Mogelijkheden",
     skills: "Vaardigheden",
     methodology: "Methodologie",
     about: "Over CraftID",
@@ -85,6 +90,7 @@ const labels: Record<
   },
   pl: {
     discover: "Odkrywaj",
+    opportunities: "Możliwości",
     skills: "Umiejętności",
     methodology: "Metodologia",
     about: "O CraftID",
@@ -99,6 +105,7 @@ const labels: Record<
   },
   it: {
     discover: "Scopri",
+    opportunities: "Opportunità",
     skills: "Competenze",
     methodology: "Metodologia",
     about: "Informazioni",
@@ -113,6 +120,7 @@ const labels: Record<
   },
   es: {
     discover: "Descubrir",
+    opportunities: "Oportunidades",
     skills: "Competencias",
     methodology: "Metodología",
     about: "Acerca de CraftID",
@@ -127,6 +135,7 @@ const labels: Record<
   },
   uk: {
     discover: "Пошук",
+    opportunities: "Можливості",
     skills: "Навички",
     methodology: "Методологія",
     about: "Про CraftID",
@@ -193,6 +202,7 @@ export function SiteHeader({
         <div className="headerRight">
           <nav className="nav" aria-label="Primary navigation">
             <Link className={isActive("/discover") ? "active" : ""} href={withLocale("/discover", locale)}>{t.discover}</Link>
+            <Link className={isActive("/opportunities") ? "active" : ""} href={withLocale("/opportunities", locale)}>{t.opportunities}</Link>
             <Link className={isActive("/skills") ? "active" : ""} href={withLocale("/skills", locale)}>{t.skills}</Link>
             <Link className={isActive("/methodology") ? "active" : ""} href={withLocale("/methodology", locale)}>{t.methodology}</Link>
             <Link className={isActive("/network") ? "active" : ""} href={withLocale("/network", locale)}>{t.network}</Link>
