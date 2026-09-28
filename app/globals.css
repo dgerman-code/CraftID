@@ -5059,3 +5059,74 @@ button {
     gap: 8px;
   }
 }
+
+
+/* Account integrity */
+.authContinuityNote {
+  margin-top: 18px;
+}
+
+.accountSecurityPanel {
+  margin-top: 30px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  background: var(--surface);
+}
+
+.accountSecurityPanel .workspaceForm {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top-width: 1px;
+}
+
+.accountEmailValue {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.15rem;
+  overflow-wrap: anywhere;
+}
+
+.accountSecurityNotice {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.accountSecurityNotice > div {
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.accountSecurityNotice p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.adminAccountIntegrityColumns {
+  grid-template-columns: minmax(220px, 1.55fr) minmax(150px, 1fr) minmax(150px, 1fr) 0.45fr minmax(150px, 0.9fr);
+}
+
+.adminAccountIntegrityColumns a {
+  color: inherit;
+}
+
+@media (max-width: 1000px) {
+  .adminAccountIntegrityColumns {
+    grid-template-columns: minmax(220px, 1.4fr) minmax(150px, 1fr) minmax(150px, 1fr);
+  }
+
+  .adminAccountIntegrityColumns > :nth-child(4),
+  .adminAccountIntegrityColumns > :nth-child(5) {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .accountSecurityNotice {
+    grid-template-columns: 1fr;
+  }
+}
