@@ -29,19 +29,16 @@ export async function GET(request: NextRequest) {
     const qr = await fetchQrPng(result.entity.profileUrl, 620, 0);
 
     if (format === "png") {
-      const [background, mediumFont] =
-        result.entity.entityType === "professional"
-          ? await Promise.all([
-              fetchBinaryAsset(
-                new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
-                "Sticker template",
-              ),
-              fetchBinaryAsset(
-                new URL("/templates/cid-sans-500.ttf", assetOrigin).toString(),
-                "Sticker font",
-              ),
-            ])
-          : [null, null];
+      const [background, mediumFont] = await Promise.all([
+        fetchBinaryAsset(
+          new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
+          "Sticker template",
+        ),
+        fetchBinaryAsset(
+          new URL("/templates/cid-sans-500.ttf", assetOrigin).toString(),
+          "Sticker font",
+        ),
+      ]);
 
       const pngSvg = renderRoundStickerPngSvg({
         craftId: result.entity.craftId,
@@ -62,19 +59,16 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const [background, font] =
-      result.entity.entityType === "professional"
-        ? await Promise.all([
-            fetchBinaryAsset(
-              new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
-              "Sticker template",
-            ),
-            fetchBinaryAsset(
-              new URL("/templates/cid-sans-500.woff2", assetOrigin).toString(),
-              "Sticker font",
-            ),
-          ])
-        : [null, null];
+    const [background, font] = await Promise.all([
+      fetchBinaryAsset(
+        new URL("/templates/craftid-sticker-original-bg.jpg", assetOrigin).toString(),
+        "Sticker template",
+      ),
+      fetchBinaryAsset(
+        new URL("/templates/cid-sans-500.woff2", assetOrigin).toString(),
+        "Sticker font",
+      ),
+    ]);
 
     const svg = renderRoundStickerSvg({
       craftId: result.entity.craftId,
