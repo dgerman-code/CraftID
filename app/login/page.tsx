@@ -3,7 +3,7 @@ import { login, resendConfirmation } from "./actions";
 import { LanguageMenu, localeFrom } from "@/components/site-shell";
 
 type LoginPageProps = {
-  searchParams: Promise<{ error?: string; message?: string; lang?: string }>;
+  searchParams: Promise<{ error?: string; message?: string; lang?: string; next?: string }>;
 };
 
 const copy = {
@@ -114,13 +114,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
         <form className="authForm" action={login}>
           <input type="hidden" name="lang" value={locale} />
+          <input type="hidden" name="next" value={params.next ?? ""} />
           <label>{t.email}<input name="email" type="email" autoComplete="email" required /></label>
           <label>{t.password}<input name="password" type="password" autoComplete="current-password" required minLength={8} /></label>
           <button className="button buttonPrimary" type="submit">{t.submit}</button>
         </form>
 
         <p className="authFoot">
-          {t.new} <Link href={`/signup${q}`}>{t.create}</Link>
+          {t.new} <Link href={`/signup${q ? `${q}&` : "?"}next=${encodeURIComponent(params.next ?? "")}`}>{t.create}</Link>
         </p>
 
         <div className="resendPanel">
