@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -35,6 +36,7 @@ type Opportunity = {
   partner_name: string;
   partner_country_code: string;
   partner_role: string;
+  partner_logo_path: string | null;
   title: string;
   summary: string;
   opportunity_type: string;
@@ -53,6 +55,7 @@ type Opportunity = {
   public_contact_email: string | null;
   allow_interest: boolean;
   is_published: boolean;
+  image_path: string | null;
   updated_at: string;
 };
 
@@ -99,6 +102,9 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
   const edit = sp.edit
     ? opportunities.find((item) => item.id === sp.edit) ?? null
     : null;
+  const editImageUrl = edit?.image_path
+    ? supabase.storage.from("opportunity-images").getPublicUrl(edit.image_path).data.publicUrl
+    : null;
   const countries = europeanCountryOptions(locale);
 
   return (
@@ -139,8 +145,20 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
             </div>
 
             <div className="partnerOpportunityList">
-              {opportunities.map((item) => (
+              {opportunities.map((item) => {
+                const visualUrl = item.image_path
+                  ? supabase.storage.from("opportunity-images").getPublicUrl(item.image_path).data.publicUrl
+                  : item.partner_logo_path
+                    ? supabase.storage.from("partner-logos").getPublicUrl(item.partner_logo_path).data.publicUrl
+                    : null;
+
+                return (
                 <article className="partnerOpportunityRow" key={item.id}>
+                  {visualUrl ? (
+                    <div className={item.image_path ? "partnerOpportunityThumb cover" : "partnerOpportunityThumb logo"}>
+                      <img src={visualUrl} alt="" />
+                    </div>
+                  ) : null}
                   <div>
                     <span className="recordId">
                       {opportunityTypeLabel(locale, item.opportunity_type)} · {item.partner_country_code}
@@ -168,7 +186,8 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
                     {ua ? "Редагувати" : "Edit"}
                   </Link>
                 </article>
-              ))}
+                );
+              })}
               {!opportunities.length ? (
                 <p className="emptyState">
                   {ua ? "Можливостей ще немає." : "No opportunities yet."}
@@ -195,6 +214,7 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
               organisations={organisations}
               edit={edit}
               countries={countries}
+              editImageUrl={editImageUrl}
             />
           </aside>
         </div>
