@@ -267,3 +267,108 @@ export async function respondToInterest(formData: FormData) {
   revalidatePath("/my-craftid/opportunities");
   redirect(`/partner/interests${q ? `${q}&` : "?"}message=responded`);
 }
+
+
+async function requirePartnerActionSession(lang: ReturnType<typeof localeFrom>) {
+  const q = localeQuery(lang);
+  const supabase = await createClient();
+  const { data: userResult } = await supabase.auth.getUser();
+
+  if (!userResult.user) {
+    redirect(`/partner/login${q}`);
+  }
+
+  const { data: mustChangePassword } = await supabase.rpc(
+    "current_partner_password_change_required",
+  );
+  if (mustChangePassword) redirect(`/partner/password${q}`);
+
+  return { supabase, q };
+}
+
+export async function archiveOpportunity(formData: FormData) {
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const opportunityId = String(formData.get("opportunityId") ?? "").trim();
+  const { supabase, q } = await requirePartnerActionSession(lang);
+
+  const { error } = await supabase.rpc("partner_set_opportunity_archived", {
+    p_opportunity_id: opportunityId,
+    p_archived: true,
+  });
+
+  if (error) {
+    redirect(
+      `/partner/opportunities${q ? `${q}&` : "?"}edit=${encodeURIComponent(
+        opportunityId,
+      )}&error=${encodeURIComponent(error.message)}`,
+    );
+  }
+
+  revalidatePath("/partner/opportunities");
+  revalidatePath("/opportunities");
+  redirect(
+    `/partner/opportunities${q ? `${q}&` : "?"}edit=${encodeURIComponent(
+      opportunityId,
+    )}&message=archived`,
+  );
+}
+
+export async function restoreOpportunity(formData: FormData) {
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const opportunityId = String(formData.get("opportunityId") ?? "").trim();
+  const { supabase, q } = await requirePartnerActionSession(lang);
+
+  const { error } = await supabase.rpc("partner_set_opportunity_archived", {
+    p_opportunity_id: opportunityId,
+    p_archived: false,
+  });
+
+  if (error) {
+    redirect(
+      `/partner/opportunities${q ? `${q}&` : "?"}edit=${encodeURIComponent(
+        opportunityId,
+      )}&error=${encodeURIComponent(error.message)}`,
+    );
+  }
+
+  revalidatePath("/partner/opportunities");
+  revalidatePath("/opportunities");
+  redirect(
+    `/partner/opportunities${q ? `${q}&` : "?"}edit=${encodeURIComponent(
+      opportunityId,
+    )}&message=restored`,
+  );
+}
+
+export async function deleteOpportunity(formData: FormData) {
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const opportunityId = String(formData.get("opportunityId") ?? "").trim();
+  const { supabase, q } = await requirePartnerActionSession(lang);
+
+  const { data: imagePath, error } = await supabase.rpc(
+    "partner_delete_opportunity",
+    {
+      p_opportunity_id: opportunityId,
+    },
+  );
+
+  if (error) {
+    redirect(
+      `/partner/opportunities${q ? `${q}&` : "?"}edit=${encodeURIComponent(
+        opportunityId,
+      )}&error=${encodeURIComponent(error.message)}`,
+    );
+  }
+
+  if (imagePath) {
+    await supabase.storage
+      .from("opportunity-images")
+      .remove([String(imagePath)]);
+  }
+
+  revalidatePath("/partner/opportunities");
+  revalidatePath("/opportunities");
+  redirect(
+    `/partner/opportunities${q ? `${q}&` : "?"}message=deleted`,
+  );
+}
