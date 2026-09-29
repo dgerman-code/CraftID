@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
@@ -85,57 +84,96 @@ export default async function IdentifiersPage({ searchParams }: Props) {
   const byId = new Map((entities ?? []).map((entity) => [entity.id, entity]));
 
   return (
-    <main className="workspacePage">
-      <div className="container">
-        <Link className="backLink" href={`/${q}`}>← {t.back}</Link>
-        <div className="workspaceGrid">
-          <section>
-            <div className="eyebrow">{t.eyebrow}</div>
-            <h1>{t.title}</h1>
-            <p className="workspaceIntro">{t.intro}</p>
-            <p className="privacyNote">{t.guidance}</p>
+    <main className="adminPage">
+      <div className="adminPageHeader">
+        <div className="eyebrow">{t.eyebrow}</div>
+        <h1>{t.title}</h1>
+        <p>{t.intro}</p>
+      </div>
 
-            {params.error ? <p className="formMessage error">{params.error}</p> : null}
-            {params.message ? <p className="formMessage">{t.success} #{params.message}</p> : null}
+      {params.error ? <p className="formMessage error">{params.error}</p> : null}
+      {params.message ? <p className="formMessage">{t.success} #{params.message}</p> : null}
 
-            <form className="workspaceForm compactForm" action={assignCraftIdNumber}>
-              <input type="hidden" name="lang" value={locale} />
-              <label>{t.owner}<input name="ownerUserId" required placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" /></label>
-              <label>{t.type}
+      <div className="adminDetailGrid adminDetailGridWide">
+        <section className="adminPanel">
+          <div className="adminPanelHeader">
+            <div>
+              <div className="eyebrow">{t.eyebrow}</div>
+              <h2>{t.assign}</h2>
+            </div>
+          </div>
+
+          <p className="privacyNote">{t.guidance}</p>
+
+          <form className="adminStatusForm adminFormComfortable" action={assignCraftIdNumber}>
+            <input type="hidden" name="lang" value={locale} />
+            <label>
+              {t.owner}
+              <input name="ownerUserId" required placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+            </label>
+            <div className="adminFormSplit">
+              <label>
+                {t.type}
                 <select name="entityType" defaultValue="professional">
                   <option value="professional">{t.professional}</option>
                   <option value="workshop">{t.workshop}</option>
                 </select>
               </label>
-              <label>{t.name}<input name="displayName" required /></label>
-              <label>{t.number}<input name="requestedNumber" type="number" min="1" step="1" required /></label>
-              <label>{t.reason}<textarea name="reason" rows={5} required /></label>
+              <label>
+                {t.number}
+                <input name="requestedNumber" type="number" min="1" step="1" required />
+              </label>
+            </div>
+            <label>
+              {t.name}
+              <input name="displayName" required />
+            </label>
+            <label>
+              {t.reason}
+              <textarea name="reason" rows={5} required />
+            </label>
+            <div className="adminFormActions">
               <button className="button buttonPrimary" type="submit">{t.assign}</button>
-            </form>
-          </section>
+            </div>
+          </form>
+        </section>
 
-          <aside className="workspaceList">
-            <div className="eyebrow">{t.history}</div>
-            {!events?.length ? <p className="emptyState">{t.empty}</p> : events.map((event) => {
-              const entity = event.entity_id ? byId.get(event.entity_id) : undefined;
-              const metadata = (event.metadata ?? {}) as Record<string, unknown>;
-              const assignmentType = metadata.assignment_type === "reserved" ? t.reserved : t.exceptional;
-              const reason = typeof metadata.reason === "string" ? metadata.reason : "";
+        <aside className="adminPanel adminDetailAside">
+          <div className="adminPanelHeader">
+            <div>
+              <div className="eyebrow">{t.history}</div>
+              <h2>{t.history}</h2>
+            </div>
+            <span>{events?.length ?? 0}</span>
+          </div>
 
-              return (
-                <article className="claimItem" key={event.id}>
-                  <span className="recordId">{assignmentType}</span>
-                  <h3>{entity ? formatId(entity.craftid_number, entity.craftid_check_digits) : "CraftID"}</h3>
-                  {reason ? <p>{reason}</p> : null}
-                  <div className="claimMeta">
-                    {entity ? <span>{entity.entity_type}</span> : null}
-                    <span>{new Date(event.created_at).toLocaleDateString(locale === "uk" ? "uk-UA" : "en-GB")}</span>
-                  </div>
-                </article>
-              );
-            })}
-          </aside>
-        </div>
+          {!events?.length ? (
+            <p className="emptyState">{t.empty}</p>
+          ) : (
+            <div className="adminMiniList">
+              {events.map((event) => {
+                const entity = event.entity_id ? byId.get(event.entity_id) : undefined;
+                const metadata = (event.metadata ?? {}) as Record<string, unknown>;
+                const assignmentType = metadata.assignment_type === "reserved" ? t.reserved : t.exceptional;
+                const reason = typeof metadata.reason === "string" ? metadata.reason : "";
+
+                return (
+                  <article key={event.id}>
+                    <span className="recordId">{assignmentType}</span>
+                    <strong>
+                      {entity ? formatId(entity.craftid_number, entity.craftid_check_digits) : "CraftID"}
+                    </strong>
+                    {reason ? <span>{reason}</span> : null}
+                    <small>
+                      {entity ? `${entity.entity_type} · ` : ""}
+                      {new Date(event.created_at).toLocaleDateString(locale === "uk" ? "uk-UA" : "en-GB")}
+                    </small>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </aside>
       </div>
     </main>
   );
