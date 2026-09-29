@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
 import { createClient } from "@/lib/supabase/server";
@@ -21,6 +22,7 @@ type PublicOpportunity = {
   partner_name: string;
   partner_country_code: string;
   partner_role: string;
+  partner_logo_path: string | null;
   title: string;
   summary: string;
   opportunity_type: string;
@@ -38,6 +40,7 @@ type PublicOpportunity = {
   public_contact_name: string | null;
   public_contact_email: string | null;
   allow_interest: boolean;
+  image_path: string | null;
   published_at: string | null;
 };
 
@@ -126,6 +129,12 @@ export default async function OpportunitiesPage({ searchParams }: Props) {
 
             <div className="publicOpportunityGrid">
               {opportunities.map((item) => {
+                const visualUrl = item.image_path
+                  ? supabase.storage.from("opportunity-images").getPublicUrl(item.image_path).data.publicUrl
+                  : item.partner_logo_path
+                    ? supabase.storage.from("partner-logos").getPublicUrl(item.partner_logo_path).data.publicUrl
+                    : null;
+                const visualKind = item.image_path ? "cover" : "logo";
                 const location =
                   item.location_mode === "online"
                     ? t.online
@@ -139,6 +148,11 @@ export default async function OpportunitiesPage({ searchParams }: Props) {
                         .join(", ");
                 return (
                   <article className="publicOpportunityCard" key={item.id}>
+                    {visualUrl ? (
+                      <div className={`publicOpportunityVisual ${visualKind}`}>
+                        <img src={visualUrl} alt="" />
+                      </div>
+                    ) : null}
                     <div className="recordId">
                       {opportunityTypeLabel(locale, item.opportunity_type)}
                     </div>
