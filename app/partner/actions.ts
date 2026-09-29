@@ -11,12 +11,8 @@ function dateOrNull(value: FormDataEntryValue | null) {
 }
 
 
-export type OpportunityFormState = {
+type OpportunityFormState = {
   error: string | null;
-};
-
-export const initialOpportunityFormState: OpportunityFormState = {
-  error: null,
 };
 
 function opportunityPayload(formData: FormData) {
