@@ -9,20 +9,35 @@ type Props = {
   children: ReactNode;
 };
 
-const nav = [
-  { href: "/admin", label: "Dashboard", adminOnly: false },
-  { href: "/admin/registry", label: "CraftID Registry", adminOnly: true },
-  { href: "/admin/publication", label: "Publication Queue", adminOnly: true },
-  { href: "/admin/review", label: "Reviews", adminOnly: false },
-  { href: "/admin/referrals", label: "Institutional Opportunities", adminOnly: true },
-  { href: "/admin/support", label: "Support & Interests", adminOnly: true },
-  { href: "/admin/partners", label: "Countries & Partners", adminOnly: true },
-  { href: "/admin/certificates", label: "Certificates", adminOnly: true },
-  { href: "/admin/taxonomy", label: "Taxonomy", adminOnly: true },
-  { href: "/admin/users", label: "Users & Roles", adminOnly: true },
-  { href: "/admin/account-integrity", label: "Account Integrity", adminOnly: true },
-  { href: "/admin/audit", label: "Audit & Compliance", adminOnly: true },
-  { href: "/admin/identifiers", label: "Identifier Administration", adminOnly: true },
+const navGroups = [
+  {
+    label: "Registry",
+    items: [
+      { href: "/admin", label: "Dashboard", adminOnly: false },
+      { href: "/admin/registry", label: "CraftID Registry", adminOnly: true },
+      { href: "/admin/publication", label: "Publication Queue", adminOnly: true },
+      { href: "/admin/review", label: "Reviews", adminOnly: false },
+      { href: "/admin/certificates", label: "Certificates", adminOnly: true },
+      { href: "/admin/identifiers", label: "Identifiers", adminOnly: true },
+    ],
+  },
+  {
+    label: "Ecosystem",
+    items: [
+      { href: "/admin/referrals", label: "Institutional Opportunities", adminOnly: true },
+      { href: "/admin/support", label: "Support & Interests", adminOnly: true },
+      { href: "/admin/partners", label: "Countries & Partners", adminOnly: true },
+      { href: "/admin/taxonomy", label: "Taxonomy", adminOnly: true },
+    ],
+  },
+  {
+    label: "Governance",
+    items: [
+      { href: "/admin/users", label: "Users & Roles", adminOnly: true },
+      { href: "/admin/account-integrity", label: "Account Integrity", adminOnly: true },
+      { href: "/admin/audit", label: "Audit & Compliance", adminOnly: true },
+    ],
+  },
 ];
 
 export function AdminShell({ role, children }: Props) {
@@ -40,22 +55,35 @@ export function AdminShell({ role, children }: Props) {
         </div>
 
         <nav className="adminNav" aria-label="Administration">
-          {nav
-            .filter((item) => !item.adminOnly || role === "admin")
-            .map((item) => {
-              const active = item.href === "/admin"
-                ? pathname === "/admin"
-                : pathname.startsWith(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  className={active ? "active" : ""}
-                  href={`${item.href}${suffix}`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+          {navGroups.map((group) => {
+            const items = group.items.filter(
+              (item) => !item.adminOnly || role === "admin",
+            );
+            if (!items.length) return null;
+
+            return (
+              <section className="adminNavGroup" key={group.label}>
+                <span className="adminNavGroupLabel">{group.label}</span>
+                <div>
+                  {items.map((item) => {
+                    const active =
+                      item.href === "/admin"
+                        ? pathname === "/admin"
+                        : pathname.startsWith(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        className={active ? "active" : ""}
+                        href={`${item.href}${suffix}`}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })}
         </nav>
 
         <div className="adminSidebarFooter">
