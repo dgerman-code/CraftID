@@ -44,15 +44,26 @@ type Opportunity = {
 };
 
 const copy = {
-  en:{back:"All opportunities",publishedBy:"Published by",type:"Type",for:"For",professional:"Professional",workshop:"Workshop",both:"Professional and Workshop",location:"Location",available:"Available to",dates:"Dates",deadline:"Deadline",apply:"Apply externally",contact:"Contact organisation",interest:"I’m interested",notice:"CraftID does not certify, endorse or guarantee this opportunity. Eligibility and selection are determined by the publishing organisation.",partnerCountry:"Partner country",europe:"All Europe",international:"International / no country restriction",online:"Online",onsite:"On-site",hybrid:"Hybrid"},
-  fr:{back:"Toutes les opportunités",publishedBy:"Publié par",type:"Type",for:"Pour",professional:"Professional",workshop:"Workshop",both:"Professional et Workshop",location:"Lieu",available:"Disponible pour",dates:"Dates",deadline:"Date limite",apply:"Candidater sur le site externe",contact:"Contacter l’organisation",interest:"Je suis intéressé",notice:"CraftID ne certifie, n’approuve ni ne garantit cette opportunité. L’éligibilité et la sélection sont déterminées par l’organisation qui la publie.",partnerCountry:"Pays du partenaire",europe:"Toute l’Europe",international:"International / sans restriction",online:"En ligne",onsite:"Sur place",hybrid:"Hybride"},
-  de:{back:"Alle Möglichkeiten",publishedBy:"Veröffentlicht von",type:"Typ",for:"Für",professional:"Professional",workshop:"Workshop",both:"Professional und Workshop",location:"Ort",available:"Verfügbar für",dates:"Zeitraum",deadline:"Frist",apply:"Extern bewerben",contact:"Organisation kontaktieren",interest:"Ich bin interessiert",notice:"CraftID zertifiziert, befürwortet oder garantiert dieses Angebot nicht. Eignung und Auswahl bestimmt die veröffentlichende Organisation.",partnerCountry:"Partnerland",europe:"Ganz Europa",international:"International / ohne Länderbeschränkung",online:"Online",onsite:"Vor Ort",hybrid:"Hybrid"},
-  nl:{back:"Alle mogelijkheden",publishedBy:"Gepubliceerd door",type:"Type",for:"Voor",professional:"Professional",workshop:"Workshop",both:"Professional en Workshop",location:"Locatie",available:"Beschikbaar voor",dates:"Data",deadline:"Deadline",apply:"Extern aanvragen",contact:"Neem contact op",interest:"Ik ben geïnteresseerd",notice:"CraftID certificeert, onderschrijft of garandeert deze mogelijkheid niet. Geschiktheid en selectie worden bepaald door de publicerende organisatie.",partnerCountry:"Land van partner",europe:"Heel Europa",international:"Internationaal / geen landbeperking",online:"Online",onsite:"Op locatie",hybrid:"Hybride"},
-  pl:{back:"Wszystkie możliwości",publishedBy:"Opublikowane przez",type:"Typ",for:"Dla",professional:"Professional",workshop:"Workshop",both:"Professional i Workshop",location:"Miejsce",available:"Dostępne dla",dates:"Daty",deadline:"Termin",apply:"Aplikuj zewnętrznie",contact:"Skontaktuj się z organizacją",interest:"Jestem zainteresowany",notice:"CraftID nie certyfikuje, nie rekomenduje ani nie gwarantuje tej możliwości. Kryteria i wybór określa organizacja publikująca.",partnerCountry:"Kraj partnera",europe:"Cała Europa",international:"Międzynarodowo / bez ograniczeń",online:"Online",onsite:"Stacjonarnie",hybrid:"Hybrydowo"},
-  it:{back:"Tutte le opportunità",publishedBy:"Pubblicato da",type:"Tipo",for:"Per",professional:"Professional",workshop:"Workshop",both:"Professional e Workshop",location:"Luogo",available:"Disponibile per",dates:"Date",deadline:"Scadenza",apply:"Candidati esternamente",contact:"Contatta l’organizzazione",interest:"Sono interessato",notice:"CraftID non certifica, approva o garantisce questa opportunità. Idoneità e selezione sono determinate dall’organizzazione che la pubblica.",partnerCountry:"Paese del partner",europe:"Tutta Europa",international:"Internazionale / senza restrizioni",online:"Online",onsite:"In presenza",hybrid:"Ibrido"},
-  es:{back:"Todas las oportunidades",publishedBy:"Publicado por",type:"Tipo",for:"Para",professional:"Professional",workshop:"Workshop",both:"Professional y Workshop",location:"Ubicación",available:"Disponible para",dates:"Fechas",deadline:"Fecha límite",apply:"Solicitar externamente",contact:"Contactar organización",interest:"Me interesa",notice:"CraftID no certifica, avala ni garantiza esta oportunidad. La elegibilidad y selección las determina la organización que publica.",partnerCountry:"País del socio",europe:"Toda Europa",international:"Internacional / sin restricción",online:"Online",onsite:"Presencial",hybrid:"Híbrido"},
-  uk:{back:"Усі можливості",publishedBy:"Опубліковано",type:"Тип",for:"Для",professional:"Professional",workshop:"Workshop",both:"Professional і Workshop",location:"Місце",available:"Доступно для",dates:"Дати",deadline:"Дедлайн",apply:"Подати заявку зовні",contact:"Зв’язатися з організацією",interest:"Я зацікавлений",notice:"CraftID не сертифікує, не схвалює і не гарантує цю можливість. Умови участі та відбір визначає організація, що її опублікувала.",partnerCountry:"Країна партнера",europe:"Вся Європа",international:"Міжнародно / без обмежень",online:"Онлайн",onsite:"Офлайн",hybrid:"Гібрид"},
+  en:{back:"All opportunities",publishedBy:"Published by",type:"Type",for:"For",professional:"Professional",workshop:"Workshop",both:"Professional and Workshop",location:"Location",available:"Available to",dates:"Dates",deadline:"Deadline",apply:"Apply externally",contact:"Contact organisation",interest:"I’m interested",notice:"CraftID does not certify, endorse or guarantee this opportunity. Eligibility and selection are determined by the publishing organisation.",partnerCountry:"Partner country",europe:"All Europe",international:"International / no country restriction",online:"Online",onsite:"On-site",hybrid:"Hybrid",contactPerson:"Contact person"},
+  fr:{back:"Toutes les opportunités",publishedBy:"Publié par",type:"Type",for:"Pour",professional:"Professional",workshop:"Workshop",both:"Professional et Workshop",location:"Lieu",available:"Disponible pour",dates:"Dates",deadline:"Date limite",apply:"Candidater sur le site externe",contact:"Contacter l’organisation",interest:"Je suis intéressé",notice:"CraftID ne certifie, n’approuve ni ne garantit cette opportunité. L’éligibilité et la sélection sont déterminées par l’organisation qui la publie.",partnerCountry:"Pays du partenaire",europe:"Toute l’Europe",international:"International / sans restriction",online:"En ligne",onsite:"Sur place",hybrid:"Hybride",contactPerson:"Personne de contact"},
+  de:{back:"Alle Möglichkeiten",publishedBy:"Veröffentlicht von",type:"Typ",for:"Für",professional:"Professional",workshop:"Workshop",both:"Professional und Workshop",location:"Ort",available:"Verfügbar für",dates:"Zeitraum",deadline:"Frist",apply:"Extern bewerben",contact:"Organisation kontaktieren",interest:"Ich bin interessiert",notice:"CraftID zertifiziert, befürwortet oder garantiert dieses Angebot nicht. Eignung und Auswahl bestimmt die veröffentlichende Organisation.",partnerCountry:"Partnerland",europe:"Ganz Europa",international:"International / ohne Länderbeschränkung",online:"Online",onsite:"Vor Ort",hybrid:"Hybrid",contactPerson:"Kontaktperson"},
+  nl:{back:"Alle mogelijkheden",publishedBy:"Gepubliceerd door",type:"Type",for:"Voor",professional:"Professional",workshop:"Workshop",both:"Professional en Workshop",location:"Locatie",available:"Beschikbaar voor",dates:"Data",deadline:"Deadline",apply:"Extern aanvragen",contact:"Neem contact op",interest:"Ik ben geïnteresseerd",notice:"CraftID certificeert, onderschrijft of garandeert deze mogelijkheid niet. Geschiktheid en selectie worden bepaald door de publicerende organisatie.",partnerCountry:"Land van partner",europe:"Heel Europa",international:"Internationaal / geen landbeperking",online:"Online",onsite:"Op locatie",hybrid:"Hybride",contactPerson:"Contactpersoon"},
+  pl:{back:"Wszystkie możliwości",publishedBy:"Opublikowane przez",type:"Typ",for:"Dla",professional:"Professional",workshop:"Workshop",both:"Professional i Workshop",location:"Miejsce",available:"Dostępne dla",dates:"Daty",deadline:"Termin",apply:"Aplikuj zewnętrznie",contact:"Skontaktuj się z organizacją",interest:"Jestem zainteresowany",notice:"CraftID nie certyfikuje, nie rekomenduje ani nie gwarantuje tej możliwości. Kryteria i wybór określa organizacja publikująca.",partnerCountry:"Kraj partnera",europe:"Cała Europa",international:"Międzynarodowo / bez ograniczeń",online:"Online",onsite:"Stacjonarnie",hybrid:"Hybrydowo",contactPerson:"Osoba kontaktowa"},
+  it:{back:"Tutte le opportunità",publishedBy:"Pubblicato da",type:"Tipo",for:"Per",professional:"Professional",workshop:"Workshop",both:"Professional e Workshop",location:"Luogo",available:"Disponibile per",dates:"Date",deadline:"Scadenza",apply:"Candidati esternamente",contact:"Contatta l’organizzazione",interest:"Sono interessato",notice:"CraftID non certifica, approva o garantisce questa opportunità. Idoneità e selezione sono determinate dall’organizzazione che la pubblica.",partnerCountry:"Paese del partner",europe:"Tutta Europa",international:"Internazionale / senza restrizioni",online:"Online",onsite:"In presenza",hybrid:"Ibrido",contactPerson:"Persona di contatto"},
+  es:{back:"Todas las oportunidades",publishedBy:"Publicado por",type:"Tipo",for:"Para",professional:"Professional",workshop:"Workshop",both:"Professional y Workshop",location:"Ubicación",available:"Disponible para",dates:"Fechas",deadline:"Fecha límite",apply:"Solicitar externamente",contact:"Contactar organización",interest:"Me interesa",notice:"CraftID no certifica, avala ni garantiza esta oportunidad. La elegibilidad y selección las determina la organización que publica.",partnerCountry:"País del socio",europe:"Toda Europa",international:"Internacional / sin restricción",online:"Online",onsite:"Presencial",hybrid:"Híbrido",contactPerson:"Persona de contacto"},
+  uk:{back:"Усі можливості",publishedBy:"Опубліковано",type:"Тип",for:"Для",professional:"Professional",workshop:"Workshop",both:"Professional і Workshop",location:"Місце",available:"Доступно для",dates:"Дати",deadline:"Дедлайн",apply:"Подати заявку зовні",contact:"Зв’язатися з організацією",interest:"Я зацікавлений",notice:"CraftID не сертифікує, не схвалює і не гарантує цю можливість. Умови участі та відбір визначає організація, що її опублікувала.",partnerCountry:"Країна партнера",europe:"Вся Європа",international:"Міжнародно / без обмежень",online:"Онлайн",onsite:"Офлайн",hybrid:"Гібрид",contactPerson:"Контактна особа"},
 } as const;
+
+function formatOpportunityDate(
+  value: string,
+  locale: keyof typeof copy,
+) {
+  return new Date(value + "T00:00:00").toLocaleDateString(locale, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default async function OpportunityPage({ params, searchParams }: Props) {
   const [{ id }, sp] = await Promise.all([params, searchParams]);
@@ -128,8 +139,23 @@ export default async function OpportunityPage({ params, searchParams }: Props) {
                 <div><dt>{t.for}</dt><dd>{target}</dd></div>
                 <div><dt>{t.location}</dt><dd>{item.location_mode === "hybrid" ? `${t.hybrid} · ${location}` : item.location_mode === "onsite" ? `${t.onsite} · ${location}` : location}</dd></div>
                 <div><dt>{t.available}</dt><dd>{available}</dd></div>
-                {item.starts_on || item.ends_on ? <div><dt>{t.dates}</dt><dd>{[item.starts_on, item.ends_on].filter(Boolean).join(" — ")}</dd></div> : null}
-                {item.deadline_date ? <div><dt>{t.deadline}</dt><dd>{new Date(item.deadline_date + "T00:00:00").toLocaleDateString(locale)}</dd></div> : null}
+                {item.starts_on || item.ends_on ? (
+                  <div>
+                    <dt>{t.dates}</dt>
+                    <dd>
+                      {[item.starts_on, item.ends_on]
+                        .filter((value): value is string => Boolean(value))
+                        .map((value) => formatOpportunityDate(value, locale))
+                        .join(" — ")}
+                    </dd>
+                  </div>
+                ) : null}
+                {item.deadline_date ? (
+                  <div>
+                    <dt>{t.deadline}</dt>
+                    <dd>{formatOpportunityDate(item.deadline_date, locale)}</dd>
+                  </div>
+                ) : null}
               </dl>
             </article>
 
@@ -149,7 +175,13 @@ export default async function OpportunityPage({ params, searchParams }: Props) {
                   {t.interest}
                 </Link>
               ) : null}
-              {item.public_contact_name ? <small>{item.public_contact_name}</small> : null}
+              {item.public_contact_name ? (
+                <div className="opportunityContactPerson">
+                  <span>{t.contactPerson}</span>
+                  <strong>{item.public_contact_name}</strong>
+                  {item.public_contact_email ? <small>{item.public_contact_email}</small> : null}
+                </div>
+              ) : null}
             </aside>
           </div>
         </section>
