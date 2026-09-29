@@ -7,10 +7,7 @@ import {
   opportunityTypes,
   opportunityTypeLabel,
 } from "@/lib/opportunities";
-import {
-  initialOpportunityFormState,
-  saveOpportunityWithState,
-} from "../actions";
+import { saveOpportunityWithState } from "../actions";
 
 type PartnerOrg = {
   id: string;
@@ -71,7 +68,7 @@ export function OpportunityEditor({
   const ua = locale === "uk";
   const [state, formAction, pending] = useActionState(
     saveOpportunityWithState,
-    initialOpportunityFormState,
+    { error: null as string | null },
   );
 
   const [values, setValues] = useState(() => ({
