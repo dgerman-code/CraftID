@@ -2,7 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createClient as createAuthClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { getSiteUrl } from "@/lib/site-url";
 
 const roles = new Set(["national_operator", "partner"]);
 
@@ -39,7 +41,8 @@ export async function savePartnerOrganisation(formData: FormData) {
   const contactEmail = String(formData.get("contactEmail") ?? "").trim();
   const contactPhone = String(formData.get("contactPhone") ?? "").trim();
   const internalNote = String(formData.get("internalNote") ?? "").trim();
-  const portalEmail = String(formData.get("portalEmail") ?? "").trim();
+  const portalEmail = String(formData.get("portalEmail") ?? "").trim().toLowerCase();
+  const temporaryPassword = String(formData.get("temporaryPassword") ?? "");
 
   const logo = formData.get("logo");
   const removeLogo = formData.get("removeLogo") === "on";
@@ -134,13 +137,82 @@ export async function savePartnerOrganisation(formData: FormData) {
     );
   }
 
+  let partnerAccessMessage = "saved";
+
   if (portalEmail) {
+    const { data: existingUserId, error: lookupError } = await supabase.rpc(
+      "admin_auth_user_for_email",
+      { p_login_email: portalEmail },
+    );
+
+    if (lookupError) {
+      redirect(
+        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+          lookupError.message,
+        )}`,
+      );
+    }
+
+    let authUserId = existingUserId ? String(existingUserId) : "";
+    let mustChangePassword = false;
+
+    if (!authUserId) {
+      if (temporaryPassword.length < 12) {
+        redirect(
+          `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+            "For a new partner login, set a temporary password of at least 12 characters.",
+          )}`,
+        );
+      }
+
+      const isolatedAuth = createAuthClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+        {
+          auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false,
+          },
+        },
+      );
+
+      const nextPath = "/partner/password?welcome=1";
+      const { data: signUpData, error: signUpError } = await isolatedAuth.auth.signUp({
+        email: portalEmail,
+        password: temporaryPassword,
+        options: {
+          emailRedirectTo: `${getSiteUrl()}auth/callback?next=${encodeURIComponent(
+            nextPath,
+          )}`,
+          data: {
+            account_purpose: "craftid_partner",
+          },
+        },
+      });
+
+      if (signUpError || !signUpData.user) {
+        redirect(
+          `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+            signUpError?.message ?? "Unable to create the partner login.",
+          )}`,
+        );
+      }
+
+      authUserId = signUpData.user.id;
+      mustChangePassword = true;
+      partnerAccessMessage = "partner-access-created";
+    } else {
+      partnerAccessMessage = "partner-access-existing";
+    }
+
     const { error: membershipError } = await supabase.rpc(
-      "admin_save_partner_membership",
+      "admin_finalize_partner_provisioning",
       {
         p_partner_organisation_id: partnerId,
         p_login_email: portalEmail,
-        p_is_active: true,
+        p_user_id: authUserId,
+        p_must_change_password: mustChangePassword,
       },
     );
 
@@ -235,7 +307,7 @@ export async function savePartnerOrganisation(formData: FormData) {
   revalidatePath("/admin/partners");
   revalidatePath("/network");
   revalidatePath("/opportunities");
-  redirect(`/admin/partners?edit=${partnerId}&message=saved`);
+  redirect(`/admin/partners?edit=${partnerId}&message=${partnerAccessMessage}`);
 }
 
 export async function revokePartnerPortalAccess(formData: FormData) {

@@ -43,12 +43,32 @@ export async function saveOpportunityWithState(
   const lang = localeFrom(String(formData.get("lang") ?? "en"));
   const q = localeQuery(lang);
   const { id, partnerId, selectedCountries } = opportunityPayload(formData);
+  const image = formData.get("image");
+  const removeImage = formData.get("removeImage") === "on";
+  const imageFile = image instanceof File && image.size > 0 ? image : null;
+
+  if (imageFile) {
+    const allowed = new Set(["image/jpeg", "image/png", "image/webp"]);
+    if (!allowed.has(imageFile.type) || imageFile.size > 5 * 1024 * 1024) {
+      return {
+        error:
+          lang === "uk"
+            ? "Зображення має бути PNG, JPG або WebP розміром до 5 МБ."
+            : "Use a PNG, JPG or WebP image up to 5 MB.",
+      };
+    }
+  }
 
   const supabase = await createClient();
   const { data: userResult } = await supabase.auth.getUser();
   if (!userResult.user) {
     redirect(`/partner/login${q}`);
   }
+
+  const { data: mustChangePassword } = await supabase.rpc(
+    "current_partner_password_change_required",
+  );
+  if (mustChangePassword) redirect(`/partner/password${q}`);
 
   const { data, error } = await supabase.rpc("partner_save_opportunity", {
     p_id: id,
@@ -77,6 +97,84 @@ export async function saveOpportunityWithState(
     return {
       error: opportunityErrorMessage(error.message, lang),
     };
+  }
+
+  const opportunityId = String(data);
+
+  if (imageFile) {
+    const ext =
+      imageFile.type === "image/png"
+        ? "png"
+        : imageFile.type === "image/webp"
+          ? "webp"
+          : "jpg";
+    const imagePath = `${partnerId}/${opportunityId}/${crypto.randomUUID()}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("opportunity-images")
+      .upload(imagePath, await imageFile.arrayBuffer(), {
+        contentType: imageFile.type,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      redirect(
+        `/partner/opportunities${q ? `${q}&` : "?"}edit=${encodeURIComponent(
+          opportunityId,
+        )}&error=${encodeURIComponent(
+          `Opportunity saved, but image upload failed: ${uploadError.message}`,
+        )}`,
+      );
+    }
+
+    const { data: oldImagePath, error: imageLinkError } = await supabase.rpc(
+      "partner_set_opportunity_image",
+      {
+        p_opportunity_id: opportunityId,
+        p_image_path: imagePath,
+      },
+    );
+
+    if (imageLinkError) {
+      await supabase.storage.from("opportunity-images").remove([imagePath]);
+      redirect(
+        `/partner/opportunities${q ? `${q}&` : "?"}edit=${encodeURIComponent(
+          opportunityId,
+        )}&error=${encodeURIComponent(
+          `Opportunity saved, but image could not be linked: ${imageLinkError.message}`,
+        )}`,
+      );
+    }
+
+    if (oldImagePath && oldImagePath !== imagePath) {
+      await supabase.storage
+        .from("opportunity-images")
+        .remove([String(oldImagePath)]);
+    }
+  } else if (removeImage) {
+    const { data: oldImagePath, error: imageRemoveError } = await supabase.rpc(
+      "partner_set_opportunity_image",
+      {
+        p_opportunity_id: opportunityId,
+        p_image_path: null,
+      },
+    );
+
+    if (imageRemoveError) {
+      redirect(
+        `/partner/opportunities${q ? `${q}&` : "?"}edit=${encodeURIComponent(
+          opportunityId,
+        )}&error=${encodeURIComponent(
+          `Opportunity saved, but image could not be removed: ${imageRemoveError.message}`,
+        )}`,
+      );
+    }
+
+    if (oldImagePath) {
+      await supabase.storage
+        .from("opportunity-images")
+        .remove([String(oldImagePath)]);
+    }
   }
 
   revalidatePath("/partner/opportunities");
@@ -148,6 +246,11 @@ export async function respondToInterest(formData: FormData) {
   if (!userResult.user) {
     redirect(`/partner/login${q}`);
   }
+
+  const { data: mustChangePassword } = await supabase.rpc(
+    "current_partner_password_change_required",
+  );
+  if (mustChangePassword) redirect(`/partner/password${q}`);
 
   const { error } = await supabase.rpc("partner_respond_to_interest", {
     p_request_id: requestId,

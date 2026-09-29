@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { localeFrom, localeQuery } from "@/lib/i18n";
@@ -16,6 +17,7 @@ type PartnerOrg = {
   short_name_uk: string | null;
   country_code: string;
   partner_role: string;
+  logo_path: string | null;
 };
 
 export default async function PartnerDashboard({ searchParams }: Props) {
@@ -41,6 +43,11 @@ export default async function PartnerDashboard({ searchParams }: Props) {
     );
   }
 
+  const { data: mustChangePassword } = await supabase.rpc(
+    "current_partner_password_change_required",
+  );
+  if (mustChangePassword) redirect(`/partner/password${q}`);
+
   return (
     <main className="workspacePage">
       <div className="container">
@@ -61,13 +68,24 @@ export default async function PartnerDashboard({ searchParams }: Props) {
         </div>
 
         <section className="partnerOrgGrid">
-          {organisations.map((org) => (
-            <article className="partnerOrgCard" key={org.id}>
-              <div className="recordId">{org.country_code} · {org.partner_role === "national_operator" ? (ua ? "Національний оператор" : "National Operator") : (ua ? "Партнер країни" : "Country Partner")}</div>
-              <h2>{ua ? org.short_name_uk || org.legal_name_uk || org.short_name_en || org.legal_name_en : org.short_name_en || org.legal_name_en}</h2>
-              <small>{org.legal_name_en}</small>
-            </article>
-          ))}
+          {organisations.map((org) => {
+            const logoUrl = org.logo_path
+              ? supabase.storage.from("partner-logos").getPublicUrl(org.logo_path).data.publicUrl
+              : null;
+
+            return (
+              <article className="partnerOrgCard" key={org.id}>
+                {logoUrl ? (
+                  <div className="partnerWorkspaceLogo">
+                    <img src={logoUrl} alt="" />
+                  </div>
+                ) : null}
+                <div className="recordId">{org.country_code} · {org.partner_role === "national_operator" ? (ua ? "Національний оператор" : "National Operator") : (ua ? "Партнер країни" : "Country Partner")}</div>
+                <h2>{ua ? org.short_name_uk || org.legal_name_uk || org.short_name_en || org.legal_name_en : org.short_name_en || org.legal_name_en}</h2>
+                <small>{org.legal_name_en}</small>
+              </article>
+            );
+          })}
         </section>
 
         <section className="dashboardModules partnerPortalModules">

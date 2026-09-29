@@ -55,6 +55,11 @@ export default async function PartnerInterestsPage({ searchParams }: Props) {
     );
   }
 
+  const { data: mustChangePassword } = await supabase.rpc(
+    "current_partner_password_change_required",
+  );
+  if (mustChangePassword) redirect(`/partner/password${q}`);
+
   const { data, error } = await supabase.rpc("partner_interest_requests");
   if (error) throw new Error(error.message);
   const requests = (data ?? []) as Interest[];
