@@ -6402,3 +6402,221 @@ button {
     height: 170px;
   }
 }
+
+
+/* Public Opportunities visual polish */
+.opportunityFilters {
+  grid-template-columns: minmax(220px, 1fr) minmax(220px, 1fr) auto auto;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.opportunityFilters .button {
+  min-height: 46px;
+  white-space: nowrap;
+}
+
+.opportunityFilters > .textButton {
+  align-self: center;
+  padding: 10px 4px;
+  white-space: nowrap;
+}
+
+.publicOpportunityGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  max-width: 1120px;
+}
+
+.publicOpportunityCard {
+  min-width: 0;
+  padding: 24px;
+}
+
+.publicOpportunityCard h2 {
+  margin: 12px 0 10px;
+  font-size: clamp(1.45rem, 2vw, 1.8rem);
+  line-height: 1.08;
+}
+
+.publicOpportunityCard > p {
+  margin: 0;
+  min-height: 3.2em;
+  font-size: 0.92rem;
+}
+
+.publicOpportunityCard dl {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+  margin: 20px 0 18px;
+}
+
+.publicOpportunityCard dl > div {
+  min-width: 0;
+}
+
+.publicOpportunityCard .opportunityCardPartner {
+  grid-column: 1 / -1;
+}
+
+.opportunityCardPartnerName {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.opportunityCardPartnerName img {
+  width: 42px;
+  height: 30px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  background: #fff;
+  object-fit: contain;
+}
+
+.publicOpportunityVisual {
+  width: calc(100% + 48px);
+  margin: -24px -24px 20px;
+}
+
+.publicOpportunityVisual.cover {
+  height: 220px;
+}
+
+.publicOpportunityVisual.logo {
+  height: 112px;
+  justify-content: flex-start;
+  padding: 20px 24px;
+  background: #f7f8f8;
+}
+
+.publicOpportunityVisual.logo img {
+  width: auto;
+  max-width: 180px;
+  height: 64px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.opportunityDetailHero .container {
+  max-width: 1180px;
+}
+
+.opportunityDetailHero h1 {
+  max-width: 980px;
+  margin-top: 18px;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 0.98;
+}
+
+.opportunityDetailHero > .container > p {
+  max-width: 860px;
+}
+
+.opportunityDetailGrid {
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 56px;
+}
+
+.opportunityFacts {
+  min-width: 0;
+}
+
+.opportunityFacts dl > div {
+  grid-template-columns: 150px minmax(0, 1fr);
+  padding: 16px 0;
+}
+
+.opportunityPartnerIdentity img {
+  width: 70px;
+  height: 46px;
+  padding: 5px;
+}
+
+.opportunityActions {
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  background: #fff;
+}
+
+.opportunityActions .button {
+  width: 100%;
+  justify-content: center;
+}
+
+.opportunityContactPerson {
+  display: grid;
+  gap: 3px;
+  margin-top: 6px;
+  padding: 14px 2px 0;
+  border-top: 1px solid var(--line);
+}
+
+.opportunityContactPerson > span {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.opportunityContactPerson > strong {
+  font-size: 0.9rem;
+}
+
+.opportunityContactPerson > small {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+}
+
+.opportunityDetailCover {
+  width: min(100%, 980px);
+  margin: 24px 0 24px;
+}
+
+@media (max-width: 1100px) {
+  .publicOpportunityGrid,
+  .opportunityDetailGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .publicOpportunityGrid {
+    max-width: 760px;
+  }
+
+  .opportunityActions {
+    max-width: 640px;
+  }
+}
+
+@media (max-width: 760px) {
+  .opportunityFilters,
+  .publicOpportunityCard dl,
+  .opportunityFacts dl > div {
+    grid-template-columns: 1fr;
+  }
+
+  .opportunityFilters {
+    padding: 14px;
+  }
+
+  .publicOpportunityCard .opportunityCardPartner {
+    grid-column: auto;
+  }
+
+  .publicOpportunityVisual.cover {
+    height: 190px;
+  }
+
+  .opportunityDetailHero h1 {
+    font-size: clamp(2.6rem, 12vw, 4rem);
+  }
+
+  .opportunityFacts dl > div {
+    gap: 7px;
+  }
+}
