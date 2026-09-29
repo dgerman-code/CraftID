@@ -76,7 +76,7 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
   const supabase = await createClient();
   const { data: userResult } = await supabase.auth.getUser();
   if (!userResult.user) {
-    redirect(`/login${q ? `${q}&` : "?"}next=${encodeURIComponent(`/partner/opportunities${q}`)}`);
+    redirect(`/partner/login${q}`);
   }
 
   const [
@@ -91,7 +91,15 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
   if (opportunityError) throw new Error(opportunityError.message);
 
   const organisations = (orgData ?? []) as PartnerOrg[];
-  if (!organisations.length) redirect(`/my-craftid${q}`);
+  if (!organisations.length) {
+    redirect(
+      `/partner/login${q ? `${q}&` : "?"}error=${encodeURIComponent(
+        ua
+          ? "Цей обліковий запис не має призначеного партнерського доступу CraftID."
+          : "This account does not have assigned CraftID partner access.",
+      )}`,
+    );
+  }
 
   const opportunities = (opportunityData ?? []) as Opportunity[];
   const edit = sp.edit
