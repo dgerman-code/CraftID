@@ -55,6 +55,14 @@ const copy = {
   uk: { eyebrow:"Можливості від партнерів", title:"Можливості для ремісників і майстерень.", intro:"Гранти, відкриті конкурси, навчання, ярмарки, резиденції, обміни та програми підтримки від призначених партнерських організацій CraftID.", filterCountry:"Релевантно для країни", filterType:"Тип", all:"Усі", applyFilters:"Застосувати фільтри", clear:"Очистити", partner:"Опубліковано", available:"Доступно для", deadline:"Дедлайн", location:"Місце", online:"Онлайн", onsite:"Офлайн", hybrid:"Гібрид", view:"Переглянути можливість", partnerCountry:"Країна партнера", selected:"Вибрані країни", europe:"Вся Європа", international:"Міжнародно / без обмежень", empty:"Наразі немає опублікованих можливостей за цими фільтрами." },
 } as const;
 
+function formatOpportunityDate(value: string, locale: keyof typeof copy) {
+  return new Date(value + "T00:00:00").toLocaleDateString(locale, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 function eligibilityLabel(item: PublicOpportunity, locale: keyof typeof copy) {
   const t = copy[locale];
   if (item.eligibility_scope === "partner_country") {
@@ -129,11 +137,12 @@ export default async function OpportunitiesPage({ searchParams }: Props) {
 
             <div className="publicOpportunityGrid">
               {opportunities.map((item) => {
+                const partnerLogoUrl = item.partner_logo_path
+                  ? supabase.storage.from("partner-logos").getPublicUrl(item.partner_logo_path).data.publicUrl
+                  : null;
                 const visualUrl = item.image_path
                   ? supabase.storage.from("opportunity-images").getPublicUrl(item.image_path).data.publicUrl
-                  : item.partner_logo_path
-                    ? supabase.storage.from("partner-logos").getPublicUrl(item.partner_logo_path).data.publicUrl
-                    : null;
+                  : partnerLogoUrl;
                 const visualKind = item.image_path ? "cover" : "logo";
                 const location =
                   item.location_mode === "online"
@@ -159,9 +168,14 @@ export default async function OpportunitiesPage({ searchParams }: Props) {
                     <h2>{item.title}</h2>
                     <p>{item.summary}</p>
                     <dl>
-                      <div>
+                      <div className="opportunityCardPartner">
                         <dt>{t.partner}</dt>
-                        <dd>{item.partner_name}</dd>
+                        <dd className="opportunityCardPartnerName">
+                          {item.image_path && partnerLogoUrl ? (
+                            <img src={partnerLogoUrl} alt="" />
+                          ) : null}
+                          <span>{item.partner_name}</span>
+                        </dd>
                       </div>
                       <div>
                         <dt>{t.available}</dt>
@@ -174,7 +188,7 @@ export default async function OpportunitiesPage({ searchParams }: Props) {
                       {item.deadline_date ? (
                         <div>
                           <dt>{t.deadline}</dt>
-                          <dd>{new Date(item.deadline_date + "T00:00:00").toLocaleDateString(locale)}</dd>
+                          <dd>{formatOpportunityDate(item.deadline_date, locale)}</dd>
                         </div>
                       ) : null}
                     </dl>
