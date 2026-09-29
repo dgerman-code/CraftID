@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteFooter, SiteHeader, localeFrom } from "@/components/site-shell";
@@ -19,6 +20,7 @@ type Opportunity = {
   partner_name: string;
   partner_country_code: string;
   partner_role: string;
+  partner_logo_path: string | null;
   partner_website_url: string | null;
   title: string;
   summary: string;
@@ -37,6 +39,7 @@ type Opportunity = {
   public_contact_name: string | null;
   public_contact_email: string | null;
   allow_interest: boolean;
+  image_path: string | null;
   published_at: string | null;
 };
 
@@ -62,6 +65,12 @@ export default async function OpportunityPage({ params, searchParams }: Props) {
   if (error) throw new Error(error.message);
   if (!data) notFound();
   const item = data as Opportunity;
+  const coverUrl = item.image_path
+    ? supabase.storage.from("opportunity-images").getPublicUrl(item.image_path).data.publicUrl
+    : null;
+  const partnerLogoUrl = item.partner_logo_path
+    ? supabase.storage.from("partner-logos").getPublicUrl(item.partner_logo_path).data.publicUrl
+    : null;
 
   const available =
     item.eligibility_scope === "partner_country"
@@ -94,6 +103,11 @@ export default async function OpportunityPage({ params, searchParams }: Props) {
           <div className="container">
             <Link className="backLink" href={withLocale("/opportunities", locale)}>← {t.back}</Link>
             <div className="eyebrow">{opportunityTypeLabel(locale, item.opportunity_type)}</div>
+            {coverUrl ? (
+              <div className="opportunityDetailCover">
+                <img src={coverUrl} alt="" />
+              </div>
+            ) : null}
             <h1>{item.title}</h1>
             <p>{item.summary}</p>
           </div>
@@ -103,7 +117,13 @@ export default async function OpportunityPage({ params, searchParams }: Props) {
           <div className="container opportunityDetailGrid">
             <article className="opportunityFacts">
               <dl>
-                <div><dt>{t.publishedBy}</dt><dd>{item.partner_name}</dd></div>
+                <div>
+                  <dt>{t.publishedBy}</dt>
+                  <dd className="opportunityPartnerIdentity">
+                    {partnerLogoUrl ? <img src={partnerLogoUrl} alt="" /> : null}
+                    <span>{item.partner_name}</span>
+                  </dd>
+                </div>
                 <div><dt>{t.type}</dt><dd>{opportunityTypeLabel(locale, item.opportunity_type)}</dd></div>
                 <div><dt>{t.for}</dt><dd>{target}</dd></div>
                 <div><dt>{t.location}</dt><dd>{item.location_mode === "hybrid" ? `${t.hybrid} · ${location}` : item.location_mode === "onsite" ? `${t.onsite} · ${location}` : location}</dd></div>
