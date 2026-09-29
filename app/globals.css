@@ -6679,3 +6679,35 @@ button {
     grid-column: auto;
   }
 }
+
+
+/* Opportunity lifecycle controls */
+.opportunityLifecycle {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.opportunityLifecycle p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.opportunityLifecycleButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.opportunityLifecycleButtons form {
+  margin: 0;
+}
+
+.opportunityLifecycle > small {
+  color: var(--muted);
+  line-height: 1.45;
+}

@@ -41,6 +41,7 @@ export type OpportunityFormRecord = {
   allow_interest: boolean;
   is_published: boolean;
   image_path: string | null;
+  archived_at: string | null;
 };
 
 type Props = {
@@ -118,6 +119,14 @@ export function OpportunityEditor({
       {state.error ? (
         <p className="formMessage error opportunityFormError" role="alert">
           {state.error}
+        </p>
+      ) : null}
+
+      {edit?.archived_at ? (
+        <p className="formMessage">
+          {ua
+            ? "Ця можливість в архіві. Відновіть її нижче, перш ніж знову публікувати."
+            : "This opportunity is archived. Restore it below before publishing it again."}
         </p>
       ) : null}
 
@@ -458,6 +467,7 @@ export function OpportunityEditor({
           name="isPublished"
           type="checkbox"
           checked={values.isPublished}
+          disabled={Boolean(edit?.archived_at)}
           onChange={(event) => setField("isPublished", event.target.checked)}
         />
         {ua ? "Опублікувати" : "Publish publicly"}
