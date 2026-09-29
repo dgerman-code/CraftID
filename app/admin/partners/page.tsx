@@ -7,6 +7,7 @@ import {
   revokePartnerPortalAccess,
   savePartnerOrganisation,
 } from "./actions";
+import { PartnerAccessSetup } from "./partner-access-setup";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,10 @@ const messageCopy: Record<string, string> = {
   saved: "Partner organisation saved.",
   deleted: "Partner organisation deleted.",
   "access-updated": "Partner portal access updated.",
+  "partner-access-created":
+    "Partner login created. A confirmation email was sent; the temporary password must be replaced at first access.",
+  "partner-access-existing":
+    "Partner access assigned to an existing CraftID account. Its existing password was not changed.",
 };
 
 export default async function PartnerAdminPage({ searchParams }: Props) {
@@ -444,14 +449,7 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
               </div>
             </div>
 
-            <label>
-              Add portal login email
-              <input
-                name="portalEmail"
-                type="email"
-                placeholder="name@organisation.eu"
-              />
-            </label>
+            <PartnerAccessSetup />
 
             {editPrivate?.portal_emails?.length ? (
               <div className="adminPortalAccessList">
