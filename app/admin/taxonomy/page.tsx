@@ -31,7 +31,7 @@ export default async function TaxonomyAdminPage({ searchParams }: Props) {
       {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
       {sp.message ? <p className="formMessage">Taxonomy term saved.</p> : null}
 
-      <div className="adminDetailGrid">
+      <div className="adminDetailGrid adminDetailGridWide">
         <section className="adminPanel">
           <div className="adminPanelHeader"><div><div className="eyebrow">Current terms</div><h2>CraftID taxonomy</h2></div><span>{terms?.length ?? 0}</span></div>
           <div className="adminTable">
