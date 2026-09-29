@@ -6711,3 +6711,394 @@ button {
   color: var(--muted);
   line-height: 1.45;
 }
+
+
+/* Admin console visual system polish */
+.adminSidebar {
+  height: 100vh;
+  min-height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.adminBrandBlock {
+  padding-bottom: 20px;
+}
+
+.adminNav {
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.adminNavGroup {
+  display: grid;
+  gap: 6px;
+}
+
+.adminNavGroupLabel {
+  padding: 0 12px;
+  color: #7f8b93;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.adminNavGroup > div {
+  display: grid;
+  gap: 2px;
+}
+
+.adminNav a {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+}
+
+.adminTopbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 64px;
+  padding: 0 38px;
+  backdrop-filter: blur(12px);
+}
+
+.adminContent {
+  padding: 36px 40px 64px;
+}
+
+.adminPage {
+  max-width: 1660px;
+}
+
+.adminPageHeader {
+  margin-bottom: 30px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.adminPageHeader h1,
+.adminEntityHeader h1 {
+  max-width: 1120px;
+  margin: 8px 0 12px;
+  font-size: clamp(2.15rem, 3vw, 3.2rem);
+  line-height: 1;
+}
+
+.adminPageHeader p,
+.adminEntityHeader p {
+  max-width: 920px;
+  font-size: 0.92rem;
+}
+
+.adminMetricGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  border: 0;
+  margin-bottom: 28px;
+}
+
+.adminMetric {
+  min-height: 116px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+}
+
+.adminMetric strong {
+  font-size: 2rem;
+}
+
+.adminMetric span {
+  font-size: 0.74rem;
+}
+
+.adminDashboardGrid {
+  gap: 20px;
+}
+
+.adminPanel {
+  padding: 24px;
+}
+
+.adminPanelHeader {
+  min-height: 44px;
+  margin-bottom: 16px;
+}
+
+.adminPanelHeader h2,
+.adminPanel > h2 {
+  font-size: 1.16rem;
+}
+
+.adminTable {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.adminTableHead,
+.adminTableRow {
+  column-gap: 18px;
+}
+
+.adminTableHead {
+  min-height: 44px;
+  font-size: 0.7rem;
+}
+
+.adminTableRow {
+  min-height: 62px;
+  padding: 12px 0;
+  font-size: 0.82rem;
+}
+
+.adminTableRow > * {
+  min-width: 0;
+}
+
+.adminTableRow small,
+.adminRegistryIdentity small {
+  overflow-wrap: anywhere;
+}
+
+.adminRegistryIdentity {
+  min-width: 0;
+}
+
+.adminRegistryIdentity strong,
+.adminRegistryIdentity span,
+.adminRegistryIdentity small {
+  overflow-wrap: anywhere;
+}
+
+.adminFilters,
+.registryToolbar {
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.adminRegistrySummary {
+  padding: 10px 0 14px;
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.adminDetailGridWide {
+  grid-template-columns: minmax(0, 1.35fr) minmax(380px, 0.65fr);
+  gap: 24px;
+}
+
+.adminDetailGridWide > * {
+  min-width: 0;
+}
+
+.adminFormComfortable {
+  gap: 18px;
+}
+
+.adminFormComfortable label,
+.adminStatusForm label {
+  min-width: 0;
+}
+
+.adminStatusForm input:not([type="checkbox"]):not([type="hidden"]):not([type="file"]),
+.adminStatusForm select,
+.adminStatusForm textarea {
+  width: 100%;
+  min-width: 0;
+}
+
+.adminFormActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.adminEmptyStateCard {
+  display: grid;
+  gap: 7px;
+  min-height: 150px;
+  align-content: center;
+  padding: 24px;
+  border: 1px dashed var(--line);
+  background: var(--surface);
+}
+
+.adminEmptyStateCard strong {
+  font-size: 0.96rem;
+}
+
+.adminEmptyStateCard span {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.adminReviewQueue {
+  margin-top: 0;
+}
+
+.adminReviewQueue .reviewCard:first-child {
+  border-top: 0;
+}
+
+.reviewCard {
+  padding: 22px 0;
+}
+
+.reviewSummary {
+  gap: 18px;
+}
+
+.reviewForm {
+  margin-top: 18px;
+}
+
+.adminMetadata {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+
+.adminAuditColumns {
+  grid-template-columns: 0.9fr 1fr minmax(210px, 1.2fr) 0.75fr minmax(280px, 1.5fr);
+}
+
+.adminAccountIntegrityColumns {
+  grid-template-columns: minmax(260px, 1.55fr) minmax(180px, 1fr) minmax(180px, 1fr) 0.45fr minmax(170px, 0.9fr);
+}
+
+.adminResolutionForm {
+  gap: 14px;
+}
+
+.adminControlGrid article {
+  min-height: 110px;
+}
+
+.certificateAdminHead,
+.certificateAdminRow {
+  grid-template-columns: minmax(210px, 1.2fr) minmax(240px, 1.35fr) 0.7fr minmax(280px, 1.4fr);
+}
+
+.certificateRevokeForm {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) auto;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.certificateRevokeForm input {
+  min-width: 0;
+}
+
+.adminTaxonomyColumns {
+  grid-template-columns: minmax(260px, 1.6fr) 0.75fr minmax(180px, 1fr) 0.65fr 0.45fr;
+}
+
+.partnerAdminLayout {
+  grid-template-columns: minmax(0, 1.2fr) minmax(440px, 0.8fr);
+}
+
+.partnerAdminEditorPanel {
+  position: sticky;
+  top: 86px;
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.partnerAdminCard {
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr) auto;
+}
+
+.adminPortalAccessList > div {
+  gap: 10px;
+}
+
+@media (max-width: 1380px) {
+  .adminMetricGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .adminDetailGridWide,
+  .partnerAdminLayout {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 430px);
+  }
+}
+
+@media (max-width: 1180px) {
+  .adminDetailGridWide,
+  .partnerAdminLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .partnerAdminEditorPanel {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 980px) {
+  .adminSidebar {
+    height: auto;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .adminNav {
+    gap: 14px;
+  }
+
+  .adminNavGroup > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adminMetricGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adminTopbar {
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  .adminContent {
+    padding: 24px 18px 44px;
+  }
+
+  .adminTopbar {
+    padding: 0 18px;
+  }
+
+  .adminPageHeader {
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+  }
+
+  .adminMetricGrid,
+  .adminNavGroup > div {
+    grid-template-columns: 1fr;
+  }
+
+  .adminMetric {
+    min-height: 96px;
+  }
+
+  .adminPanel {
+    padding: 18px;
+  }
+
+  .adminFormSplit,
+  .certificateRevokeForm {
+    grid-template-columns: 1fr;
+  }
+}

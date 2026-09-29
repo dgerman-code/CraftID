@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
@@ -72,22 +71,37 @@ export default async function ReviewPage({ searchParams }: Props) {
   });
 
   return (
-    <main className="workspacePage">
-      <div className="container">
-        <Link className="backLink" href={`/${q}`}>← {t.back}</Link>
+    <main className="adminPage">
+      <div className="adminPageHeader">
         <div className="eyebrow">{t.eyebrow}</div>
         <h1>{t.title}</h1>
-        <p className="workspaceIntro">{t.intro}</p>
+        <p>{t.intro}</p>
+      </div>
 
-        {params.error ? <p className="formMessage error">{params.error}</p> : null}
-        {params.message ? <p className="formMessage">{t.done}</p> : null}
+      {params.error ? <p className="formMessage error">{params.error}</p> : null}
+      {params.message ? <p className="formMessage">{t.done}</p> : null}
 
-        <section className="reviewQueue">
-          <div className="eyebrow">{t.queue}</div>
-          {!reviewableLinks.length ? (
-            <p className="emptyState">{t.empty}</p>
-          ) : (
-            reviewableLinks.map((link) => {
+      <section className="adminPanel">
+        <div className="adminPanelHeader">
+          <div>
+            <div className="eyebrow">{t.queue}</div>
+            <h2>{t.queue}</h2>
+          </div>
+          <span>{reviewableLinks.length}</span>
+        </div>
+
+        {!reviewableLinks.length ? (
+          <div className="adminEmptyStateCard">
+            <strong>{t.empty}</strong>
+            <span>
+              {locale === "uk"
+                ? "Нові елементи з’являться тут після того, як власники CraftID пов’яжуть докази з твердженнями."
+                : "New items will appear here when CraftID holders link evidence to claims."}
+            </span>
+          </div>
+        ) : (
+          <div className="reviewQueue adminReviewQueue">
+            {reviewableLinks.map((link) => {
               const claim = Array.isArray(link.claims) ? link.claims[0] : link.claims;
               const evidence = Array.isArray(link.evidence_items) ? link.evidence_items[0] : link.evidence_items;
               if (!claim || !evidence) return null;
@@ -110,6 +124,7 @@ export default async function ReviewPage({ searchParams }: Props) {
                     <input type="hidden" name="lang" value={locale} />
                     <input type="hidden" name="claimId" value={claim.id} />
                     <input type="hidden" name="evidenceId" value={evidence.id} />
+
                     <label>{t.decision}
                       <select name="decision" defaultValue="supports_claim">
                         <option value="supports_claim">Supports claim</option>
@@ -118,6 +133,7 @@ export default async function ReviewPage({ searchParams }: Props) {
                         <option value="does_not_support_claim">Does not support claim</option>
                       </select>
                     </label>
+
                     <label>{t.result}
                       <select name="resultingStatus" defaultValue="evidence_reviewed">
                         <option value="evidence_submitted">Evidence submitted</option>
@@ -128,15 +144,19 @@ export default async function ReviewPage({ searchParams }: Props) {
                       </select>
                       <small className="fieldHelp">{t.statusNote}</small>
                     </label>
-                    <label>{t.notes}<textarea name="privateNotes" rows={4} /></label>
+
+                    <label>{t.notes}
+                      <textarea name="privateNotes" rows={4} />
+                    </label>
+
                     <button className="button buttonPrimary" type="submit">{t.submit}</button>
                   </form>
                 </article>
               );
-            })
-          )}
-        </section>
-      </div>
+            })}
+          </div>
+        )}
+      </section>
     </main>
   );
 }

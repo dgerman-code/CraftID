@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { localeFrom } from "@/components/site-shell";
@@ -75,57 +74,112 @@ export default async function AdminReferralsPage({ searchParams }: Props) {
   const byId = new Map((entities ?? []).map((e) => [e.id, e]));
 
   return (
-    <main className="workspacePage">
-      <div className="container">
-        <Link className="backLink" href={`/${q}`}>← {t.back}</Link>
-        <div className="workspaceGrid">
-          <section>
-            <div className="eyebrow">{t.eyebrow}</div>
-            <h1>{t.title}</h1>
-            <p className="workspaceIntro">{t.intro}</p>
+    <main className="adminPage">
+      <div className="adminPageHeader">
+        <div className="eyebrow">{t.eyebrow}</div>
+        <h1>{t.title}</h1>
+        <p>{t.intro}</p>
+      </div>
 
-            {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
-            {sp.message ? <p className="formMessage">{t.created}</p> : null}
+      {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
+      {sp.message ? <p className="formMessage">{t.created}</p> : null}
 
-            <form className="workspaceForm compactForm" action={createInstitutionalReferral}>
-              <input type="hidden" name="lang" value={locale} />
-              <label>{t.craftId}<input name="craftId" placeholder="0000-0101-86" required /></label>
-              <label>{t.organisation}<input name="organisation" required /></label>
-              <div className="formGrid">
-                <label>{t.contactName}<input name="contactName" /></label>
-                <label>{t.contactEmail}<input name="contactEmail" type="email" /></label>
-              </div>
-              <label>{t.type}
+      <div className="adminDetailGrid adminDetailGridWide">
+        <section className="adminPanel">
+          <div className="adminPanelHeader">
+            <div>
+              <div className="eyebrow">{t.eyebrow}</div>
+              <h2>{t.send}</h2>
+            </div>
+          </div>
+
+          <form className="adminStatusForm adminFormComfortable" action={createInstitutionalReferral}>
+            <input type="hidden" name="lang" value={locale} />
+
+            <div className="adminFormSplit">
+              <label>
+                {t.craftId}
+                <input name="craftId" placeholder="0000-0101-86" required />
+              </label>
+              <label>
+                {t.type}
                 <select name="opportunityType" defaultValue="project">
-                  {Object.entries(t.types).map(([value,label]) => <option value={value} key={value}>{label}</option>)}
+                  {Object.entries(t.types).map(([value,label]) => (
+                    <option value={value} key={value}>{label}</option>
+                  ))}
                 </select>
               </label>
-              <label>{t.referralTitle}<input name="title" required /></label>
-              <label>{t.message}<textarea name="message" rows={7} minLength={20} required /></label>
-              <label>{t.deadline}<input name="deadline" type="date" /></label>
-              <button className="button buttonPrimary" type="submit">{t.send}</button>
-            </form>
-          </section>
+            </div>
 
-          <aside className="workspaceList">
-            <div className="eyebrow">{t.recent}</div>
-            {!referrals?.length ? <p className="emptyState">{t.empty}</p> : referrals.map((r) => {
-              const e = byId.get(r.target_entity_id);
-              return (
-                <article className="claimItem" key={r.id}>
-                  <span className="recordId">{e ? formatCraftIdWithHash(e.craftid_number, e.craftid_check_digits) : "CraftID"}</span>
-                  <h3>{r.title}</h3>
-                  <p>{r.requester_organisation}</p>
-                  <div className="claimMeta">
-                    <span>{r.opportunity_type}</span>
-                    <span>{r.status}</span>
-                    {r.response_deadline ? <span>{r.response_deadline}</span> : null}
-                  </div>
-                </article>
-              );
-            })}
-          </aside>
-        </div>
+            <label>
+              {t.organisation}
+              <input name="organisation" required />
+            </label>
+
+            <div className="adminFormSplit">
+              <label>
+                {t.contactName}
+                <input name="contactName" />
+              </label>
+              <label>
+                {t.contactEmail}
+                <input name="contactEmail" type="email" />
+              </label>
+            </div>
+
+            <label>
+              {t.referralTitle}
+              <input name="title" required />
+            </label>
+
+            <label>
+              {t.message}
+              <textarea name="message" rows={7} minLength={20} required />
+            </label>
+
+            <label>
+              {t.deadline}
+              <input name="deadline" type="date" />
+            </label>
+
+            <div className="adminFormActions">
+              <button className="button buttonPrimary" type="submit">{t.send}</button>
+            </div>
+          </form>
+        </section>
+
+        <aside className="adminPanel adminDetailAside">
+          <div className="adminPanelHeader">
+            <div>
+              <div className="eyebrow">{t.recent}</div>
+              <h2>{t.recent}</h2>
+            </div>
+            <span>{referrals?.length ?? 0}</span>
+          </div>
+
+          {!referrals?.length ? (
+            <p className="emptyState">{t.empty}</p>
+          ) : (
+            <div className="adminMiniList">
+              {referrals.map((r) => {
+                const e = byId.get(r.target_entity_id);
+                return (
+                  <article key={r.id}>
+                    <span className="recordId">
+                      {e ? formatCraftIdWithHash(e.craftid_number, e.craftid_check_digits) : "CraftID"}
+                    </span>
+                    <strong>{r.title}</strong>
+                    <span>{r.requester_organisation}</span>
+                    <small>
+                      {r.opportunity_type} · {r.status}
+                      {r.response_deadline ? ` · ${r.response_deadline}` : ""}
+                    </small>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </aside>
       </div>
     </main>
   );
