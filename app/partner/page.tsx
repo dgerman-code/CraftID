@@ -41,6 +41,11 @@ export default async function PartnerDashboard({ searchParams }: Props) {
     );
   }
 
+  const { data: mustChangePassword } = await supabase.rpc(
+    "current_partner_password_change_required",
+  );
+  if (mustChangePassword) redirect(`/partner/password${q}`);
+
   return (
     <main className="workspacePage">
       <div className="container">
