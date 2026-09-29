@@ -6620,3 +6620,62 @@ button {
     gap: 7px;
   }
 }
+
+
+/* Partner Opportunity list alignment repair */
+.partnerOpportunityRow {
+  grid-template-columns: 110px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 20px;
+}
+
+.partnerOpportunityRow > div:nth-child(2) {
+  min-width: 0;
+}
+
+.partnerOpportunityRow > .textButton {
+  align-self: start;
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.partnerOpportunityRow h3 {
+  margin-top: 6px;
+}
+
+.partnerOpportunityRow p {
+  max-width: 760px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .partnerOpportunityRow {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+
+  .partnerOpportunityThumb {
+    width: 88px;
+    min-width: 88px;
+    height: 66px;
+  }
+
+  .partnerOpportunityRow > .textButton {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 520px) {
+  .partnerOpportunityRow {
+    grid-template-columns: 1fr;
+  }
+
+  .partnerOpportunityThumb {
+    width: 100%;
+    height: 150px;
+  }
+
+  .partnerOpportunityRow > .textButton {
+    grid-column: auto;
+  }
+}
