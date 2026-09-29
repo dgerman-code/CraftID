@@ -90,6 +90,11 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
     );
   }
 
+  const { data: mustChangePassword } = await supabase.rpc(
+    "current_partner_password_change_required",
+  );
+  if (mustChangePassword) redirect(`/partner/password${q}`);
+
   const opportunities = (opportunityData ?? []) as Opportunity[];
   const edit = sp.edit
     ? opportunities.find((item) => item.id === sp.edit) ?? null
