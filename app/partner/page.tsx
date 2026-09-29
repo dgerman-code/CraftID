@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { localeFrom, localeQuery } from "@/lib/i18n";
 import { createClient } from "@/lib/supabase/server";
-import { logout } from "@/app/login/actions";
+import { partnerLogout } from "./login/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -25,13 +25,21 @@ export default async function PartnerDashboard({ searchParams }: Props) {
   const supabase = await createClient();
   const { data: userResult } = await supabase.auth.getUser();
   if (!userResult.user) {
-    redirect(`/login${q ? `${q}&` : "?"}next=${encodeURIComponent(`/partner${q}`)}`);
+    redirect(`/partner/login${q}`);
   }
 
   const { data, error } = await supabase.rpc("current_partner_organisations");
   if (error) throw new Error(error.message);
   const organisations = (data ?? []) as PartnerOrg[];
-  if (!organisations.length) redirect(`/my-craftid${q}`);
+  if (!organisations.length) {
+    redirect(
+      `/partner/login${q ? `${q}&` : "?"}error=${encodeURIComponent(
+        ua
+          ? "Цей обліковий запис не має призначеного партнерського доступу CraftID."
+          : "This account does not have assigned CraftID partner access.",
+      )}`,
+    );
+  }
 
   return (
     <main className="workspacePage">
@@ -46,7 +54,7 @@ export default async function PartnerDashboard({ searchParams }: Props) {
                 : "Publish opportunities for craftspeople and workshops and respond to interest from CraftID holders."}
             </p>
           </div>
-          <form action={logout}>
+          <form action={partnerLogout}>
             <input type="hidden" name="lang" value={locale} />
             <button className="button" type="submit">{ua ? "Вийти" : "Sign out"}</button>
           </form>

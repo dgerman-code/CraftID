@@ -432,10 +432,16 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
             <div>
               <div className="eyebrow">Partner portal access</div>
               <p className="fieldHelp">
-                Add a confirmed login email that may publish opportunities for
-                this organisation. The user signs in through the normal CraftID
-                login.
+                Add the email that may publish opportunities for this
+                organisation. The partner uses the dedicated Partner Access page;
+                the password is created and managed by the partner.
               </p>
+              <div className="partnerAdminLoginLink">
+                <span>Partner sign-in</span>
+                <Link href="/partner/login" target="_blank">
+                  craftid.eu/partner/login ↗
+                </Link>
+              </div>
             </div>
 
             <label>

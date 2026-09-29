@@ -41,11 +41,19 @@ export default async function PartnerInterestsPage({ searchParams }: Props) {
   const supabase = await createClient();
   const { data: userResult } = await supabase.auth.getUser();
   if (!userResult.user) {
-    redirect(`/login${q ? `${q}&` : "?"}next=${encodeURIComponent(`/partner/interests${q}`)}`);
+    redirect(`/partner/login${q}`);
   }
 
   const { data: orgs } = await supabase.rpc("current_partner_organisations");
-  if (!Array.isArray(orgs) || !orgs.length) redirect(`/my-craftid${q}`);
+  if (!Array.isArray(orgs) || !orgs.length) {
+    redirect(
+      `/partner/login${q ? `${q}&` : "?"}error=${encodeURIComponent(
+        ua
+          ? "Цей обліковий запис не має призначеного партнерського доступу CraftID."
+          : "This account does not have assigned CraftID partner access.",
+      )}`,
+    );
+  }
 
   const { data, error } = await supabase.rpc("partner_interest_requests");
   if (error) throw new Error(error.message);

@@ -23,7 +23,7 @@ export async function saveOpportunity(formData: FormData) {
   const supabase = await createClient();
   const { data: userResult } = await supabase.auth.getUser();
   if (!userResult.user) {
-    redirect(`/login${q ? `${q}&` : "?"}next=${encodeURIComponent(`/partner/opportunities${q}`)}`);
+    redirect(`/partner/login${q}`);
   }
 
   const { data, error } = await supabase.rpc("partner_save_opportunity", {
@@ -67,7 +67,7 @@ export async function respondToInterest(formData: FormData) {
   const supabase = await createClient();
   const { data: userResult } = await supabase.auth.getUser();
   if (!userResult.user) {
-    redirect(`/login${q ? `${q}&` : "?"}next=${encodeURIComponent(`/partner/interests${q}`)}`);
+    redirect(`/partner/login${q}`);
   }
 
   const { error } = await supabase.rpc("partner_respond_to_interest", {

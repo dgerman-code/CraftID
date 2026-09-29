@@ -33,7 +33,9 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(
-    new URL("/login?error=Unable%20to%20confirm%20your%20account", requestUrl.origin),
-  );
+  const errorPath = next.startsWith("/partner")
+    ? "/partner/login?error=Unable%20to%20confirm%20your%20partner%20account"
+    : "/login?error=Unable%20to%20confirm%20your%20account";
+
+  return NextResponse.redirect(new URL(errorPath, requestUrl.origin));
 }
