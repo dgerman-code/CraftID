@@ -39,6 +39,7 @@ export type OpportunityFormRecord = {
   public_contact_email: string | null;
   allow_interest: boolean;
   is_published: boolean;
+  image_path: string | null;
 };
 
 type Props = {
@@ -46,6 +47,7 @@ type Props = {
   organisations: PartnerOrg[];
   edit: OpportunityFormRecord | null;
   countries: { code: string; label: string }[];
+  editImageUrl?: string | null;
 };
 
 const languageLabels: Record<string, string> = {
@@ -64,6 +66,7 @@ export function OpportunityEditor({
   organisations,
   edit,
   countries,
+  editImageUrl,
 }: Props) {
   const ua = locale === "uk";
   const [state, formAction, pending] = useActionState(
@@ -208,6 +211,34 @@ export function OpportunityEditor({
           <option value="workshop">Workshop</option>
         </select>
       </label>
+
+      <div className="opportunityImageField">
+        <div>
+          <div className="eyebrow">{ua ? "Зображення" : "Opportunity image"}</div>
+          <p className="fieldHelp">
+            {ua
+              ? "Необов’язкове зображення для картки та сторінки можливості. Якщо його немає, CraftID використає логотип партнерської організації."
+              : "Optional cover image for the opportunity card and detail page. If none is provided, CraftID falls back to the partner organisation logo."}
+          </p>
+        </div>
+        {editImageUrl ? (
+          <div className="opportunityImagePreview">
+            <img src={editImageUrl} alt="" />
+          </div>
+        ) : null}
+        <input
+          name="image"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+        />
+        <small className="fieldHelp">PNG, JPG or WebP · max 5 MB</small>
+        {edit?.image_path ? (
+          <label className="adminCheckbox">
+            <input name="removeImage" type="checkbox" />
+            {ua ? "Видалити поточне зображення" : "Remove current image"}
+          </label>
+        ) : null}
+      </div>
 
       <div className="adminFormDivider" />
       <div>
