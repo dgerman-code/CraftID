@@ -8,6 +8,7 @@ import {
   opportunityTypeLabel,
 } from "@/lib/opportunities";
 import { OpportunityEditor } from "./opportunity-editor";
+import { OpportunityLifecycleActions } from "./opportunity-lifecycle-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,7 @@ type Opportunity = {
   allow_interest: boolean;
   is_published: boolean;
   image_path: string | null;
+  archived_at: string | null;
   updated_at: string;
 };
 
@@ -131,7 +133,23 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
 
         {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
         {sp.message ? (
-          <p className="formMessage">{ua ? "Збережено." : "Saved."}</p>
+          <p className="formMessage">
+            {sp.message === "archived"
+              ? ua
+                ? "Можливість переміщено в архів."
+                : "Opportunity archived."
+              : sp.message === "restored"
+                ? ua
+                  ? "Можливість відновлено з архіву. Вона залишається неопублікованою, доки ви не увімкнете Publish publicly."
+                  : "Opportunity restored from archive. It remains unpublished until you enable Publish publicly."
+                : sp.message === "deleted"
+                  ? ua
+                    ? "Можливість видалено."
+                    : "Opportunity deleted."
+                  : ua
+                    ? "Збережено."
+                    : "Saved."}
+          </p>
         ) : null}
 
         <div className="partnerOpportunityLayout">
@@ -167,13 +185,17 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
                     <p>{item.summary}</p>
                     <small>
                       {item.partner_name} ·{" "}
-                      {item.is_published
+                      {item.archived_at
                         ? ua
-                          ? "Опубліковано"
-                          : "Published"
-                        : ua
-                          ? "Чернетка"
-                          : "Draft"}
+                          ? "Архів"
+                          : "Archived"
+                        : item.is_published
+                          ? ua
+                            ? "Опубліковано"
+                            : "Published"
+                          : ua
+                            ? "Чернетка"
+                            : "Draft"}
                       {item.deadline_date
                         ? ` · ${ua ? "Дедлайн" : "Deadline"} ${item.deadline_date}`
                         : ""}
@@ -216,6 +238,13 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
               countries={countries}
               editImageUrl={editImageUrl}
             />
+            {edit ? (
+              <OpportunityLifecycleActions
+                locale={locale}
+                opportunityId={edit.id}
+                archived={Boolean(edit.archived_at)}
+              />
+            ) : null}
           </aside>
         </div>
       </div>
