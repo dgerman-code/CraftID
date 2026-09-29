@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { localeFrom, localeQuery, supportedLocales } from "@/lib/i18n";
+import { localeFrom, localeQuery } from "@/lib/i18n";
 import {
   europeanCountryOptions,
-  opportunityTypes,
   opportunityTypeLabel,
 } from "@/lib/opportunities";
-import { saveOpportunity } from "../actions";
+import { OpportunityEditor } from "./opportunity-editor";
 
 export const dynamic = "force-dynamic";
 
@@ -57,16 +56,6 @@ type Opportunity = {
   updated_at: string;
 };
 
-const languageLabels: Record<string, string> = {
-  en: "English",
-  fr: "Français",
-  de: "Deutsch",
-  nl: "Nederlands",
-  pl: "Polski",
-  it: "Italiano",
-  es: "Español",
-  uk: "Українська",
-};
 
 export default async function PartnerOpportunitiesPage({ searchParams }: Props) {
   const sp = await searchParams;
@@ -195,287 +184,13 @@ export default async function PartnerOpportunitiesPage({ searchParams }: Props) 
             </div>
             <h2>{edit?.title ?? (ua ? "Додати пропозицію" : "Add opportunity")}</h2>
 
-            <form className="adminStatusForm" action={saveOpportunity}>
-              <input type="hidden" name="lang" value={locale} />
-              <input type="hidden" name="id" value={edit?.id ?? ""} />
-
-              <label>
-                {ua ? "Організація" : "Organisation"}
-                <select
-                  name="partnerId"
-                  required
-                  defaultValue={
-                    edit?.partner_organisation_id ?? organisations[0]?.id ?? ""
-                  }
-                >
-                  {organisations.map((org) => (
-                    <option key={org.id} value={org.id}>
-                      {org.country_code} ·{" "}
-                      {ua
-                        ? org.short_name_uk ||
-                          org.legal_name_uk ||
-                          org.short_name_en ||
-                          org.legal_name_en
-                        : org.short_name_en || org.legal_name_en}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label>
-                {ua ? "Назва" : "Title"}
-                <input
-                  name="title"
-                  required
-                  minLength={3}
-                  defaultValue={edit?.title ?? ""}
-                />
-              </label>
-
-              <label>
-                {ua ? "Короткий опис" : "Short description"}
-                <textarea
-                  name="summary"
-                  required
-                  minLength={10}
-                  rows={5}
-                  defaultValue={edit?.summary ?? ""}
-                />
-              </label>
-
-              <div className="adminFormSplit">
-                <label>
-                  {ua ? "Тип" : "Type"}
-                  <select
-                    name="opportunityType"
-                    defaultValue={edit?.opportunity_type ?? "open_call"}
-                  >
-                    {opportunityTypes.map((type) => (
-                      <option value={type} key={type}>
-                        {opportunityTypeLabel(locale, type)}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label>
-                  {ua ? "Мова контенту" : "Content language"}
-                  <select
-                    name="contentLanguage"
-                    defaultValue={edit?.content_language ?? "en"}
-                  >
-                    {supportedLocales.map((code) => (
-                      <option key={code} value={code}>
-                        {languageLabels[code] ?? code}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
-              <label>
-                {ua ? "Для кого" : "Eligible CraftID entity"}
-                <select
-                  name="targetEntity"
-                  defaultValue={edit?.target_entity ?? "both"}
-                >
-                  <option value="both">{ua ? "Professional і Workshop" : "Professional and Workshop"}</option>
-                  <option value="professional">Professional</option>
-                  <option value="workshop">Workshop</option>
-                </select>
-              </label>
-
-              <div className="adminFormDivider" />
-              <div>
-                <div className="eyebrow">{ua ? "Де відбувається" : "Where it takes place"}</div>
-                <p className="fieldHelp">
-                  {ua
-                    ? "Місце проведення не визначає країни, для яких доступна можливість."
-                    : "Event location is separate from the countries whose CraftID holders are eligible."}
-                </p>
-              </div>
-
-              <label>
-                {ua ? "Формат" : "Location mode"}
-                <select
-                  name="locationMode"
-                  defaultValue={edit?.location_mode ?? "online"}
-                >
-                  <option value="online">{ua ? "Онлайн" : "Online"}</option>
-                  <option value="onsite">{ua ? "Офлайн" : "On-site"}</option>
-                  <option value="hybrid">{ua ? "Гібрид" : "Hybrid"}</option>
-                </select>
-              </label>
-
-              <div className="adminFormSplit">
-                <label>
-                  {ua ? "Країна проведення" : "Location country"}
-                  <select
-                    name="locationCountryCode"
-                    defaultValue={edit?.location_country_code ?? ""}
-                  >
-                    <option value="">—</option>
-                    {countries.map((country) => (
-                      <option key={country.code} value={country.code}>
-                        {country.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label>
-                  {ua ? "Місто" : "City"}
-                  <input
-                    name="locationCity"
-                    defaultValue={edit?.location_city ?? ""}
-                  />
-                </label>
-              </div>
-
-              <div className="adminFormDivider" />
-              <div>
-                <div className="eyebrow">{ua ? "Географія доступності" : "Geographic eligibility"}</div>
-                <p className="fieldHelp">
-                  {ua
-                    ? "Вкажіть, власникам CraftID з яких країн ця пропозиція релевантна."
-                    : "Choose which countries' CraftID holders can use this opportunity."}
-                </p>
-              </div>
-
-              <label>
-                {ua ? "Доступно для" : "Available to"}
-                <select
-                  name="eligibilityScope"
-                  defaultValue={edit?.eligibility_scope ?? "partner_country"}
-                >
-                  <option value="partner_country">
-                    {ua ? "Лише країна партнера" : "Partner country only"}
-                  </option>
-                  <option value="selected_countries">
-                    {ua ? "Вибрані країни" : "Selected countries"}
-                  </option>
-                  <option value="all_europe">
-                    {ua ? "Вся Європа" : "All Europe"}
-                  </option>
-                  <option value="international">
-                    {ua ? "Міжнародно / без обмежень" : "International / no country restriction"}
-                  </option>
-                </select>
-              </label>
-
-              <fieldset className="opportunityCountryPicker">
-                <legend>{ua ? "Вибрані країни" : "Selected countries"}</legend>
-                <p className="fieldHelp">
-                  {ua
-                    ? "Використовується лише для режиму «Вибрані країни». Просто відмітьте будь-які потрібні країни — вони не повинні бути поруч у списку."
-                    : "Used only for Selected countries. Tick any countries independently; they do not need to be adjacent in the list."}
-                </p>
-                <div className="opportunityCountryGrid">
-                  {countries.map((country) => (
-                    <label className="opportunityCountryOption" key={country.code}>
-                      <input
-                        type="checkbox"
-                        name="eligibleCountries"
-                        value={country.code}
-                        defaultChecked={edit?.eligible_countries?.includes(country.code) ?? false}
-                      />
-                      <span>{country.label}</span>
-                      <small>{country.code}</small>
-                    </label>
-                  ))}
-                </div>
-              </fieldset>
-
-              <div className="adminFormSplit">
-                <label>
-                  {ua ? "Початок" : "Starts"}
-                  <input
-                    type="date"
-                    name="startsOn"
-                    defaultValue={edit?.starts_on ?? ""}
-                  />
-                </label>
-                <label>
-                  {ua ? "Завершення" : "Ends"}
-                  <input
-                    type="date"
-                    name="endsOn"
-                    defaultValue={edit?.ends_on ?? ""}
-                  />
-                </label>
-              </div>
-
-              <label>
-                {ua ? "Дедлайн подачі" : "Application deadline"}
-                <input
-                  type="date"
-                  name="deadlineDate"
-                  defaultValue={edit?.deadline_date ?? ""}
-                />
-              </label>
-
-              <div className="adminFormDivider" />
-              <div>
-                <div className="eyebrow">{ua ? "Як взаємодіяти" : "Interaction"}</div>
-                <p className="fieldHelp">
-                  {ua
-                    ? "Можна одночасно використовувати зовнішню заявку, прямий контакт і CraftID Interest Request."
-                    : "You may combine an external application, direct organisation contact and the CraftID interest request."}
-                </p>
-              </div>
-
-              <label>
-                {ua ? "Зовнішнє посилання Apply" : "External Apply URL"}
-                <input
-                  name="externalApplyUrl"
-                  type="url"
-                  placeholder="https://"
-                  defaultValue={edit?.external_apply_url ?? ""}
-                />
-              </label>
-
-              <div className="adminFormSplit">
-                <label>
-                  {ua ? "Контактна особа для можливості" : "Opportunity contact name"}
-                  <input
-                    name="publicContactName"
-                    defaultValue={edit?.public_contact_name ?? ""}
-                  />
-                </label>
-                <label>
-                  {ua ? "Публічний контактний email" : "Public contact email"}
-                  <input
-                    name="publicContactEmail"
-                    type="email"
-                    defaultValue={edit?.public_contact_email ?? ""}
-                  />
-                </label>
-              </div>
-
-              <label className="adminCheckbox">
-                <input
-                  name="allowInterest"
-                  type="checkbox"
-                  defaultChecked={edit?.allow_interest ?? true}
-                />
-                {ua
-                  ? "Дозволити «Я зацікавлений» через CraftID"
-                  : 'Allow "I’m interested" through CraftID'}
-              </label>
-
-              <label className="adminCheckbox">
-                <input
-                  name="isPublished"
-                  type="checkbox"
-                  defaultChecked={edit?.is_published ?? false}
-                />
-                {ua ? "Опублікувати" : "Publish publicly"}
-              </label>
-
-              <button className="button buttonPrimary" type="submit">
-                {edit ? (ua ? "Зберегти" : "Save changes") : (ua ? "Створити" : "Create opportunity")}
-              </button>
-            </form>
+            <OpportunityEditor
+              key={edit?.id ?? "new-opportunity"}
+              locale={locale}
+              organisations={organisations}
+              edit={edit}
+              countries={countries}
+            />
           </aside>
         </div>
       </div>
