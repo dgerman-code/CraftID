@@ -83,6 +83,14 @@ export async function partnerLogin(formData: FormData) {
     );
   }
 
+  const { data: mustChangePassword } = await supabase.rpc(
+    "current_partner_password_change_required",
+  );
+
+  if (mustChangePassword) {
+    redirect(`/partner/password${q}`);
+  }
+
   redirect(`/partner${q}`);
 }
 
@@ -221,4 +229,72 @@ export async function partnerLogout(formData?: FormData) {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect(`/partner/login${q}`);
+}
+
+
+export async function changePartnerPassword(formData: FormData) {
+  const lang = localeFrom(String(formData.get("lang") ?? "en"));
+  const q = localeQuery(lang);
+  const password = String(formData.get("password") ?? "");
+  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+  const errorUrl = (message: string) =>
+    `/partner/password${q ? `${q}&` : "?"}error=${encodeURIComponent(message)}`;
+
+  if (password.length < 12) {
+    redirect(
+      errorUrl(
+        lang === "uk"
+          ? "Новий пароль має містити щонайменше 12 символів."
+          : "Your new password must be at least 12 characters.",
+      ),
+    );
+  }
+
+  if (password !== confirmPassword) {
+    redirect(
+      errorUrl(
+        lang === "uk" ? "Паролі не збігаються." : "Passwords do not match.",
+      ),
+    );
+  }
+
+  const supabase = await createClient();
+  const { data: userResult } = await supabase.auth.getUser();
+
+  if (!userResult.user) {
+    redirect(`/partner/login${q}`);
+  }
+
+  const { data: partnerOrganisations } = await supabase.rpc(
+    "current_partner_organisations",
+  );
+
+  if (!Array.isArray(partnerOrganisations) || !partnerOrganisations.length) {
+    redirect(
+      errorUrl(
+        lang === "uk"
+          ? "Партнерський доступ для цього облікового запису не знайдено."
+          : "Partner access was not found for this account.",
+      ),
+    );
+  }
+
+  const { error: passwordError } = await supabase.auth.updateUser({ password });
+
+  if (passwordError) {
+    redirect(errorUrl(passwordError.message));
+  }
+
+  const { error: markError } = await supabase.rpc(
+    "mark_current_partner_password_changed",
+  );
+
+  if (markError) {
+    redirect(errorUrl(markError.message));
+  }
+
+  redirect(
+    `/partner${q ? `${q}&` : "?"}message=password-changed`,
+  );
 }
