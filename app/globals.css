@@ -7299,3 +7299,58 @@ button {
     display: grid;
   }
 }
+
+
+.adminQueueSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 190px));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.adminQueueSummary article {
+  display: grid;
+  gap: 5px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.adminQueueSummary span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.adminQueueSummary strong {
+  font-size: 1.4rem;
+}
+
+.adminFilterClear {
+  align-self: end;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.adminTypeLabel {
+  font-weight: 700;
+}
+
+.adminFormSectionIntro {
+  display: grid;
+  gap: 5px;
+  padding-bottom: 4px;
+}
+
+.adminFormSectionIntro .fieldHelp {
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .adminQueueSummary {
+    grid-template-columns: 1fr;
+  }
+}
