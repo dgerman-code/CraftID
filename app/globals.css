@@ -7881,3 +7881,116 @@ button {
     padding: 10px 12px;
   }
 }
+
+
+/* Staff access by email */
+.staffAccessPanel {
+  display: grid;
+  gap: 16px;
+}
+
+.staffLookupForm {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+  max-width: 920px;
+}
+
+.staffLookupForm label,
+.staffGrantResolved label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.staffLookupForm input,
+.staffGrantResolved select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.staffLookupResult {
+  max-width: 920px;
+}
+
+.staffLookupFound {
+  display: grid;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--accent);
+  background: var(--surface);
+}
+
+.staffLookupIdentity {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.staffLookupIdentity > div:first-child {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.staffLookupIdentity strong,
+.staffLookupIdentity small {
+  overflow-wrap: anywhere;
+}
+
+.staffLookupIdentity strong {
+  font-size: 1rem;
+}
+
+.staffLookupIdentity small {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.staffLookupMeta {
+  display: grid;
+  gap: 5px;
+  min-width: 210px;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.staffGrantResolved {
+  display: grid;
+  grid-template-columns: minmax(220px, 360px) auto;
+  gap: 12px;
+  align-items: end;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 720px) {
+  .staffLookupForm,
+  .staffGrantResolved {
+    grid-template-columns: 1fr;
+  }
+
+  .staffLookupIdentity {
+    flex-direction: column;
+  }
+
+  .staffLookupMeta {
+    min-width: 0;
+  }
+}
