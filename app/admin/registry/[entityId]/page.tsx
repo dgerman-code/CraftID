@@ -142,7 +142,7 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
         </div>
 
         <div className="adminEntityState">
-          <span>Status</span>
+          <span>Registry status</span>
           <strong className={`adminStatus adminStatus-${entity.public_status}`}>{entity.public_status}</strong>
           {entity.public_status === "published" ? (
             <Link href={`/id/${publicRouteId}`} target="_blank">Open public profile ↗</Link>
@@ -174,7 +174,7 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
         ))}
       </section>
 
-      <div className="adminDetailGrid">
+      <div className="adminDetailGrid adminRegistryDetailGrid">
         <div className="adminDetailMain">
           <section className="adminPanel">
             <div className="adminPanelHeader">
@@ -212,7 +212,7 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
                     <span>{claim.visibility}</span>
                   </div>
                 </article>
-              )) : <p className="emptyState">No claims recorded.</p>}
+              )) : <p className="emptyState adminMutedEmpty">No claims recorded.</p>}
             </div>
           </section>
 
@@ -237,7 +237,7 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
                     <span>{item.visibility}</span>
                   </div>
                 </article>
-              )) : <p className="emptyState">No evidence submitted.</p>}
+              )) : <p className="emptyState adminMutedEmpty">No evidence submitted.</p>}
             </div>
           </section>
 
@@ -261,7 +261,7 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
                     <span>{new Date(obs.observed_at).toLocaleDateString("en-GB")}</span>
                   </div>
                 </article>
-              )) : <p className="emptyState">No current observations recorded.</p>}
+              )) : <p className="emptyState adminMutedEmpty">No current observations recorded.</p>}
             </div>
           </section>
 
@@ -282,12 +282,12 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
                     {event.old_status && event.new_status ? `${event.old_status} → ${event.new_status}` : ""}
                   </small>
                 </article>
-              )) : <p className="emptyState">No audit events recorded.</p>}
+              )) : <p className="emptyState adminMutedEmpty">No audit events recorded.</p>}
             </div>
           </section>
         </div>
 
-        <aside className="adminDetailAside">
+        <aside className="adminDetailAside adminRegistryAside">
           <section className="adminPanel">
             <div className="eyebrow">Publication control</div>
             <h2>Registry status</h2>
@@ -338,7 +338,7 @@ export default async function RegistryDetailPage({ params, searchParams }: Props
                     {contact.verification_level} · public {contact.show_in_public_profile ? "yes" : "no"} · institutional {contact.share_with_institutional_partners ? "yes" : "no"}
                   </small>
                 </article>
-              )) : <p className="emptyState">No professional contacts.</p>}
+              )) : <p className="emptyState adminMutedEmpty">No professional contacts.</p>}
             </div>
           </section>
 
