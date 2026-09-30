@@ -62,7 +62,14 @@ export default async function PublicationQueuePage() {
       privacySet.has(entity.id),
     ];
     const ready = checks.filter(Boolean).length;
-    return { entity, profile, ready, total: checks.length };
+    return {
+      entity,
+      profile,
+      ready,
+      total: checks.length,
+      missing: checks.length - ready,
+      isReady: ready === checks.length,
+    };
   }).sort((a,b) => b.ready - a.ready);
 
   return (
@@ -73,11 +80,22 @@ export default async function PublicationQueuePage() {
         <p>Minimum integrity gate for draft and suspended CraftID records. A record needs a name, professional title or craft sector, public location, at least one skill claim and privacy settings. Evidence review is not required for publication, and publication does not imply certification.</p>
       </div>
 
+      <div className="adminQueueLegend">
+        <div>
+          <span className="adminStatus adminStatus-published">Ready</span>
+          <small>All five minimum publication checks are complete.</small>
+        </div>
+        <div>
+          <span className="adminStatus adminStatus-draft">Needs input</span>
+          <small>Open the record to see which minimum fields are missing.</small>
+        </div>
+      </div>
+
       <section className="adminTable">
         <div className="adminTableHead adminPublicationColumns">
           <span>CraftID / Name</span><span>Type</span><span>Location</span><span>Readiness</span><span>Status</span><span>Updated</span>
         </div>
-        {rows.length ? rows.map(({ entity, profile, ready, total }) => (
+        {rows.length ? rows.map(({ entity, profile, ready, total, missing, isReady }) => (
           <Link className="adminTableRow adminPublicationColumns" href={`/admin/registry/${entity.id}`} key={entity.id}>
             <div className="adminRegistryIdentity">
               <strong>{formatId(entity.craftid_number, entity.craftid_check_digits)}</strong>
@@ -86,7 +104,10 @@ export default async function PublicationQueuePage() {
             </div>
             <span>{entity.entity_type}</span>
             <span>{profile?.location || "—"}</span>
-            <span>{ready}/{total}</span>
+            <div className="adminReadinessScore">
+              <strong>{ready}/{total}</strong>
+              <small>{isReady ? "Ready for publication" : `${missing} check${missing === 1 ? "" : "s"} missing`}</small>
+            </div>
             <span className={`adminStatus adminStatus-${entity.public_status}`}>{entity.public_status}</span>
             <span>{new Date(entity.updated_at).toLocaleDateString("en-GB")}</span>
           </Link>
