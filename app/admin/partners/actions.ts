@@ -8,6 +8,15 @@ import { getSiteUrl } from "@/lib/site-url";
 
 const roles = new Set(["national_operator", "partner"]);
 
+function partnerAdminTarget(id: string | null, error?: string, message?: string) {
+  const base = id ? `/admin/partners/${encodeURIComponent(id)}` : "/admin/partners/new";
+  const params = new URLSearchParams();
+  if (error) params.set("error", error);
+  if (message) params.set("message", message);
+  const query = params.toString();
+  return query ? `${base}?${query}` : base;
+}
+
 function partnerSaveError(message: string, countryCode: string) {
   const lower = message.toLowerCase();
 
@@ -48,7 +57,7 @@ export async function savePartnerOrganisation(formData: FormData) {
   const removeLogo = formData.get("removeLogo") === "on";
 
   if (!legalNameEn || !/^[A-Z]{2}$/.test(countryCode) || !roles.has(partnerRole)) {
-    redirect("/admin/partners?error=" + encodeURIComponent("Complete the required partner fields."));
+    redirect(partnerAdminTarget(id, "Complete the required partner fields."));
   }
 
   const supabase = await createClient();
@@ -72,11 +81,7 @@ export async function savePartnerOrganisation(formData: FormData) {
         const message =
           `A National Operator is already assigned for ${countryCode}: ` +
           `${conflict.short_name_en || conflict.legal_name_en}. Edit that organisation or choose Country Partner.`;
-        redirect(
-          `/admin/partners?error=${encodeURIComponent(message)}&edit=${encodeURIComponent(
-            id ?? conflict.id,
-          )}`,
-        );
+        redirect(partnerAdminTarget(id, message));
       }
     }
   }
@@ -104,17 +109,12 @@ export async function savePartnerOrganisation(formData: FormData) {
 
   if (error) {
     const message = partnerSaveError(error.message, countryCode);
-    redirect(
-      `/admin/partners?error=${encodeURIComponent(message)}${id ? `&edit=${encodeURIComponent(id)}` : ""}`,
-    );
+    redirect(partnerAdminTarget(id, message));
   }
 
   const partnerId = String(savedPartnerId ?? id ?? "").trim();
   if (!partnerId) {
-    redirect(
-      "/admin/partners?error=" +
-        encodeURIComponent("Partner saved, but its ID could not be resolved."),
-    );
+    redirect(partnerAdminTarget(id, "Partner saved, but its ID could not be resolved."));
   }
 
   const { error: contactError } = await supabase.rpc(
@@ -130,11 +130,7 @@ export async function savePartnerOrganisation(formData: FormData) {
   );
 
   if (contactError) {
-    redirect(
-      `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
-        contactError.message,
-      )}`,
-    );
+    redirect(partnerAdminTarget(partnerId, contactError.message));
   }
 
   let partnerAccessMessage = "saved";
@@ -146,11 +142,7 @@ export async function savePartnerOrganisation(formData: FormData) {
     );
 
     if (lookupError) {
-      redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
-          lookupError.message,
-        )}`,
-      );
+      redirect(partnerAdminTarget(partnerId, lookupError.message));
     }
 
     let authUserId = existingUserId ? String(existingUserId) : "";
@@ -159,9 +151,10 @@ export async function savePartnerOrganisation(formData: FormData) {
     if (!authUserId) {
       if (temporaryPassword.length < 12) {
         redirect(
-          `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+          partnerAdminTarget(
+            partnerId,
             "For a new partner login, set a temporary password of at least 12 characters.",
-          )}`,
+          ),
         );
       }
 
@@ -193,9 +186,10 @@ export async function savePartnerOrganisation(formData: FormData) {
 
       if (signUpError || !signUpData.user) {
         redirect(
-          `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+          partnerAdminTarget(
+            partnerId,
             signUpError?.message ?? "Unable to create the partner login.",
-          )}`,
+          ),
         );
       }
 
@@ -217,11 +211,7 @@ export async function savePartnerOrganisation(formData: FormData) {
     );
 
     if (membershipError) {
-      redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
-          membershipError.message,
-        )}`,
-      );
+      redirect(partnerAdminTarget(partnerId, membershipError.message));
     }
   }
 
@@ -229,9 +219,10 @@ export async function savePartnerOrganisation(formData: FormData) {
     const allowed = new Set(["image/jpeg", "image/png", "image/webp"]);
     if (!allowed.has(logo.type) || logo.size > 2 * 1024 * 1024) {
       redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
+        partnerAdminTarget(
+          partnerId,
           "Use PNG, JPG or WebP up to 2 MB for the organisation logo.",
-        )}`,
+        ),
       );
     }
 
@@ -251,11 +242,7 @@ export async function savePartnerOrganisation(formData: FormData) {
       });
 
     if (uploadError) {
-      redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
-          uploadError.message,
-        )}`,
-      );
+      redirect(partnerAdminTarget(partnerId, uploadError.message));
     }
 
     const { data: oldLogoPath, error: logoLinkError } = await supabase.rpc(
@@ -268,11 +255,7 @@ export async function savePartnerOrganisation(formData: FormData) {
 
     if (logoLinkError) {
       await supabase.storage.from("partner-logos").remove([logoPath]);
-      redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
-          logoLinkError.message,
-        )}`,
-      );
+      redirect(partnerAdminTarget(partnerId, logoLinkError.message));
     }
 
     if (oldLogoPath && oldLogoPath !== logoPath) {
@@ -290,11 +273,7 @@ export async function savePartnerOrganisation(formData: FormData) {
     );
 
     if (removeLinkError) {
-      redirect(
-        `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
-          removeLinkError.message,
-        )}`,
-      );
+      redirect(partnerAdminTarget(partnerId, removeLinkError.message));
     }
 
     if (oldLogoPath) {
@@ -307,7 +286,7 @@ export async function savePartnerOrganisation(formData: FormData) {
   revalidatePath("/admin/partners");
   revalidatePath("/network");
   revalidatePath("/opportunities");
-  redirect(`/admin/partners?edit=${partnerId}&message=${partnerAccessMessage}`);
+  redirect(partnerAdminTarget(partnerId, undefined, partnerAccessMessage));
 }
 
 export async function revokePartnerPortalAccess(formData: FormData) {
@@ -325,15 +304,11 @@ export async function revokePartnerPortalAccess(formData: FormData) {
   });
 
   if (error) {
-    redirect(
-      `/admin/partners?edit=${partnerId}&error=${encodeURIComponent(
-        error.message,
-      )}`,
-    );
+    redirect(partnerAdminTarget(partnerId, error.message));
   }
 
   revalidatePath("/admin/partners");
-  redirect(`/admin/partners?edit=${partnerId}&message=access-updated`);
+  redirect(partnerAdminTarget(partnerId, undefined, "access-updated"));
 }
 
 
@@ -362,7 +337,7 @@ export async function deletePartnerOrganisation(formData: FormData) {
 
   if (error) {
     redirect(
-      `/admin/partners?edit=${encodeURIComponent(partnerId)}&error=${encodeURIComponent(
+      `/admin/partners/${encodeURIComponent(partnerId)}?error=${encodeURIComponent(
         error.message,
       )}`,
     );
