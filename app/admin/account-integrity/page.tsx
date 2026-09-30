@@ -126,10 +126,11 @@ export default async function AccountIntegrityPage({ searchParams }: Props) {
         {entities.length < 2 ? (
           <p className="emptyState">At least two active {entityType} records are required.</p>
         ) : (
-          <div className="adminDangerNotice">
-            This action can move a CraftID to another login and archive another CraftID. Use it only after identity ownership has been confirmed.
-          </div>
-          <form className="adminResolutionForm" action={resolveDuplicateCraftId}>
+          <>
+            <div className="adminDangerNotice">
+              This action can move a CraftID to another login and archive another CraftID. Use it only after identity ownership has been confirmed.
+            </div>
+            <form className="adminResolutionForm" action={resolveDuplicateCraftId}>
             <label>
               Canonical CraftID to keep
               <select name="keepEntityId" required defaultValue="">
@@ -196,7 +197,8 @@ export default async function AccountIntegrityPage({ searchParams }: Props) {
                 Draft and public/privacy consent is reset for review.
               </small>
             </div>
-          </form>
+            </form>
+          </>
         )}
       </section>
     );
