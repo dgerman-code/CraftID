@@ -8,7 +8,7 @@ create or replace function private.admin_find_auth_user_by_email_impl(
 returns table(
   user_id uuid,
   email text,
-  current_role text,
+  staff_role text,
   created_at timestamptz,
   email_confirmed boolean
 )
@@ -51,7 +51,7 @@ create or replace function public.admin_find_auth_user_by_email(
 returns table(
   user_id uuid,
   email text,
-  current_role text,
+  staff_role text,
   created_at timestamptz,
   email_confirmed boolean
 )
