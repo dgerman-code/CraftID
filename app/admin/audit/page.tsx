@@ -49,7 +49,10 @@ export default async function AuditCompliancePage({ searchParams }: Props) {
               <strong>{event.action.replaceAll("_", " ")}</strong>
               <div className="adminRegistryIdentity"><small>{event.entity_id ?? "System"}</small><small>{event.actor_user_id ?? "No actor"}</small></div>
               <span>{event.old_status || event.new_status ? `${event.old_status ?? "—"} → ${event.new_status ?? "—"}` : "—"}</span>
-              <code className="adminMetadata">{JSON.stringify(event.metadata ?? {})}</code>
+              <details className="adminMetadataDisclosure">
+                <summary>View details</summary>
+                <code className="adminMetadata">{JSON.stringify(event.metadata ?? {}, null, 2)}</code>
+              </details>
             </div>
           ))}
         </div>
