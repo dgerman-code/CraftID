@@ -3,13 +3,21 @@ import { createClient } from "@/lib/supabase/server";
 import { removeStaffRole, setStaffRole } from "./actions";
 
 export const dynamic = "force-dynamic";
-type Props = { searchParams: Promise<{ error?: string; message?: string }> };
+type Props = { searchParams: Promise<{ error?: string; message?: string; email?: string }> };
 
 type StaffMember = {
   user_id: string;
   email: string | null;
   role: "admin" | "reviewer";
   created_at: string;
+};
+
+type AuthLookup = {
+  user_id: string;
+  email: string;
+  current_role: "admin" | "reviewer" | null;
+  created_at: string;
+  email_confirmed: boolean;
 };
 
 export default async function UsersAdminPage({ searchParams }: Props) {
@@ -21,6 +29,23 @@ export default async function UsersAdminPage({ searchParams }: Props) {
   const { data: staffData, error } = await supabase.rpc("admin_list_staff");
   if (error) throw new Error(error.message);
   const staff = (staffData ?? []) as StaffMember[];
+
+  const lookupEmail = String(sp.email ?? "").trim().toLowerCase();
+  let lookup: AuthLookup | null = null;
+  let lookupError: string | null = null;
+
+  if (lookupEmail) {
+    const { data, error: findError } = await supabase.rpc(
+      "admin_find_auth_user_by_email",
+      { p_email: lookupEmail },
+    );
+
+    if (findError) {
+      lookupError = findError.message;
+    } else {
+      lookup = ((data ?? [])[0] ?? null) as AuthLookup | null;
+    }
+  }
 
   return (
     <main className="adminPage">
@@ -58,15 +83,83 @@ export default async function UsersAdminPage({ searchParams }: Props) {
         </div>
       </section>
 
-      <section className="adminPanel">
-        <div className="eyebrow">Grant access</div>
-        <h2>Add staff role by user UUID</h2>
-        <p className="fieldHelp">The account must already exist in CraftID authentication. This does not create a new login account.</p>
-        <form className="adminGrantForm" action={setStaffRole}>
-          <label>User UUID<input name="userId" required placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" /></label>
-          <label>Role<select name="role" defaultValue="reviewer"><option value="reviewer">Platform Reviewer</option><option value="admin">Platform Admin</option></select></label>
-          <button className="button buttonPrimary" type="submit">Grant role</button>
+      <section className="adminPanel staffAccessPanel">
+        <div className="adminPanelHeader">
+          <div>
+            <div className="eyebrow">Grant access</div>
+            <h2>Add staff access by email</h2>
+          </div>
+        </div>
+        <p className="fieldHelp">
+          Find an existing CraftID authentication account by its exact email address.
+          Staff access does not create a new login account.
+        </p>
+
+        <form className="staffLookupForm" method="get">
+          <label>
+            Email
+            <input
+              name="email"
+              type="email"
+              required
+              defaultValue={lookupEmail}
+              placeholder="reviewer@organisation.eu"
+            />
+          </label>
+          <button className="button" type="submit">Find user</button>
         </form>
+
+        {lookupError ? <p className="formMessage error">{lookupError}</p> : null}
+
+        {lookupEmail && !lookup && !lookupError ? (
+          <div className="adminEmptyStateCard staffLookupResult">
+            <strong>Account not found</strong>
+            <span>
+              No CraftID authentication account exists for <b>{lookupEmail}</b>.
+              The person must create and confirm a CraftID login before a staff
+              role can be granted.
+            </span>
+          </div>
+        ) : null}
+
+        {lookup ? (
+          <div className="staffLookupResult staffLookupFound">
+            <div className="staffLookupIdentity">
+              <div>
+                <span className="recordId">Account found</span>
+                <strong>{lookup.email}</strong>
+                <small>User ID · {lookup.user_id}</small>
+              </div>
+              <div className="staffLookupMeta">
+                <span>
+                  Email {lookup.email_confirmed ? "confirmed" : "not confirmed"}
+                </span>
+                <span>
+                  Current access ·{" "}
+                  {lookup.current_role === "admin"
+                    ? "Platform Admin"
+                    : lookup.current_role === "reviewer"
+                      ? "Platform Reviewer"
+                      : "No staff role"}
+                </span>
+              </div>
+            </div>
+
+            <form className="staffGrantResolved" action={setStaffRole}>
+              <input type="hidden" name="userId" value={lookup.user_id} />
+              <label>
+                Role
+                <select name="role" defaultValue={lookup.current_role ?? "reviewer"}>
+                  <option value="reviewer">Platform Reviewer</option>
+                  <option value="admin">Platform Admin</option>
+                </select>
+              </label>
+              <button className="button buttonPrimary" type="submit">
+                {lookup.current_role ? "Update access" : "Grant access"}
+              </button>
+            </form>
+          </div>
+        ) : null}
       </section>
     </main>
   );
