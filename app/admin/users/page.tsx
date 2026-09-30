@@ -15,7 +15,7 @@ type StaffMember = {
 type AuthLookup = {
   user_id: string;
   email: string;
-  current_role: "admin" | "reviewer" | null;
+  staff_role: "admin" | "reviewer" | null;
   created_at: string;
   email_confirmed: boolean;
 };
@@ -136,9 +136,9 @@ export default async function UsersAdminPage({ searchParams }: Props) {
                 </span>
                 <span>
                   Current access ·{" "}
-                  {lookup.current_role === "admin"
+                  {lookup.staff_role === "admin"
                     ? "Platform Admin"
-                    : lookup.current_role === "reviewer"
+                    : lookup.staff_role === "reviewer"
                       ? "Platform Reviewer"
                       : "No staff role"}
                 </span>
@@ -149,13 +149,13 @@ export default async function UsersAdminPage({ searchParams }: Props) {
               <input type="hidden" name="userId" value={lookup.user_id} />
               <label>
                 Role
-                <select name="role" defaultValue={lookup.current_role ?? "reviewer"}>
+                <select name="role" defaultValue={lookup.staff_role ?? "reviewer"}>
                   <option value="reviewer">Platform Reviewer</option>
                   <option value="admin">Platform Admin</option>
                 </select>
               </label>
               <button className="button buttonPrimary" type="submit">
-                {lookup.current_role ? "Update access" : "Grant access"}
+                {lookup.staff_role ? "Update access" : "Grant access"}
               </button>
             </form>
           </div>
