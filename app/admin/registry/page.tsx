@@ -148,6 +148,7 @@ export default async function RegistryPage({ searchParams }: Props) {
           </select>
         </label>
         <button className="button buttonPrimary" type="submit">Apply filters</button>
+        <Link className="textButton adminFilterClear" href="/admin/registry">Clear</Link>
       </form>
 
       <div className="adminRegistrySummary">
@@ -180,7 +181,7 @@ export default async function RegistryPage({ searchParams }: Props) {
                 <span>{profile?.display_name ?? "Profile not completed"}</span>
                 {profile?.subtitle ? <small>{profile.subtitle}</small> : null}
               </div>
-              <span>{entity.entity_type}</span>
+              <span className="adminTypeLabel">{entity.entity_type === "professional" ? "Professional" : "Workshop"}</span>
               <span>{location}</span>
               <span>{claimCounts.get(entity.id) ?? 0}</span>
               <span>{evidenceCounts.get(entity.id) ?? 0}</span>
