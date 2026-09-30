@@ -245,6 +245,13 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
               value={edit?.agreement_status ?? "none"}
             />
 
+            <div className="adminFormSectionIntro">
+              <div className="eyebrow">Organisation & public profile</div>
+              <p className="fieldHelp">
+                Core organisation details used in the CraftID partner network and public Opportunity attribution.
+              </p>
+            </div>
+
             <label>
               English legal name
               <input
@@ -437,9 +444,8 @@ export default async function PartnerAdminPage({ searchParams }: Props) {
             <div>
               <div className="eyebrow">Partner portal access</div>
               <p className="fieldHelp">
-                Add the email that may publish opportunities for this
-                organisation. The partner uses the dedicated Partner Access page;
-                the password is created and managed by the partner.
+                Add the email that may manage this organisation’s Partner Workspace and publish Opportunities.
+                For a new login you can issue a temporary password; the partner must replace it at first access.
               </p>
               <div className="partnerAdminLoginLink">
                 <span>Partner sign-in</span>
