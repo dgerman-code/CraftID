@@ -7822,3 +7822,62 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Fix partner editor sticky-bar and logo uploader overlap */
+.partnerEditorForm {
+  padding-bottom: 88px;
+}
+
+.partnerEditorStickyBar {
+  min-height: 58px;
+  padding: 10px 16px;
+}
+
+.partnerEditorPublicGrid > *,
+.partnerEditorLogoCard,
+.partnerEditorLogoCard input[type="file"] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.partnerEditorLogoCard {
+  overflow: hidden;
+}
+
+.partnerEditorLogoPreview {
+  width: 100%;
+  min-width: 0;
+}
+
+.partnerEditorLogoCard input[type="file"] {
+  display: block;
+  width: 100%;
+  font-size: 0.72rem;
+  overflow: hidden;
+}
+
+.partnerEditorLogoCard input[type="file"]::file-selector-button {
+  margin-right: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent);
+  background: #fff;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.partnerEditorLogoCard input[type="file"]::file-selector-button:hover {
+  background: var(--surface);
+}
+
+@media (max-width: 760px) {
+  .partnerEditorForm {
+    padding-bottom: 110px;
+  }
+
+  .partnerEditorStickyBar {
+    padding: 10px 12px;
+  }
+}
