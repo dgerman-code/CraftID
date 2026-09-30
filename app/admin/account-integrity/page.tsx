@@ -115,7 +115,7 @@ export default async function AccountIntegrityPage({ searchParams }: Props) {
 
     return (
       <section className="adminPanel" key={entityType}>
-        <div className="eyebrow">Controlled resolution</div>
+        <div className="eyebrow">Controlled resolution · destructive action</div>
         <h2>{title}</h2>
         <p className="fieldHelp">
           Use only after confirming that two login accounts refer to the same underlying
@@ -126,6 +126,9 @@ export default async function AccountIntegrityPage({ searchParams }: Props) {
         {entities.length < 2 ? (
           <p className="emptyState">At least two active {entityType} records are required.</p>
         ) : (
+          <div className="adminDangerNotice">
+            This action can move a CraftID to another login and archive another CraftID. Use it only after identity ownership has been confirmed.
+          </div>
           <form className="adminResolutionForm" action={resolveDuplicateCraftId}>
             <label>
               Canonical CraftID to keep
@@ -213,6 +216,21 @@ export default async function AccountIntegrityPage({ searchParams }: Props) {
 
       {sp.error ? <p className="formMessage error">{sp.error}</p> : null}
       {sp.message ? <p className="formMessage">{sp.message}</p> : null}
+
+      <section className="adminWorkflowSteps">
+        <article>
+          <span>1</span>
+          <div><strong>Review accounts</strong><small>Confirm the emails and CraftIDs that may refer to the same underlying person or workshop.</small></div>
+        </article>
+        <article>
+          <span>2</span>
+          <div><strong>Confirm ownership</strong><small>Use external or administrative evidence. CraftID never infers duplicate ownership automatically.</small></div>
+        </article>
+        <article>
+          <span>3</span>
+          <div><strong>Resolve only when certain</strong><small>Keep one canonical CraftID, archive the duplicate, and record the reason in the audit trail.</small></div>
+        </article>
+      </section>
 
       <section className="adminPanel">
         <div className="adminPanelHeader">
