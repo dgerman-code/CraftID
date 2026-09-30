@@ -72,6 +72,9 @@ export default async function PublicationQueuePage() {
     };
   }).sort((a,b) => b.ready - a.ready);
 
+  const readyCount = rows.filter((row) => row.isReady).length;
+  const needsInputCount = rows.length - readyCount;
+
   return (
     <main className="adminPage">
       <div className="adminPageHeader">
@@ -79,6 +82,21 @@ export default async function PublicationQueuePage() {
         <h1>Publication Queue</h1>
         <p>Minimum integrity gate for draft and suspended CraftID records. A record needs a name, professional title or craft sector, public location, at least one skill claim and privacy settings. Evidence review is not required for publication, and publication does not imply certification.</p>
       </div>
+
+      <section className="adminQueueSummary">
+        <article>
+          <span>Ready for publication</span>
+          <strong>{readyCount}</strong>
+        </article>
+        <article>
+          <span>Needs input</span>
+          <strong>{needsInputCount}</strong>
+        </article>
+        <article>
+          <span>Total in queue</span>
+          <strong>{rows.length}</strong>
+        </article>
+      </section>
 
       <div className="adminQueueLegend">
         <div>
