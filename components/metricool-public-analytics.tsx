@@ -63,6 +63,7 @@ export function MetricoolPublicAnalytics() {
     window.__metricoolLoaded = true;
     let initialised = false;
 
+    /* eslint-disable no-var, @typescript-eslint/no-unused-expressions */
     function loadScript(a: () => void){
       var b=document.getElementsByTagName("head")[0],
           c=document.createElement("script");
@@ -79,6 +80,7 @@ export function MetricoolPublicAnalytics() {
       initialised = true;
       window.beTracker.t({hash:"ebaf93684e0f50db35ee6b2b75ad9ffe"})
     });
+    /* eslint-enable no-var, @typescript-eslint/no-unused-expressions */
   }, [pathname]);
 
   return null;
