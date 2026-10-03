@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { localeFrom, type Locale } from "@/lib/i18n";
+import { MetricoolPublicAnalytics } from "@/components/metricool-public-analytics";
 import "./globals.css";
 
 const descriptions: Record<Locale, string> = {
@@ -37,7 +38,10 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body>{children}</body>
+      <body>
+        <MetricoolPublicAnalytics />
+        {children}
+      </body>
     </html>
   );
 }
