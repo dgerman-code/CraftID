@@ -69,6 +69,7 @@ export function MetricoolPublicAnalytics() {
           c=document.createElement("script");
       c.type="text/javascript",
       c.src="https://tracker.metricool.com/resources/be.js",
+      // @ts-expect-error Metricool's official snippet uses the legacy script ready-state hook.
       c.onreadystatechange=a,
       c.onload=a,
       b.appendChild(c)
